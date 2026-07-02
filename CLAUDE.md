@@ -1,7 +1,12 @@
 # CLAUDE.md — kromi-dpc
 
 ## Qué es este proyecto
-Resumen breve derivado de `.kromi/init.md`. (Completar al avanzar el wizard.)
+**DPC — Data Protection Compliance**: plataforma de gestión de cumplimiento de la Ley 21.719
+(protección de datos personales, Chile). Cara pública (landing + autoevaluación gratuita +
+verificación de certificados) y plataforma interna multi-empresa para el equipo consultor
+(checklist de 14 dominios, fichas de control, evidencias, riesgos, plan de adecuación,
+certificación privada). Detalle en `.kromi/init.md` y `RFC.md`; diseño en `.kromi/design.md`
+(Style Reference Attio) y `design/prototype.dc.html`.
 
 ## Stack (fijo)
 Next.js (App Router) + Supabase (Auth/Postgres/Storage) + Zod + next-intl + Sentry + Vercel. Gestor de paquetes: **pnpm**.
