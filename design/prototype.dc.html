@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;font-feature-settings:'ss03';color:#1c1d1f;background:#ffffff;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  ::selection{background:#94b9ff;color:#1c1d1f;}
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-thumb{background:#e4e7ec;border-radius:8px;border:3px solid #fff;}
+  ::-webkit-scrollbar-thumb:hover{background:#d3d8df;}
+  @keyframes dpcBlink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+</style>
+</helmet>
+<div style="--accent:{{ accent }};--serif:{{ serifFont }};min-height:100vh;background:#ffffff;">
+
+<sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+<div style="max-width:100%;overflow-x:hidden;">
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #e4e7ec;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="assets/dpc-logo.png" alt="DPC" style="height:44px;width:auto;display:block;" />
+        <span style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:17px;font-weight:500;font-style:italic;letter-spacing:-0.2px;color:#1c1d1f;">Protección Certificada</span>
+      </div>
+      <nav style="display:flex;align-items:center;gap:2px;">
+        <a href="#dominios" style="font-size:14px;font-weight:500;color:#6f7988;padding:6px 10px;border-radius:10px;">Dominios</a>
+        <a href="#ciclo" style="font-size:14px;font-weight:500;color:#6f7988;padding:6px 10px;border-radius:10px;">Ciclo de servicio</a>
+        <a href="#modelo" style="font-size:14px;font-weight:500;color:#6f7988;padding:6px 10px;border-radius:10px;">Modelo</a>
+        <a href="#certificacion" style="font-size:14px;font-weight:500;color:#6f7988;padding:6px 10px;border-radius:10px;">Certificación</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:8px;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section style="max-width:1180px;margin:0 auto;padding:96px 32px 56px;text-align:center;">
+    <div style="display:inline-flex;align-items:center;gap:9px;border:1px solid #f3c9c6;background:#fdf3f2;border-radius:999px;padding:5px 14px 5px 10px;font-size:12px;font-weight:600;color:#a1231f;margin-bottom:28px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:#e5342b;animation:dpcBlink 1.1s ease-in-out infinite;"></span>
+      <span style="display:inline-flex;align-items:center;background:#e5342b;border-radius:999px;padding:2px 9px;color:#fff;">Ley 21.719</span>
+      vigente desde el 1 de diciembre de 2026
+    </div>
+    <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:64px;line-height:1.05;letter-spacing:-1.28px;margin:0 auto;max-width:820px;color:#1c1d1f;">Protección de datos personales, certificada<span style="display:inline-flex;vertical-align:middle;margin-left:14px;transform:translateY(-3px);"><svg width="58" height="58" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#22C463"></circle><path d="M8 12.2l2.6 2.6L16 9.4" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></h1>
+    <p style="font-size:20px;font-weight:500;line-height:1.4;letter-spacing:-0.4px;color:#6f7988;max-width:560px;margin:24px auto 0;">En DPC acompañamos a las empresas en todo el proceso: diagnóstico, propuesta y validación.</p>
+    <p style="font-size:13px;font-weight:600;color:#8f99a8;margin:36px auto 12px;letter-spacing:0.2px;">Dos formas de cotizar</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+      <button onClick="{{ goCotizador }}" style="font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:500;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:10px;padding:11px 18px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 7h8M8 11h8M8 15h4"></path></svg>Autoevaluación en línea</button>
+      <span style="font-size:14px;font-weight:500;color:#8f99a8;">o</span>
+      <a href="https://wa.me/56900000000?text=Hola,%20quiero%20informaci%C3%B3n%20sobre%20la%20certificaci%C3%B3n%20de%20protecci%C3%B3n%20de%20datos" target="_blank" rel="noopener" style="font-family:inherit;display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:500;color:#fff;background:#25D366;border:1px solid #25D366;border-radius:10px;padding:11px 18px;text-decoration:none;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M17.47 14.38c-.29-.14-1.7-.84-1.96-.93-.26-.1-.45-.14-.64.15-.19.29-.73.93-.9 1.12-.16.19-.33.21-.62.07-.29-.15-1.22-.45-2.32-1.43-.86-.77-1.44-1.71-1.6-2-.17-.29-.02-.44.12-.59.13-.13.29-.34.44-.5.14-.17.19-.29.29-.48.09-.2.05-.37-.03-.51-.07-.14-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 .98-1 2.38s1.03 2.76 1.17 2.95c.14.19 2.02 3.08 4.88 4.32.68.29 1.21.47 1.63.6.68.22 1.3.19 1.79.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34z M20.52 3.45A11.86 11.86 0 0012.06 0C5.5 0 .19 5.31.19 11.86c0 2.09.55 4.13 1.6 5.93L.09 24l6.37-1.67a11.85 11.85 0 005.66 1.44h.01c6.55 0 11.86-5.31 11.86-11.86 0-3.17-1.24-6.15-3.47-8.46zM12.06 21.79h-.01a9.86 9.86 0 01-5.02-1.38l-.36-.21-3.73.98.99-3.64-.23-.37a9.82 9.82 0 01-1.51-5.29c0-5.44 4.43-9.87 9.88-9.87 2.64 0 5.12 1.03 6.98 2.9a9.8 9.8 0 012.89 6.98c0 5.45-4.43 9.88-9.88 9.88z"/></svg>Cotización asistida</a>
+    </div>
+
+    <!-- STAKES -->
+    <div style="margin-top:56px;border:1px solid #e4e7ec;border-radius:12px;background:#fff;overflow:hidden;text-align:left;box-shadow:rgba(28,40,64,0.08) 0px 8px 24px -12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 24px;border-bottom:1px solid #f3f4f6;background:#fbfbfc;">
+        <span style="font-size:13px;font-weight:600;color:#1c1d1f;letter-spacing:-0.1px;">Lo que está en juego</span>
+        <span style="font-size:13px;font-weight:500;color:#6f7988;">Fiscalización de la Agencia desde el 1 de diciembre de 2026</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;">
+        <sc-for list="{{ stakes }}" as="s" hint-placeholder-count="3">
+          <div style="padding:24px;border-left:1px solid #f3f4f6;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ s.dot }};"></span>
+              <span style="font-size:13px;font-weight:600;color:#1c1d1f;">{{ s.sev }}</span>
+            </div>
+            <div style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:26px;font-weight:500;letter-spacing:-0.5px;color:#1c1d1f;">{{ s.utm }}</div>
+            <div style="font-size:13px;color:#8f99a8;margin-top:4px;">{{ s.clp }} CLP</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOMINIOS -->
+  <section id="dominios" style="max-width:1180px;margin:0 auto;padding:80px 32px;border-top:1px solid #f3f4f6;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:12px;">Arquitectura del marco de trabajo</div>
+      <h2 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0;">Un estándar completo de protección de datos.</h2>
+      <p style="font-size:16px;color:#6f7988;max-width:600px;margin:16px auto 0;letter-spacing:-0.24px;">Ocho dominios se alinean directamente con cada principio de la Ley 21.719, y seis dominios complementarios cubren las obligaciones operativas restantes.</p>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="font-size:12px;font-weight:600;color:#1c1d1f;text-transform:uppercase;letter-spacing:0.4px;">Principios</span>
+      <span style="font-size:12px;font-weight:500;color:#8f99a8;">Art. 3 · Ley 21.719</span>
+      <span style="flex:1;height:1px;background:#e4e7ec;"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:40px;">
+      <sc-for list="{{ domainsPrincipio }}" as="d" hint-placeholder-count="8">
+        <div style="border:1px solid #e4e7ec;border-radius:8px;padding:18px;background:#fff;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-family:'Inter';font-size:11px;font-weight:600;letter-spacing:0.3px;color:#505967;background:#f3f4f6;border-radius:4px;padding:3px 7px;">{{ d.code }}</span>
+            <span style="font-size:15px;font-weight:600;letter-spacing:-0.2px;">{{ d.name }}</span>
+          </div>
+          <p style="font-size:13px;line-height:1.5;color:#6f7988;margin:0;">{{ d.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="font-size:12px;font-weight:600;color:#1c1d1f;text-transform:uppercase;letter-spacing:0.4px;">Dominios complementarios</span>
+      <span style="font-size:12px;font-weight:500;color:#8f99a8;">Obligaciones operativas</span>
+      <span style="flex:1;height:1px;background:#e4e7ec;"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;">
+      <sc-for list="{{ domainsComp }}" as="d" hint-placeholder-count="6">
+        <div style="border:1px solid #e4e7ec;border-radius:8px;padding:18px;background:#fff;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-family:'Inter';font-size:11px;font-weight:600;letter-spacing:0.3px;color:#505967;background:#f3f4f6;border-radius:4px;padding:3px 7px;">{{ d.code }}</span>
+            <span style="font-size:15px;font-weight:600;letter-spacing:-0.2px;">{{ d.name }}</span>
+          </div>
+          <p style="font-size:13px;line-height:1.5;color:#6f7988;margin:0;">{{ d.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- LOGO CLOUD -->
+  <section style="max-width:1180px;margin:0 auto;padding:0 32px 80px;text-align:center;">
+    <p style="font-size:13px;font-weight:500;color:#8f99a8;margin:0 0 24px;">Diseñado sobre el ecosistema regulatorio chileno</p>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:32px 44px;">
+      <sc-for list="{{ agencies }}" as="a" hint-placeholder-count="6">
+        <span style="font-size:16px;font-weight:600;color:#8f99a8;letter-spacing:-0.2px;">{{ a }}</span>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- CICLO -->
+  <section id="ciclo" style="background:#fbfbfc;border-top:1px solid #f3f4f6;border-bottom:1px solid #f3f4f6;">
+    <div style="max-width:1180px;margin:0 auto;padding:80px 32px;">
+      <div style="text-align:center;margin-bottom:48px;">
+        <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:12px;">Ciclo de aseguramiento continuo</div>
+        <h2 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0;">Del diagnóstico a la renovación.</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <sc-for list="{{ fases }}" as="f" hint-placeholder-count="4">
+          <div style="border:1px solid #e4e7ec;border-radius:8px;padding:22px;background:#fff;">
+            <div style="font-size:12px;font-weight:600;color:#b5bdc9;margin-bottom:14px;">{{ f.n }}</div>
+            <div style="font-size:18px;font-weight:600;letter-spacing:-0.3px;margin-bottom:8px;">{{ f.name }}</div>
+            <p style="font-size:13px;line-height:1.5;color:#6f7988;margin:0;">{{ f.landing }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENTREGABLE -->
+  <section style="max-width:1180px;margin:0 auto;padding:80px 32px;">
+    <div style="display:grid;grid-template-columns:1fr 1.05fr;gap:64px;align-items:center;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:12px;">El entregable</div>
+        <h2 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 16px;">Documentación lista para una fiscalización.</h2>
+        <p style="font-size:16px;color:#6f7988;letter-spacing:-0.24px;margin:0 0 24px;">Al cerrar el proceso, la organización recibe un expediente de cumplimiento completo junto con la certificación: el detalle documentado de cómo trata los datos personales, control por control, que da cuenta del cuidado de cada exigencia de la ley.</p>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <span style="width:22px;height:22px;flex-shrink:0;border-radius:6px;background:#f3f4f6;color:#1c1d1f;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+            <span style="font-size:14px;line-height:1.5;color:#1c1d1f;"><b style="font-weight:600;">Respaldo ante fiscalización</b> — evidencia admisible y ordenada, disponible de inmediato.</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <span style="width:22px;height:22px;flex-shrink:0;border-radius:6px;background:#f3f4f6;color:#1c1d1f;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+            <span style="font-size:14px;line-height:1.5;color:#1c1d1f;"><b style="font-weight:600;">Trazabilidad total</b> — cada control respaldado, versionado y fechado.</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <span style="width:22px;height:22px;flex-shrink:0;border-radius:6px;background:#f3f4f6;color:#1c1d1f;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+            <span style="font-size:14px;line-height:1.5;color:#1c1d1f;"><b style="font-weight:600;">Detalle del tratamiento</b> — el mapa completo de los datos personales de la organización.</span>
+          </div>
+        </div>
+      </div>
+      <div style="border:1px solid #e4e7ec;border-radius:12px;background:#fff;overflow:hidden;box-shadow:rgba(28,40,64,0.1) 0px 16px 40px -16px, rgba(28,40,64,0.05) 0px 4px 8px -4px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f3f4f6;background:#fbfbfc;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="width:26px;height:26px;border-radius:7px;background:#1c1d1f;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5"></path><path d="M6 3h8l5 5v11a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z"></path></svg></span>
+            <span style="font-size:14px;font-weight:600;letter-spacing:-0.1px;">Expediente de cumplimiento</span>
+          </div>
+          <span style="font-size:11px;font-weight:600;color:#075a39;background:#e9f2ec;border-radius:999px;padding:3px 10px;">Certificado</span>
+        </div>
+        <div style="padding:6px 20px;">
+          <sc-for list="{{ dossierDocs }}" as="d" hint-placeholder-count="7">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f3f4f6;">
+              <span style="width:18px;height:18px;flex-shrink:0;border-radius:5px;background:#e9f2ec;color:#075a39;display:flex;align-items:center;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+              <span style="font-size:13px;color:#1c1d1f;">{{ d }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:#1c1d1f;color:#fff;">
+          <span style="width:40px;height:40px;flex-shrink:0;border-radius:50%;border:2px solid #34353a;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a6 6 0 100-12 6 6 0 000 12z"></path><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"></path></svg></span>
+          <div>
+            <div style="font-size:13px;font-weight:600;">Certificación privada DPC</div>
+            <div style="font-size:12px;color:#8f99a8;">Verificable en línea</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIANZA / AUTOCERTIFICACIÓN -->
+  <section style="max-width:1180px;margin:0 auto;padding:0 32px 40px;">
+    <div style="border:1px solid #e4e7ec;border-radius:12px;background:#fbfbfc;padding:32px;display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+      <div style="display:flex;align-items:flex-start;gap:16px;">
+        <span style="width:44px;height:44px;flex-shrink:0;border-radius:10px;background:#1c1d1f;color:#fff;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a6 6 0 100-12 6 6 0 000 12z"></path><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"></path></svg></span>
+        <div>
+          <div style="font-size:16px;font-weight:600;letter-spacing:-0.2px;margin-bottom:6px;">Nuestros procesos, bajo la misma rigurosidad</div>
+          <p style="font-size:14px;line-height:1.55;color:#6f7988;margin:0;">La información de nuestros propios clientes se resguarda bajo los mismos 14 dominios que rigen nuestro estándar, asegurando la calidad del proceso y de los resultados.</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:16px;">
+        <span style="width:44px;height:44px;flex-shrink:0;border-radius:10px;background:#fff;border:1px solid #d3d8df;color:#1c1d1f;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z"></path><path d="M9 12l2 2 4-4"></path></svg></span>
+        <div>
+          <div style="font-size:16px;font-weight:600;letter-spacing:-0.2px;margin-bottom:6px;">Confidencialidad por diseño</div>
+          <p style="font-size:14px;line-height:1.55;color:#6f7988;margin:0;">Accedemos solo a la evidencia necesaria para evaluar. Los datos de la organización permanecen bajo su control, con acuerdo de confidencialidad y contrato de encargo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACOMPAÑAMIENTO -->
+  <section style="max-width:1180px;margin:0 auto;padding:80px 32px;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:12px;">Acompañamiento</div>
+      <h2 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0;">Un consultor asignado en cada fase.</h2>
+      <p style="font-size:16px;color:#6f7988;max-width:560px;margin:16px auto 0;letter-spacing:-0.24px;">La metodología da rigor; el consultor da criterio. Combinamos una plataforma estructurada con acompañamiento humano real.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+      <sc-for list="{{ acompanamiento }}" as="a" hint-placeholder-count="4">
+        <div style="border:1px solid #e4e7ec;border-radius:8px;padding:22px;background:#fff;">
+          <div style="font-size:16px;font-weight:600;letter-spacing:-0.2px;margin-bottom:10px;">{{ a.t }}</div>
+          <p style="font-size:13px;line-height:1.55;color:#6f7988;margin:0;">{{ a.d }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- MODELO DE SERVICIO -->
+  <section id="modelo" style="background:#fbfbfc;border-top:1px solid #f3f4f6;border-bottom:1px solid #f3f4f6;">
+    <div style="max-width:1180px;margin:0 auto;padding:80px 32px;">
+      <div style="text-align:center;margin-bottom:44px;">
+        <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:12px;">Modelo de servicio</div>
+        <h2 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0;">Un acompañamiento que perdura.</h2>
+        <p style="font-size:16px;color:#6f7988;max-width:600px;margin:16px auto 0;letter-spacing:-0.24px;">El servicio se estructura en dos etapas: la certificación inicial que lleva a la organización al estándar, y una suscripción que lo mantiene vigente en el tiempo.</p>
+      </div>
+
+      <!-- Dos componentes -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="font-size:11px;font-weight:600;color:#505967;background:#f3f4f6;border-radius:6px;padding:4px 10px;">01 · Certificación inicial</span>
+          </div>
+          <div style="font-size:20px;font-weight:600;letter-spacing:-0.3px;margin-bottom:8px;">Ruta al estándar</div>
+          <p style="font-size:14px;line-height:1.6;color:#6f7988;margin:0;">Llevamos a la organización hasta el estándar: diagnóstico, cierre de brechas y la certificación privada DPC. El alcance del trabajo se ajusta a la complejidad de cada organización.</p>
+        </div>
+        <div style="background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="font-size:11px;font-weight:600;color:#505967;background:#f3f4f6;border-radius:6px;padding:4px 10px;">02 · Revalidación periódica</span>
+          </div>
+          <div style="font-size:20px;font-weight:600;letter-spacing:-0.3px;margin-bottom:8px;">Aseguramiento continuo</div>
+          <p style="font-size:14px;line-height:1.6;color:#6f7988;margin:0 0 16px;">Acompañamos a la organización para sostener el estándar en el tiempo: monitoreo de cambios normativos, revisiones periódicas, soporte ante incidentes y la <b style="color:#1c1d1f;font-weight:600;">renovación de la certificación</b>.</p>
+          <div style="font-size:13px;color:#8f99a8;">Suscripción renovable, con la periodicidad que mejor se adapte.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="certificacion" style="max-width:1180px;margin:0 auto;padding:72px 32px;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:12px;">La inversión</div>
+      <h2 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0;">El valor, a la medida de cada organización.</h2>
+      <p style="font-size:16px;color:#6f7988;max-width:600px;margin:16px auto 0;letter-spacing:-0.24px;">Cada organización parte de un valor base accesible y acorde a su tamaño. Ese valor puede ajustarse tras el diagnóstico según la complejidad real de sus tratamientos y la presencia de datos sensibles.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+      <div style="border:1px solid #e4e7ec;border-radius:12px;padding:28px;background:#fff;">
+        <div style="font-size:16px;font-weight:600;letter-spacing:-0.2px;margin-bottom:16px;">Microempresa</div>
+        <div style="font-size:12px;color:#8f99a8;">Desde</div>
+        <div style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:34px;font-weight:500;letter-spacing:-0.6px;color:#1c1d1f;">5 UF <span style="font-size:14px;color:#8f99a8;">+ IVA</span></div>
+        <div style="font-size:12px;color:#8f99a8;margin-top:2px;">valor base referencial</div>
+      </div>
+      <div style="border:1px solid #e4e7ec;border-radius:12px;padding:28px;background:#fff;">
+        <div style="font-size:16px;font-weight:600;letter-spacing:-0.2px;margin-bottom:16px;">Pequeña empresa</div>
+        <div style="font-size:12px;color:#8f99a8;">Desde</div>
+        <div style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:34px;font-weight:500;letter-spacing:-0.6px;color:#1c1d1f;">15 UF <span style="font-size:14px;color:#8f99a8;">+ IVA</span></div>
+        <div style="font-size:12px;color:#8f99a8;margin-top:2px;">valor base referencial</div>
+      </div>
+      <div style="border:1px solid #1c1d1f;border-radius:12px;padding:28px;background:#1c1d1f;color:#fff;">
+        <div style="font-size:16px;font-weight:600;letter-spacing:-0.2px;margin-bottom:16px;">Enterprise</div>
+        <div style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:34px;font-weight:500;letter-spacing:-0.6px;color:#fff;margin-top:18px;">Bajo cotización</div>
+        <div style="font-size:12px;color:#b5bdc9;margin-top:6px;">según el alcance del diagnóstico</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;padding-top:24px;border-top:1px solid #f3f4f6;">
+      <p style="font-size:13px;color:#8f99a8;margin:0;max-width:520px;line-height:1.5;">Los valores base son referenciales y acordes al tamaño de cada organización. El precio final se confirma tras el diagnóstico, según la complejidad de los tratamientos.</p>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <button onClick="{{ goCotizador }}" style="font-family:inherit;cursor:pointer;font-size:14px;font-weight:500;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:10px;padding:11px 18px;">Autoevaluación en línea</button>
+      <a href="https://wa.me/56900000000?text=Hola,%20quiero%20cotizar%20la%20certificaci%C3%B3n%20de%20protecci%C3%B3n%20de%20datos%20para%20mi%20organizaci%C3%B3n" target="_blank" rel="noopener" style="font-family:inherit;display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:500;color:#fff;background:#25D366;border:1px solid #25D366;border-radius:10px;padding:11px 18px;text-decoration:none;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M17.47 14.38c-.29-.14-1.7-.84-1.96-.93-.26-.1-.45-.14-.64.15-.19.29-.73.93-.9 1.12-.16.19-.33.21-.62.07-.29-.15-1.22-.45-2.32-1.43-.86-.77-1.44-1.71-1.6-2-.17-.29-.02-.44.12-.59.13-.13.29-.34.44-.5.14-.17.19-.29.29-.48.09-.2.05-.37-.03-.51-.07-.14-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 .98-1 2.38s1.03 2.76 1.17 2.95c.14.19 2.02 3.08 4.88 4.32.68.29 1.21.47 1.63.6.68.22 1.3.19 1.79.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34z M20.52 3.45A11.86 11.86 0 0012.06 0C5.5 0 .19 5.31.19 11.86c0 2.09.55 4.13 1.6 5.93L.09 24l6.37-1.67a11.85 11.85 0 005.66 1.44h.01c6.55 0 11.86-5.31 11.86-11.86 0-3.17-1.24-6.15-3.47-8.46zM12.06 21.79h-.01a9.86 9.86 0 01-5.02-1.38l-.36-.21-3.73.98.99-3.64-.23-.37a9.82 9.82 0 01-1.51-5.29c0-5.44 4.43-9.87 9.88-9.87 2.64 0 5.12 1.03 6.98 2.9a9.8 9.8 0 012.89 6.98c0 5.45-4.43 9.88-9.88 9.88z"/></svg>Cotizar certificación</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#000000;color:#fff;">
+    <div style="max-width:1180px;margin:0 auto;padding:64px 32px 40px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <img src="assets/dpc-logo.png" alt="DPC" style="height:30px;width:auto;display:block;filter:invert(1);" />
+          <span style="font-size:15px;font-weight:600;">Data Protection Compliance</span>
+        </div>
+        <p style="font-size:13px;line-height:1.6;color:#8f99a8;max-width:280px;margin:0;">Estándar privado de cumplimiento estructurado para la Ley N° 21.719 y su ecosistema regulatorio en Chile.</p>
+      </div>
+      <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+        <div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:14px;">{{ col.title }}</div>
+          <sc-for list="{{ col.links }}" as="lnk" hint-placeholder-count="4">
+            <div onClick="{{ lnk.onClick }}" style="font-size:14px;color:#8f99a8;margin-bottom:10px;cursor:pointer;">{{ lnk.label }}</div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+    <div style="max-width:1180px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid #1c1d1f;font-size:12px;color:#6f7988;">© 2026 DPC · Marco de trabajo. No emite certificaciones gubernamentales oficiales ni suplanta las potestades de la Agencia de Protección de Datos Personales.</div>
+  </footer>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fbfbfc;padding:32px;">
+  <div style="width:100%;max-width:400px;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;">
+      <img src="assets/dpc-logo.png" alt="DPC" style="height:40px;width:auto;display:block;" />
+      <span style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:17px;font-weight:500;font-style:italic;letter-spacing:-0.2px;color:#1c1d1f;">Protección Certificada</span>
+    </div>
+    <div style="background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:32px;box-shadow:rgba(28,40,64,0.1) 0px 12px 32px -12px, rgba(28,40,64,0.06) 0px 4px 8px -4px;">
+      <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:26px;line-height:1.15;letter-spacing:-0.4px;margin:0 0 4px;">Ingreso del equipo</h1>
+      <p style="font-size:14px;color:#6f7988;margin:0 0 24px;letter-spacing:-0.1px;">Herramienta interna de evaluación y certificación DPC.</p>
+      <label style="display:block;margin-bottom:14px;">
+        <span style="display:block;font-size:12px;font-weight:500;color:#6f7988;margin-bottom:6px;">Usuario</span>
+        <input value="{{ loginUser }}" onInput="{{ onLoginUser }}" onKeyDown="{{ onLoginKey }}" placeholder="admin" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:8px;padding:10px 12px;" />
+      </label>
+      <label style="display:block;margin-bottom:8px;">
+        <span style="display:block;font-size:12px;font-weight:500;color:#6f7988;margin-bottom:6px;">Contraseña</span>
+        <input type="password" value="{{ loginPass }}" onInput="{{ onLoginPass }}" onKeyDown="{{ onLoginKey }}" placeholder="••••••" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:8px;padding:10px 12px;" />
+      </label>
+      <sc-if value="{{ loginErr }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:13px;color:#772322;background:#f6e9e8;border:1px solid #77232222;border-radius:8px;padding:9px 12px;margin-top:12px;">Usuario o contraseña incorrectos.</div>
+      </sc-if>
+      <button onClick="{{ doLogin }}" style="font-family:inherit;width:100%;margin-top:20px;font-size:14px;font-weight:500;color:#fff;background:#1c1d1f;border:1px solid #1c1d1f;border-radius:10px;padding:11px;cursor:pointer;">Ingresar</button>
+      <button onClick="{{ goLanding }}" style="font-family:inherit;width:100%;margin-top:8px;font-size:13px;font-weight:500;color:#6f7988;background:transparent;border:none;padding:8px;cursor:pointer;">← Volver al sitio</button>
+    </div>
+    <p style="font-size:12px;color:#b5bdc9;text-align:center;margin:16px auto 0;">Demo · usuario <b style="color:#8f99a8;">admin</b> · contraseña <b style="color:#8f99a8;">admin</b></p>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCotizador }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:#fbfbfc;">
+  <!-- TOPBAR -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #e4e7ec;">
+    <div style="max-width:1080px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="assets/dpc-logo.png" alt="DPC" style="height:36px;width:auto;display:block;" />
+        <span style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:16px;font-weight:500;font-style:italic;letter-spacing:-0.2px;color:#1c1d1f;">Protección Certificada</span>
+      </div>
+      <button onClick="{{ goLanding }}" style="font-family:inherit;cursor:pointer;font-size:13px;font-weight:500;color:#6f7988;background:#fff;border:1px solid #d3d8df;border-radius:10px;padding:8px 12px;">← Volver al sitio</button>
+    </div>
+  </header>
+
+  <div style="max-width:1080px;margin:0 auto;padding:56px 32px 80px;">
+    <div style="text-align:center;margin-bottom:44px;">
+      <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:12px;">Autoevaluación en línea</div>
+      <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:48px;line-height:1.05;letter-spacing:-0.9px;margin:0 auto;max-width:720px;">Estima el valor de la certificación.</h1>
+      <p style="font-size:17px;color:#6f7988;max-width:600px;margin:16px auto 0;letter-spacing:-0.24px;">Responde algunas preguntas y obtén una orientación inmediata del valor. Es gratis y sin compromiso; la cotización final se confirma al conversar con el equipo.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:20px;align-items:start;">
+      <!-- Preguntas -->
+      <div style="background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:30px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#1c1d1f;margin-bottom:12px;">Tamaño de la organización</div>
+            <select value="{{ cotSize }}" onChange="{{ onCotSize }}" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:10px;padding:11px 12px;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 stroke=%22%236f7988%22 stroke-width=%221.6%22><path d=%22M4 6l4 4 4-4%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;">
+              <sc-for list="{{ cotSizes }}" as="s" hint-placeholder-count="3">
+                <option value="{{ s.key }}">{{ s.label }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#1c1d1f;margin-bottom:12px;">Rubro</div>
+            <select value="{{ cotRubro }}" onChange="{{ onCotRubro }}" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:10px;padding:11px 12px;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 stroke=%22%236f7988%22 stroke-width=%221.6%22><path d=%22M4 6l4 4 4-4%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;">
+              <sc-for list="{{ cotRubros }}" as="r" hint-placeholder-count="4">
+                <option value="{{ r.key }}">{{ r.label }}</option>
+              </sc-for>
+            </select>
+          </div>
+        </div>
+        <sc-for list="{{ cotToggles }}" as="t" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-top:1px solid #f3f4f6;">
+            <span style="font-size:14px;color:#1c1d1f;line-height:1.4;">{{ t.q }}</span>
+            <div style="display:flex;gap:8px;flex-shrink:0;">
+              <button onClick="{{ t.si.onClick }}" style="{{ t.si.style }}">Sí</button>
+              <button onClick="{{ t.no.onClick }}" style="{{ t.no.style }}">No</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <!-- Resultado -->
+      <div style="background:#1c1d1f;border-radius:12px;padding:30px;color:#fff;position:sticky;top:88px;">
+        <div style="font-size:12px;font-weight:500;color:#b5bdc9;margin-bottom:8px;">Estimación referencial</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px;">{{ cotTierName }}</div>
+        <div style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:40px;font-weight:500;letter-spacing:-0.8px;line-height:1;margin-bottom:20px;">{{ cotPrice }}</div>
+        <div style="height:1px;background:#2c2d30;margin-bottom:18px;"></div>
+        <p style="font-size:13px;line-height:1.5;color:#b5bdc9;margin:0 0 14px;">{{ cotNote }}</p>
+        <sc-if value="{{ cotHasFactors }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;">
+            <sc-for list="{{ cotFactors }}" as="f" hint-placeholder-count="2">
+              <span style="font-size:11px;font-weight:500;color:#fff;background:#2c2d30;border-radius:999px;padding:4px 10px;">{{ f }}</span>
+            </sc-for>
+          </div>
+        </sc-if>
+        <a href="https://wa.me/56900000000?text=Hola,%20hice%20la%20autoevaluaci%C3%B3n%20y%20quiero%20cotizar%20la%20certificaci%C3%B3n" target="_blank" rel="noopener" style="font-family:inherit;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;font-size:14px;font-weight:500;color:#1c1d1f;background:#fff;border:none;border-radius:10px;padding:12px;text-decoration:none;box-sizing:border-box;">Confirmar cotización con el equipo</a>
+      </div>
+    </div>
+
+    <!-- PERSPECTIVA: RIESGO vs VALOR -->
+    <div style="margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="border:1px solid #f3c9c6;background:#fdf3f2;border-radius:12px;padding:28px;">
+        <div style="font-size:12px;font-weight:600;color:#a1231f;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:16px;">El riesgo de no contar con certificación</div>
+        <div style="font-size:14px;font-weight:600;color:#1c1d1f;margin-bottom:10px;">Por ejemplo:</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
+          <div style="display:flex;align-items:flex-start;gap:11px;">
+            <span style="width:6px;height:6px;flex-shrink:0;border-radius:50%;background:#a1231f;margin-top:8px;"></span>
+            <span style="font-size:14px;line-height:1.5;color:#1c1d1f;">Si la empresa recibe documentos de sus clientes a través de WhatsApp de ejecutivos.</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:11px;">
+            <span style="width:6px;height:6px;flex-shrink:0;border-radius:50%;background:#a1231f;margin-top:8px;"></span>
+            <span style="font-size:14px;line-height:1.5;color:#1c1d1f;">O la información de los clientes se mantiene en un archivo Excel en un equipo de la empresa.</span>
+          </div>
+        </div>
+        <p style="font-size:14px;line-height:1.55;color:#6f7988;margin:0 0 14px;">Ambos casos representan una vulnerabilidad, ya que estos dispositivos pueden extraviarse, ser intervenidos o robados, exponiendo los datos de la empresa. Y esa exposición arriesga a la organización a una multa que parte en los <b style="color:#1c1d1f;font-weight:600;">7 millones de pesos</b>.</p>
+        <p style="font-size:14px;line-height:1.55;color:#6f7988;margin:0;">Tal como el ejemplo anterior, existen muchas otras situaciones que pueden representar un riesgo para la organización.</p>
+      </div>
+      <div style="border:1px solid #cfe6d8;background:#f1f9f4;border-radius:12px;padding:28px;">
+        <div style="font-size:12px;font-weight:600;color:#075a39;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:12px;">El valor de certificarse</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <sc-for list="{{ cotValor }}" as="v" hint-placeholder-count="3">
+            <div style="display:flex;align-items:flex-start;gap:11px;">
+              <span style="width:20px;height:20px;flex-shrink:0;border-radius:6px;background:#dcefe3;color:#075a39;display:flex;align-items:center;justify-content:center;margin-top:1px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:#1c1d1f;">{{ v.t }}</div>
+                <p style="font-size:13px;line-height:1.5;color:#6f7988;margin:2px 0 0;">{{ v.d }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;min-height:100vh;background:#ffffff;">
+  <!-- SIDEBAR -->
+  <aside style="width:236px;flex-shrink:0;border-right:1px solid #e4e7ec;background:#fbfbfc;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;">
+    <div style="height:56px;display:flex;align-items:center;gap:9px;padding:0 18px;border-bottom:1px solid #f3f4f6;">
+      <img src="assets/dpc-logo.png" alt="DPC" style="height:26px;width:auto;display:block;" />
+      <span style="font-size:14px;font-weight:600;letter-spacing:-0.2px;">DPC · Marco de trabajo</span>
+    </div>
+    <sc-if value="{{ inCompany }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px 14px 10px;border-bottom:1px solid #f3f4f6;">
+        <button onClick="{{ goEmpresas }}" style="font-family:inherit;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#8f99a8;background:transparent;border:none;cursor:pointer;padding:0;margin-bottom:12px;">← Todas las empresas</button>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="width:32px;height:32px;flex-shrink:0;border-radius:8px;background:#1c1d1f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">{{ current.in }}</span>
+          <div style="min-width:0;">
+            <div style="font-size:13px;font-weight:600;color:#1c1d1f;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ current.name }}</div>
+            <div style="font-size:11px;color:#8f99a8;">{{ current.rubro }}</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+    <nav style="flex:1;padding:12px 10px;overflow-y:auto;">
+      <div style="font-size:11px;font-weight:600;color:#b5bdc9;text-transform:uppercase;letter-spacing:0.4px;padding:6px 10px 8px;">{{ navLabel }}</div>
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="7">
+        <button onClick="{{ n.onClick }}" style="{{ n.style }}">
+          <span style="display:flex;align-items:center;color:{{ n.icColor }};">{{ n.icon }}</span>
+          <span>{{ n.label }}</span>
+        </button>
+      </sc-for>
+    </nav>
+    <div style="padding:12px;border-top:1px solid #f3f4f6;">
+      <button onClick="{{ logout }}" style="font-family:inherit;width:100%;font-size:13px;font-weight:500;color:#6f7988;background:transparent;border:1px solid #e4e7ec;border-radius:10px;padding:8px;cursor:pointer;">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+    <!-- TOPBAR -->
+    <header style="height:56px;flex-shrink:0;border-bottom:1px solid #e4e7ec;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#fff;position:sticky;top:0;z-index:20;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <sc-if value="{{ inCompany }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:15px;font-weight:600;color:#1c1d1f;">{{ current.name }}</span>
+          <span style="font-size:12px;font-weight:500;color:{{ current.faseColor }};background:{{ current.faseBg }};border-radius:999px;padding:4px 10px;">{{ current.faseLabel }}</span>
+          <sc-if value="{{ showScores }}" hint-placeholder-val="{{ true }}">
+            <span style="font-size:12px;color:#8f99a8;">Complexity Score <b style="color:#1c1d1f;font-weight:600;">{{ current.score }}</b> · {{ current.scoreTier }}</span>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{ isAdminView }}" hint-placeholder-val="{{ true }}">
+          <span style="font-size:15px;font-weight:600;color:#1c1d1f;">Panel de administración</span>
+        </sc-if>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:200px;height:32px;border:1px solid #d3d8df;border-radius:7px;display:flex;align-items:center;padding:0 10px;gap:8px;color:#b5bdc9;font-size:13px;">
+          <span>⌕</span> Buscar controles…
+        </div>
+        <span style="width:30px;height:30px;border-radius:50%;background:#1c1d1f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;">CD</span>
+      </div>
+    </header>
+
+    <main style="flex:1;overflow-y:auto;background:#ffffff;">
+      <div style="max-width:1160px;margin:0 auto;padding:32px 32px 80px;">
+
+        <!-- DASHBOARD (admin) -->
+        <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-bottom:28px;">
+            <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Panel general</h1>
+            <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Visión de administración del portafolio de evaluaciones DPC.</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+            <sc-for list="{{ dashStats }}" as="s" hint-placeholder-count="4">
+              <div style="border:1px solid #e4e7ec;border-radius:8px;padding:18px;background:#fff;">
+                <div style="font-size:12px;color:#8f99a8;margin-bottom:10px;">{{ s.label }}</div>
+                <div style="display:flex;align-items:baseline;gap:8px;">
+                  <span style="font-size:30px;font-weight:600;letter-spacing:-0.9px;">{{ s.value }}</span>
+                  <span style="font-size:12px;font-weight:500;color:{{ s.deltaColor }};">{{ s.delta }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:16px;align-items:start;">
+            <div style="border:1px solid #e4e7ec;border-radius:8px;background:#fff;padding:20px;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:16px;">Distribución por fase</div>
+              <sc-for list="{{ faseDist }}" as="f" hint-placeholder-count="4">
+                <div style="margin-bottom:14px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+                    <span style="color:#1c1d1f;font-weight:500;">{{ f.label }}</span>
+                    <span style="color:#8f99a8;">{{ f.n }}</span>
+                  </div>
+                  <div style="height:7px;background:#f3f4f6;border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ f.pctW }};background:{{ f.color }};border-radius:999px;"></div></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border:1px solid #e4e7ec;border-radius:8px;background:#fff;overflow:hidden;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #f3f4f6;">
+                <span style="font-size:14px;font-weight:600;">Actividad reciente</span>
+                <button onClick="{{ goEmpresas }}" style="font-family:inherit;font-size:13px;font-weight:500;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:8px;padding:6px 11px;cursor:pointer;">Ver todas →</button>
+              </div>
+              <sc-for list="{{ companies }}" as="c" hint-placeholder-count="6">
+                <div onClick="{{ c.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;border-bottom:1px solid #f3f4f6;cursor:pointer;">
+                  <div style="display:flex;align-items:center;gap:11px;min-width:0;">
+                    <span style="width:28px;height:28px;flex-shrink:0;border-radius:7px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#505967;">{{ c.in }}</span>
+                    <div style="min-width:0;">
+                      <div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ c.name }}</div>
+                      <div style="font-size:11px;color:#8f99a8;">{{ c.dias }} en proceso</div>
+                    </div>
+                  </div>
+                  <span style="font-size:12px;font-weight:500;color:{{ c.faseColor }};background:{{ c.faseBg }};border-radius:999px;padding:3px 9px;flex-shrink:0;">{{ c.faseLabel }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- EMPRESAS (listado) -->
+        <sc-if value="{{ isEmpresas }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;">
+            <div>
+              <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Empresas</h1>
+              <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Selecciona una empresa para trabajar su evaluación y certificación.</p>
+            </div>
+            <button onClick="{{ goRegistro }}" style="font-family:inherit;font-size:13px;font-weight:500;color:#fff;background:#1c1d1f;border:1px solid #1c1d1f;border-radius:10px;padding:9px 14px;cursor:pointer;flex-shrink:0;">+ Nueva empresa</button>
+          </div>
+          <div style="border:1px solid #e4e7ec;border-radius:8px;background:#fff;overflow:hidden;box-shadow:rgba(28,40,64,0.1) 0px 2px 3px -2px, rgba(28,40,64,0.04) 0px 4px 6px -2px;">
+            <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1.3fr 0.8fr 0.9fr 0.9fr;gap:12px;padding:10px 18px;border-bottom:1px solid #f3f4f6;font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;">
+              <span>Empresa</span><span>Rubro</span><span>Fase</span><span>Cumplimiento</span><span>Score</span><span>Riesgos</span><span>Tiempo</span>
+            </div>
+            <sc-for list="{{ companies }}" as="c" hint-placeholder-count="6">
+              <div onClick="{{ c.onClick }}" style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1.3fr 0.8fr 0.9fr 0.9fr;gap:12px;padding:14px 18px;border-bottom:1px solid #f3f4f6;align-items:center;cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:11px;min-width:0;">
+                  <span style="width:30px;height:30px;flex-shrink:0;border-radius:7px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#505967;">{{ c.in }}</span>
+                  <span style="font-size:14px;font-weight:500;letter-spacing:-0.1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ c.name }}</span>
+                </div>
+                <span style="font-size:13px;color:#6f7988;">{{ c.rubro }}</span>
+                <span><span style="font-size:12px;font-weight:500;color:{{ c.faseColor }};background:{{ c.faseBg }};border-radius:999px;padding:3px 9px;">{{ c.faseLabel }}</span></span>
+                <div style="display:flex;align-items:center;gap:9px;">
+                  <div style="flex:1;height:6px;background:#f3f4f6;border-radius:999px;overflow:hidden;max-width:90px;"><div style="height:100%;width:{{ c.pctW }};background:{{ c.pctColor }};border-radius:999px;"></div></div>
+                  <span style="font-size:13px;font-weight:600;width:34px;">{{ c.pct }}</span>
+                </div>
+                <span style="font-size:13px;font-weight:600;color:{{ c.scoreColor }};">{{ c.score }}</span>
+                <span style="font-size:13px;color:#6f7988;"><b style="color:#772322;font-weight:600;">{{ c.riesgos }}</b></span>
+                <span style="font-size:13px;color:#8f99a8;">{{ c.dias }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- RESUMEN (overview de empresa) -->
+        <sc-if value="{{ isResumen }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-bottom:24px;">
+            <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Resumen de la evaluación</div>
+            <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">{{ resumen.name }}</h1>
+            <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">{{ resumen.rubro }} · DPO {{ resumen.dpo }} · en proceso desde {{ resumen.inicio }} ({{ resumen.dias }})</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+            <div style="border:1px solid #e4e7ec;border-radius:8px;padding:18px;background:#fff;">
+              <div style="font-size:12px;color:#8f99a8;margin-bottom:10px;">Fase actual</div>
+              <span style="font-size:15px;font-weight:600;color:{{ resumen.faseColor }};background:{{ resumen.faseBg }};border-radius:999px;padding:4px 12px;">{{ resumen.faseLabel }}</span>
+            </div>
+            <div style="border:1px solid #e4e7ec;border-radius:8px;padding:18px;background:#fff;">
+              <div style="font-size:12px;color:#8f99a8;margin-bottom:10px;">Cumplimiento global</div>
+              <div style="display:flex;align-items:center;gap:9px;">
+                <span style="font-size:26px;font-weight:600;letter-spacing:-0.8px;">{{ resumen.pct }}</span>
+                <div style="flex:1;height:6px;background:#f3f4f6;border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ resumen.pctW }};background:{{ resumen.pctColor }};border-radius:999px;"></div></div>
+              </div>
+            </div>
+            <div style="border:1px solid #e4e7ec;border-radius:8px;padding:18px;background:#fff;">
+              <div style="font-size:12px;color:#8f99a8;margin-bottom:10px;">Complexity Score</div>
+              <div style="display:flex;align-items:baseline;gap:8px;">
+                <span style="font-size:26px;font-weight:600;letter-spacing:-0.8px;color:{{ resumen.scoreColor }};">{{ resumen.score }}</span>
+                <span style="font-size:12px;font-weight:500;color:#8f99a8;">{{ resumen.scoreTier }}</span>
+              </div>
+            </div>
+            <div style="border:1px solid #e4e7ec;border-radius:8px;padding:18px;background:#fff;">
+              <div style="font-size:12px;color:#8f99a8;margin-bottom:10px;">Controles / Riesgos</div>
+              <div style="display:flex;align-items:baseline;gap:8px;">
+                <span style="font-size:26px;font-weight:600;letter-spacing:-0.8px;">{{ resumen.ctrlDone }}/{{ resumen.ctrlTotal }}</span>
+                <span style="font-size:12px;font-weight:500;color:#772322;">{{ resumen.riesgos }} riesgos</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:start;">
+            <div style="border:1px solid #e4e7ec;border-radius:8px;background:#fff;overflow:hidden;">
+              <div style="padding:14px 18px;border-bottom:1px solid #f3f4f6;font-size:14px;font-weight:600;">Avance por dominio</div>
+              <sc-for list="{{ resumenDominios }}" as="d" hint-placeholder-count="14">
+                <div onClick="{{ d.onClick }}" style="display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid #f3f4f6;cursor:pointer;">
+                  <span style="font-size:10px;font-weight:600;color:#505967;background:#f3f4f6;border-radius:4px;padding:3px 6px;font-family:'Inter';flex-shrink:0;width:64px;text-align:center;">{{ d.code }}</span>
+                  <span style="font-size:13px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ d.name }}</span>
+                  <div style="width:90px;height:6px;background:#f3f4f6;border-radius:999px;overflow:hidden;flex-shrink:0;"><div style="height:100%;width:{{ d.pctW }};background:{{ d.pctColor }};border-radius:999px;"></div></div>
+                  <span style="font-size:12px;color:#8f99a8;width:34px;text-align:right;flex-shrink:0;">{{ d.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border:1px solid #e4e7ec;border-radius:8px;background:#fff;padding:20px;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:14px;">Próximos pasos</div>
+              <sc-for list="{{ resumenPasos }}" as="p" hint-placeholder-count="3">
+                <div onClick="{{ p.onClick }}" style="display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-top:1px solid #f3f4f6;cursor:pointer;">
+                  <span style="width:7px;height:7px;border-radius:50%;background:var(--accent,#407ff2);margin-top:6px;flex-shrink:0;"></span>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:13px;line-height:1.4;color:#1c1d1f;">{{ p.t }}</div>
+                    <span style="font-size:11px;color:#8f99a8;font-family:'Inter';">{{ p.dom }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isRegistro }}" hint-placeholder-val="{{ true }}"><div style="margin-bottom:28px;">
+  <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Alta de empresa · Paso 1 de 4</div>
+  <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Registrar y clasificar empresa</h1>
+  <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Selecciona el rubro corporativo: el sistema activa las leyes complementarias aplicables y calcula el Complexity Score.</p>
+</div>
+<div style="display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start;">
+  <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:24px;">
+    <div style="font-size:14px;font-weight:600;margin-bottom:16px;">Datos de la empresa</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;">
+      <label style="display:block;"><span style="display:block;font-size:12px;font-weight:500;color:#6f7988;margin-bottom:6px;">Razón social</span><input value="Clínica Andes Salud SpA" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:7px;padding:9px 12px;" /></label>
+      <label style="display:block;"><span style="display:block;font-size:12px;font-weight:500;color:#6f7988;margin-bottom:6px;">RUT</span><input value="76.421.905-K" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:7px;padding:9px 12px;" /></label>
+      <label style="display:block;"><span style="display:block;font-size:12px;font-weight:500;color:#6f7988;margin-bottom:6px;">N° de colaboradores</span><input value="480" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:7px;padding:9px 12px;" /></label>
+      <label style="display:block;"><span style="display:block;font-size:12px;font-weight:500;color:#6f7988;margin-bottom:6px;">Sucursales / oficinas</span><input value="6" style="width:100%;font-family:inherit;font-size:14px;color:#1c1d1f;background:#fff;border:1px solid #d3d8df;border-radius:7px;padding:9px 12px;" /></label>
+    </div>
+    <div style="font-size:14px;font-weight:600;margin-bottom:4px;">Rubro corporativo</div>
+    <div style="font-size:12px;color:#8f99a8;margin-bottom:12px;">Determina el multiplicador sectorial y los controles adicionales activados.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <sc-for list="{{ rubros }}" as="r" hint-placeholder-count="7"><button onClick="{{ r.onClick }}" style="{{ r.style }}">{{ r.label }}</button></sc-for>
+    </div>
+    <div style="margin-top:22px;border-top:1px solid #f3f4f6;padding-top:18px;">
+      <div style="font-size:12px;font-weight:500;color:#6f7988;margin-bottom:11px;">Leyes complementarias activadas automáticamente</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:12px;font-weight:500;color:#1c1d1f;background:#eaf1fe;border:1px solid #dbe7fd;border-radius:999px;padding:4px 11px;">Ley 21.719 · base</span>
+        <sc-for list="{{ comp.laws }}" as="l" hint-placeholder-count="3"><span style="font-size:12px;font-weight:500;color:#1c1d1f;background:#f3f4f6;border:1px solid #e4e7ec;border-radius:999px;padding:4px 11px;">{{ l }}</span></sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="background:#1c1d1f;border:1px solid #1c1d1f;border-radius:8px;padding:24px;color:#fff;">
+    <div style="font-size:12px;font-weight:500;color:#b5bdc9;margin-bottom:8px;">DPC Complexity Score</div>
+    <div style="display:flex;align-items:flex-end;gap:12px;">
+      <span style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:64px;line-height:0.9;font-weight:500;">{{ comp.final }}</span>
+      <span style="font-size:12px;font-weight:600;color:{{ comp.tierColor }};background:#fff;border-radius:999px;padding:4px 12px;margin-bottom:8px;">{{ comp.tier }}</span>
+    </div>
+    <div style="font-size:13px;color:#8f99a8;margin-top:10px;line-height:1.5;">Rubro <b style="color:#fff;">{{ comp.rubroLabel }}</b> · multiplicador ×{{ comp.mult }} ({{ comp.multPct }} sectorial sobre {{ comp.base }} pts base)</div>
+    <div style="height:1px;background:#2c2d30;margin:20px 0;"></div>
+    <div style="font-size:12px;font-weight:500;color:#b5bdc9;margin-bottom:14px;">Factores del score</div>
+    <sc-for list="{{ factors }}" as="f" hint-placeholder-count="7">
+      <div style="margin-bottom:11px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;"><span style="color:#d3d8df;">{{ f.label }}</span><span style="color:#fff;font-weight:600;">{{ f.pts }}</span></div>
+        <div style="height:5px;background:#2c2d30;border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ f.w }};background:#fff;opacity:0.85;border-radius:999px;"></div></div>
+      </div>
+    </sc-for>
+    <button onClick="{{ goChecklist }}" style="font-family:inherit;width:100%;margin-top:18px;font-size:14px;font-weight:500;color:#1c1d1f;background:#fff;border:none;border-radius:10px;padding:11px;cursor:pointer;">Iniciar assessment →</button>
+  </div>
+</div></sc-if>
+        <sc-if value="{{ isChecklist }}" hint-placeholder-val="{{ true }}"><div style="margin-bottom:24px;">
+  <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Checklist DPC · {{ current.name }}</div>
+  <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Checklist multiregulatorio</h1>
+  <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Diligenciamiento de controles cruzados con la Ley 21.719 y sus normas complementarias. Haz clic en el estado para actualizarlo.</p>
+</div>
+<div style="display:grid;grid-template-columns:284px 1fr;gap:20px;align-items:start;">
+  <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:10px;">
+    <div style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;padding:8px 10px 6px;">14 dominios · 8 por principio</div>
+    <sc-for list="{{ checkDomains }}" as="d" hint-placeholder-count="10">
+      <button onClick="{{ d.onClick }}" style="{{ d.style }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+          <span style="font-size:11px;font-weight:600;color:#505967;font-family:'Inter';">{{ d.code }}</span>
+          <span style="font-size:11px;color:#8f99a8;">{{ d.done }}/{{ d.total }}</span>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:#1c1d1f;margin-bottom:9px;line-height:1.3;">{{ d.name }}</div>
+        <div style="height:5px;background:#eef0f3;border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ d.pctW }};background:#1c1d1f;border-radius:999px;"></div></div>
+      </button>
+    </sc-for>
+  </div>
+  <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;overflow:hidden;box-shadow:rgba(28,40,64,0.1) 0px 2px 3px -2px, rgba(28,40,64,0.04) 0px 4px 6px -2px;">
+    <div style="padding:18px 20px;border-bottom:1px solid #f3f4f6;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:11px;font-weight:600;color:#505967;background:#f3f4f6;border-radius:4px;padding:3px 8px;font-family:'Inter';">{{ selDomain.code }}</span>
+        <span style="font-size:16px;font-weight:600;letter-spacing:-0.2px;">{{ selDomain.name }}</span>
+        <span style="margin-left:auto;font-size:11px;font-weight:600;color:#2c5bb8;background:#eef4ff;border:1px solid #dbe7fd;border-radius:999px;padding:3px 10px;">{{ selDomain.rel }}</span>
+      </div>
+      <p style="font-size:13px;color:#6f7988;line-height:1.5;margin:8px 0 0;">{{ selDomain.desc }}</p>
+    </div>
+    <sc-for list="{{ domainControls }}" as="c" hint-placeholder-count="3">
+      <div onClick="{{ c.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 20px;border-bottom:1px solid #f3f4f6;cursor:pointer;">
+        <div style="min-width:0;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="font-size:11px;font-weight:600;color:#8f99a8;font-family:'Inter';">{{ c.code }}</span>
+            <sc-for list="{{ c.laws }}" as="lw" hint-placeholder-count="2"><span style="font-size:11px;color:#6f7988;background:#f3f4f6;border-radius:4px;padding:2px 7px;">{{ lw }}</span></sc-for>
+          </div>
+          <div style="font-size:14px;font-weight:500;color:#1c1d1f;letter-spacing:-0.1px;">{{ c.name }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+          <button onClick="{{ c.onCycle }}" style="{{ c.pillStyle }}">{{ c.pillLabel }}</button>
+          <span style="color:#c9ced6;font-size:18px;">›</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div></sc-if>
+        <sc-if value="{{ isControl }}" hint-placeholder-val="{{ true }}"><button onClick="{{ goChecklist }}" style="font-family:inherit;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:#6f7988;background:transparent;border:none;cursor:pointer;padding:0;margin-bottom:18px;">← Volver al checklist</button>
+<div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
+  <div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="font-size:12px;font-weight:600;color:#505967;background:#f3f4f6;border-radius:4px;padding:4px 9px;font-family:'Inter';">{{ ctrl.code }}</span>
+      <span style="font-size:13px;color:#8f99a8;">{{ ctrl.domainName }}</span>
+    </div>
+    <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:32px;line-height:1.15;letter-spacing:-0.5px;margin:0 0 24px;">{{ ctrl.name }}</h1>
+    <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;overflow:hidden;">
+      <div style="padding:18px 20px;border-bottom:1px solid #f3f4f6;">
+        <div style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">Objetivo del control</div>
+        <p style="font-size:14px;line-height:1.6;color:#1c1d1f;margin:0 0 12px;font-weight:500;">{{ ctrl.objetivo }}</p>
+        <p style="font-size:14px;line-height:1.65;color:#505967;margin:0;">{{ ctrl.detalle }}</p>
+      </div>
+      <div style="padding:18px 20px;border-bottom:1px solid #f3f4f6;">
+        <div style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:12px;">Qué se evalúa · criterios de verificación</div>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <sc-for list="{{ ctrl.criterios }}" as="cr" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;">
+              <span style="width:20px;height:20px;flex-shrink:0;border-radius:6px;background:#f3f4f6;color:#505967;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;margin-top:1px;">{{ cr.num }}</span>
+              <span style="font-size:14px;line-height:1.55;color:#1c1d1f;">{{ cr.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="padding:18px 20px;border-bottom:1px solid #f3f4f6;">
+        <div style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">Fundamento legal primario</div>
+        <p style="font-size:14px;line-height:1.6;color:#1c1d1f;margin:0;">{{ ctrl.fp }}</p>
+      </div>
+      <div style="padding:18px 20px;border-bottom:1px solid #f3f4f6;">
+        <div style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">Fundamento legal conectado</div>
+        <p style="font-size:14px;line-height:1.6;color:#1c1d1f;margin:0;">{{ ctrl.fc }}</p>
+      </div>
+      <div style="padding:18px 20px;">
+        <div style="font-size:11px;font-weight:600;color:#772322;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:8px;">Riesgo mitigado</div>
+        <p style="font-size:14px;line-height:1.6;color:#1c1d1f;margin:0;">{{ ctrl.riesgo }}</p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:20px;margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:12px;">Métrica de resultado</div>
+      <button onClick="{{ ctrl.onCycle }}" style="font-family:inherit;width:100%;display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:600;color:{{ ctrl.statusColor }};background:{{ ctrl.statusBg }};border:1px solid {{ ctrl.statusBorder }};border-radius:10px;padding:12px 16px;cursor:pointer;">
+        <span>{{ ctrl.statusLabel }}</span><span style="font-size:12px;font-weight:500;opacity:0.7;">cambiar ↻</span>
+      </button>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;">
+        <sc-for list="{{ ctrl.laws }}" as="lw" hint-placeholder-count="2"><span style="font-size:11px;color:#6f7988;background:#f3f4f6;border-radius:4px;padding:3px 8px;">{{ lw }}</span></sc-for>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <span style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;">Evidencias requeridas</span>
+        <span style="font-size:12px;color:#6f7988;">{{ ctrl.evDone }}/{{ ctrl.evTotal }}</span>
+      </div>
+      <sc-for list="{{ ctrl.evidencias }}" as="e" hint-placeholder-count="3">
+        <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-top:1px solid #f3f4f6;">
+          <span style="width:7px;height:7px;border-radius:50%;background:{{ e.color }};margin-top:6px;flex-shrink:0;"></span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;line-height:1.4;color:#1c1d1f;margin-bottom:6px;">{{ e.n }}</div>
+            <span style="font-size:11px;font-weight:600;color:{{ e.color }};background:{{ e.bg }};border-radius:4px;padding:2px 8px;">{{ e.label }}</span>
+          </div>
+        </div>
+      </sc-for>
+      <button style="font-family:inherit;width:100%;margin-top:14px;font-size:13px;font-weight:500;color:#1c1d1f;background:#fff;border:1px dashed #d3d8df;border-radius:10px;padding:10px;cursor:pointer;">+ Cargar evidencia</button>
+    </div>
+  </div>
+</div></sc-if>
+        <sc-if value="{{ isRiesgos }}" hint-placeholder-val="{{ true }}"><div style="margin-bottom:24px;">
+  <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Gap Analysis · {{ current.name }}</div>
+  <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Riesgos & matriz de brechas</h1>
+  <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Riesgos tipificados detectados durante la evaluación, clasificados por impacto y probabilidad.</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:20px;align-items:start;">
+  <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:20px;">
+    <div style="font-size:14px;font-weight:600;margin-bottom:16px;">Matriz de riesgo</div>
+    <div style="display:grid;grid-template-columns:64px 1fr 1fr 1fr;gap:6px;">
+      <div></div>
+      <sc-for list="{{ matrixCols }}" as="col" hint-placeholder-count="3"><div style="font-size:10px;font-weight:600;color:#8f99a8;text-align:center;text-transform:uppercase;letter-spacing:0.2px;padding-bottom:4px;">{{ col }}</div></sc-for>
+      <sc-for list="{{ matrixRows }}" as="row" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;justify-content:flex-end;font-size:10px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.2px;padding-right:8px;">{{ row.label }}</div>
+        <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="3">
+          <div style="background:{{ cell.bg }};border-radius:8px;min-height:64px;padding:8px;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start;">
+            <sc-for list="{{ cell.codes }}" as="cd" hint-placeholder-count="1"><span style="font-size:11px;font-weight:600;color:#1c1d1f;background:rgba(255,255,255,0.75);border-radius:5px;padding:3px 7px;height:fit-content;">{{ cd }}</span></sc-for>
+          </div>
+        </sc-for>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:16px;font-size:10px;color:#8f99a8;">
+      <span style="width:12px;height:12px;border-radius:3px;background:#e9f2ec;"></span> Bajo
+      <span style="width:12px;height:12px;border-radius:3px;background:#f6f0df;margin-left:8px;"></span> Medio
+      <span style="width:12px;height:12px;border-radius:3px;background:#f6e9e8;margin-left:8px;"></span> Alto
+      <span style="margin-left:auto;">Eje vertical: probabilidad</span>
+    </div>
+  </div>
+  <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:1px solid #f3f4f6;font-size:14px;font-weight:600;">Catálogo de riesgos identificados</div>
+    <sc-for list="{{ risks }}" as="r" hint-placeholder-count="7">
+      <div style="padding:15px 20px;border-bottom:1px solid #f3f4f6;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:7px;">
+          <span style="font-size:11px;font-weight:700;color:#1c1d1f;font-family:'Inter';">{{ r.code }}</span>
+          <span style="font-size:11px;color:#6f7988;background:#f3f4f6;border-radius:4px;padding:2px 7px;">{{ r.tipo }}</span>
+          <span style="font-size:11px;color:#8f99a8;background:#f3f4f6;border-radius:4px;padding:2px 7px;font-family:'Inter';">{{ r.dominio }}</span>
+          <span style="margin-left:auto;font-size:11px;font-weight:600;color:{{ r.impColor }};background:{{ r.impBg }};border-radius:999px;padding:3px 10px;">{{ r.imp }}</span>
+        </div>
+        <p style="font-size:13px;line-height:1.5;color:#1c1d1f;margin:0;">{{ r.desc }}</p>
+      </div>
+    </sc-for>
+  </div>
+</div></sc-if>
+        <sc-if value="{{ isSoluciones }}" hint-placeholder-val="{{ true }}"><div style="margin-bottom:24px;">
+  <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Catálogo de soluciones</div>
+  <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Remedios parametrizados</h1>
+  <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Para cada brecha, un conjunto de alternativas de mitigación previamente validadas. El cliente elige según rubro, tamaño y presupuesto.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;">
+  <sc-for list="{{ solutions }}" as="s" hint-placeholder-count="3">
+    <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;overflow:hidden;">
+      <div style="padding:18px 20px;border-bottom:1px solid #f3f4f6;background:#fbfbfc;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;">Problema identificado</span>
+          <span style="font-size:11px;color:#6f7988;background:#f3f4f6;border-radius:4px;padding:2px 7px;font-family:'Inter';">{{ s.dominio }}</span>
+          <span style="font-size:11px;font-weight:600;color:#772322;background:#f6e9e8;border-radius:4px;padding:2px 7px;font-family:'Inter';">{{ s.riesgo }}</span>
+        </div>
+        <div style="font-size:15px;font-weight:600;letter-spacing:-0.2px;color:#1c1d1f;">{{ s.problema }}</div>
+      </div>
+      <div style="padding:16px 20px;">
+        <div style="font-size:12px;font-weight:500;color:#6f7988;margin-bottom:12px;">Alternativas de solución predefinidas</div>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <sc-for list="{{ s.alts }}" as="a" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;">
+              <span style="width:22px;height:22px;flex-shrink:0;border-radius:6px;background:#1c1d1f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;">{{ a.num }}</span>
+              <span style="font-size:14px;line-height:1.5;color:#1c1d1f;">{{ a.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+</div></sc-if>
+        <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}"><div style="margin-bottom:24px;">
+  <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Plan de adecuación · {{ current.name }}</div>
+  <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Seguimiento de remediación</h1>
+  <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Tareas del plan de acción con responsable, plazo y avance hacia el cierre de brechas.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+  <sc-for list="{{ planSummary }}" as="s" hint-placeholder-count="4">
+    <div style="border:1px solid #e4e7ec;border-radius:8px;padding:16px;background:#fff;">
+      <div style="font-size:12px;color:#8f99a8;margin-bottom:8px;">{{ s.l }}</div>
+      <div style="font-size:28px;font-weight:600;letter-spacing:-0.8px;">{{ s.v }}</div>
+    </div>
+  </sc-for>
+</div>
+<div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;overflow:hidden;">
+  <div style="display:grid;grid-template-columns:2.2fr 1fr 1.2fr 1fr 1.1fr 1fr;gap:12px;padding:12px 20px;border-bottom:1px solid #f3f4f6;font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;">
+    <span>Tarea</span><span>Dominio</span><span>Responsable</span><span>Vence</span><span>Avance</span><span>Estado</span>
+  </div>
+  <sc-for list="{{ plan }}" as="p" hint-placeholder-count="7">
+    <div style="display:grid;grid-template-columns:2.2fr 1fr 1.2fr 1fr 1.1fr 1fr;gap:12px;padding:14px 20px;border-bottom:1px solid #f3f4f6;align-items:center;">
+      <span style="font-size:14px;font-weight:500;color:#1c1d1f;letter-spacing:-0.1px;">{{ p.tarea }}</span>
+      <span style="font-size:12px;color:#6f7988;font-family:'Inter';">{{ p.dominio }}</span>
+      <span style="font-size:13px;color:#6f7988;">{{ p.resp }}</span>
+      <span style="font-size:13px;color:#6f7988;">{{ p.vence }}</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;height:6px;background:#f3f4f6;border-radius:999px;overflow:hidden;max-width:70px;"><div style="height:100%;width:{{ p.progW }};background:{{ p.progColor }};border-radius:999px;"></div></div>
+        <span style="font-size:12px;font-weight:600;">{{ p.progW }}</span>
+      </div>
+      <span><span style="font-size:12px;font-weight:500;color:{{ p.estadoColor }};background:{{ p.estadoBg }};border-radius:999px;padding:3px 10px;">{{ p.estado }}</span></span>
+    </div>
+  </sc-for>
+</div></sc-if>
+        <sc-if value="{{ isEvidencias }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;">
+  <div>
+    <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Repositorio · {{ current.name }}</div>
+    <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Evidencias documentales</h1>
+    <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Repositorio centralizado y auditable de la prueba de cumplimiento, indexada por control.</p>
+  </div>
+  <button style="font-family:inherit;font-size:13px;font-weight:500;color:#fff;background:#1c1d1f;border:1px solid #1c1d1f;border-radius:10px;padding:9px 14px;cursor:pointer;flex-shrink:0;">+ Subir evidencia</button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+  <sc-for list="{{ evSummary }}" as="s" hint-placeholder-count="4">
+    <div style="border:1px solid #e4e7ec;border-radius:8px;padding:16px;background:#fff;">
+      <div style="font-size:12px;color:#8f99a8;margin-bottom:8px;">{{ s.l }}</div>
+      <div style="font-size:28px;font-weight:600;letter-spacing:-0.8px;">{{ s.v }}</div>
+    </div>
+  </sc-for>
+</div>
+<div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;overflow:hidden;">
+  <div style="display:grid;grid-template-columns:2.4fr 1.1fr 1fr 1fr 0.8fr 1fr;gap:12px;padding:12px 20px;border-bottom:1px solid #f3f4f6;font-size:11px;font-weight:600;color:#8f99a8;text-transform:uppercase;letter-spacing:0.3px;">
+    <span>Documento</span><span>Control</span><span>Tipo</span><span>Fecha</span><span>Tamaño</span><span>Estado</span>
+  </div>
+  <sc-for list="{{ evidences }}" as="e" hint-placeholder-count="7">
+    <div style="display:grid;grid-template-columns:2.4fr 1.1fr 1fr 1fr 0.8fr 1fr;gap:12px;padding:14px 20px;border-bottom:1px solid #f3f4f6;align-items:center;">
+      <div style="display:flex;align-items:center;gap:11px;min-width:0;">
+        <span style="width:28px;height:28px;flex-shrink:0;border-radius:7px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;color:#6f7988;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5"></path><path d="M6 3h8l5 5v11a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z"></path></svg></span>
+        <span style="font-size:13px;font-weight:500;color:#1c1d1f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ e.name }}</span>
+      </div>
+      <span style="font-size:12px;color:#6f7988;font-family:'Inter';">{{ e.control }}</span>
+      <span style="font-size:13px;color:#6f7988;">{{ e.tipo }}</span>
+      <span style="font-size:13px;color:#6f7988;">{{ e.fecha }}</span>
+      <span style="font-size:13px;color:#8f99a8;">{{ e.size }}</span>
+      <span><span style="font-size:12px;font-weight:500;color:{{ e.estColor }};background:{{ e.estBg }};border-radius:999px;padding:3px 10px;">{{ e.estado }}</span></span>
+    </div>
+  </sc-for>
+</div></sc-if>
+        <sc-if value="{{ isCertificacion }}" hint-placeholder-val="{{ true }}"><div style="margin-bottom:24px;">
+  <div style="font-size:13px;font-weight:600;color:var(--accent,#407ff2);margin-bottom:8px;">Certificación DPC · {{ current.name }}</div>
+  <h1 style="font-family:var(--serif,'Newsreader',Georgia,serif);font-weight:500;font-size:40px;line-height:1.1;letter-spacing:-0.6px;margin:0 0 6px;">Certificado privado de cumplimiento</h1>
+  <p style="font-size:15px;color:#6f7988;margin:0;letter-spacing:-0.2px;">Emisión y verificación criptográfica del sello DPC, respaldado por el ciclo de aseguramiento completo.</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+  <div>
+    <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:22px;margin-bottom:16px;">
+      <div style="font-size:14px;font-weight:600;margin-bottom:18px;">Ciclo de aseguramiento</div>
+      <sc-for list="{{ certPhases }}" as="p" hint-placeholder-count="4">
+        <div style="display:flex;align-items:flex-start;gap:14px;padding-bottom:18px;">
+          <span style="width:28px;height:28px;flex-shrink:0;border-radius:50%;background:{{ p.stBg }};color:{{ p.stColor }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">{{ p.num }}</span>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:14px;font-weight:600;color:#1c1d1f;">{{ p.name }}</span>
+              <span style="font-size:11px;font-weight:500;color:{{ p.stColor }};background:{{ p.stBg }};border-radius:999px;padding:2px 9px;">{{ p.stLabel }}</span>
+            </div>
+            <p style="font-size:12px;line-height:1.5;color:#8f99a8;margin:4px 0 0;">{{ p.landing }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="background:#fff;border:1px solid #e4e7ec;border-radius:8px;padding:22px;">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;">Resumen de controles</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+        <div style="border:1px solid #e9f2ec;background:#f6faf7;border-radius:8px;padding:14px;"><div style="font-size:24px;font-weight:600;color:#075a39;letter-spacing:-0.6px;">{{ cert.cumple }}</div><div style="font-size:12px;color:#6f7988;margin-top:2px;">Cumple</div></div>
+        <div style="border:1px solid #f6f0df;background:#fbf8ef;border-radius:8px;padding:14px;"><div style="font-size:24px;font-weight:600;color:#705500;letter-spacing:-0.6px;">{{ cert.parcial }}</div><div style="font-size:12px;color:#6f7988;margin-top:2px;">Parcial</div></div>
+        <div style="border:1px solid #f6e9e8;background:#fbf3f2;border-radius:8px;padding:14px;"><div style="font-size:24px;font-weight:600;color:#772322;letter-spacing:-0.6px;">{{ cert.no }}</div><div style="font-size:12px;color:#6f7988;margin-top:2px;">No cumple</div></div>
+      </div>
+      <div style="font-size:12px;color:#8f99a8;margin-top:14px;">{{ cert.totalCtrl }} controles evaluados · {{ cert.pct }} de cumplimiento global</div>
+    </div>
+  </div>
+  <div style="background:#1c1d1f;border-radius:12px;padding:36px 32px;color:#fff;position:sticky;top:80px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div style="width:24px;height:24px;border-radius:7px;background:#fff;color:#1c1d1f;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">D</div>
+        <span style="font-size:14px;font-weight:600;">DPC Certification</span>
+      </div>
+      <span style="font-size:11px;font-weight:500;color:{{ cert.estadoColor }};background:{{ cert.estadoBg }};border-radius:999px;padding:4px 11px;">{{ cert.estadoLabel }}</span>
+    </div>
+    <div style="width:72px;height:72px;border-radius:50%;border:2px solid #34353a;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a6 6 0 100-12 6 6 0 000 12z"></path><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"></path></svg>
+    </div>
+    <div style="font-size:12px;color:#8f99a8;margin-bottom:6px;">Certificado de cumplimiento otorgado a</div>
+    <div style="font-family:var(--serif,'Newsreader',Georgia,serif);font-size:28px;font-weight:500;letter-spacing:-0.4px;margin-bottom:4px;">{{ cert.company }}</div>
+    <div style="font-size:13px;color:#8f99a8;margin-bottom:28px;">Rubro {{ cert.rubro }} · Estándar DPC v0.3</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;border-top:1px solid #34353a;padding-top:20px;">
+      <div><div style="font-size:11px;color:#8f99a8;margin-bottom:4px;">Código</div><div style="font-size:13px;font-weight:600;font-family:'Inter';">{{ cert.code }}</div></div>
+      <div><div style="font-size:11px;color:#8f99a8;margin-bottom:4px;">Cumplimiento</div><div style="font-size:13px;font-weight:600;">{{ cert.pct }}</div></div>
+      <div><div style="font-size:11px;color:#8f99a8;margin-bottom:4px;">Emitido</div><div style="font-size:13px;font-weight:600;">{{ cert.fecha }}</div></div>
+      <div><div style="font-size:11px;color:#8f99a8;margin-bottom:4px;">Vence</div><div style="font-size:13px;font-weight:600;">{{ cert.vence }}</div></div>
+    </div>
+    <div style="border-top:1px solid #34353a;margin-top:20px;padding-top:16px;">
+      <div style="font-size:11px;color:#8f99a8;margin-bottom:4px;">Hash de verificación</div>
+      <div style="font-size:12px;font-family:'Inter';color:#d3d8df;word-break:break-all;">{{ cert.hash }}</div>
+    </div>
+    <button style="font-family:inherit;width:100%;margin-top:24px;font-size:14px;font-weight:500;color:#1c1d1f;background:#fff;border:none;border-radius:10px;padding:11px;cursor:pointer;">Verificar certificado ↗</button>
+  </div>
+</div></sc-if>
+
+      </div>
+    </main>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:800},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1c1d1f&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#407ff2&quot;,&quot;#075a39&quot;,&quot;#1c1d1f&quot;],&quot;section&quot;:&quot;Estilo&quot;},&quot;serifHeadlines&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Estilo&quot;},&quot;showComplexityScore&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Datos&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.DOMAINS = [
+      // --- Dominios por principio (Art. 3 Ley 21.719) ---
+      {code:'DPC-LIC', name:'Licitud y Lealtad', esPrincipio:true, rel:'Licitud y lealtad', desc:'Toda operación se apoya en una base legal válida (consentimiento, contrato, obligación legal, interés legítimo) y se trata al titular de forma leal. Cruce con Ley 19.496 (SERNAC).'},
+      {code:'DPC-FIN', name:'Finalidad', esPrincipio:true, rel:'Finalidad', desc:'Los datos se recolectan para fines determinados, explícitos y legítimos, y no se reutilizan para fines incompatibles. Incluye conservación limitada y borrado al cumplirse la finalidad.'},
+      {code:'DPC-PRO', name:'Proporcionalidad', esPrincipio:true, rel:'Proporcionalidad', desc:'Solo se tratan los datos estrictamente necesarios para la finalidad declarada (minimización). Se evita la recolección preventiva o excesiva.'},
+      {code:'DPC-CAL', name:'Calidad', esPrincipio:true, rel:'Calidad', desc:'Los datos se mantienen exactos, completos y actualizados, con mecanismos de corrección y depuración a lo largo de su ciclo de vida.'},
+      {code:'DPC-RES', name:'Responsabilidad', esPrincipio:true, rel:'Responsabilidad (accountability)', desc:'La organización puede demostrar su cumplimiento: gobernanza, DPD, Modelo de Prevención de Infracciones (MPI) y evidencia trazable. Cruce con ISO 27001.'},
+      {code:'DPC-SEG', name:'Seguridad', esPrincipio:true, rel:'Seguridad', desc:'Medidas técnicas y organizativas adecuadas al riesgo: cifrado, control de accesos y bitácoras. Cruce con Ley 21.459 (Delitos Informáticos) y exigencias CMF.'},
+      {code:'DPC-TRA', name:'Transparencia e Información', esPrincipio:true, rel:'Transparencia e información', desc:'El deber de información del Art. 14 ter: política de tratamiento pública, con fecha y versión, e información clara al titular sobre el uso de sus datos.'},
+      {code:'DPC-CON', name:'Confidencialidad', esPrincipio:true, rel:'Confidencialidad', desc:'Deber de secreto de quienes acceden a los datos, que se mantiene incluso terminada la relación. Acuerdos de confidencialidad y capacitación.'},
+      // --- Dominios complementarios (obligaciones operativas) ---
+      {code:'DPC-INV', name:'Inventario y RAT', esPrincipio:false, rel:'Registro de Actividades de Tratamiento', desc:'Levantamiento del inventario de datos y del Registro de Actividades de Tratamiento (RAT): qué se trata, con qué finalidad y base, con quién se comparte y por cuánto tiempo. Mapeo de flujos.'},
+      {code:'DPC-DER', name:'Derechos de los Titulares', esPrincipio:false, rel:'Derechos ARCOP', desc:'Canal y procedimiento para ejercer los derechos de acceso, rectificación, supresión, oposición y portabilidad, con plazos auditables (30 días).'},
+      {code:'DPC-SEN', name:'Datos Sensibles y Grupos Especiales', esPrincipio:false, rel:'Régimen reforzado', desc:'Protección reforzada para datos sensibles y de NNA. Cruce estricto con Ley 20.584 (Salud), biometría laboral y datos económico-financieros.'},
+      {code:'DPC-TER', name:'Encargados y Transferencias', esPrincipio:false, rel:'Encargados y transferencias internacionales', desc:'Evaluación de encargados del tratamiento, contratos de encargo (DPA) y transferencias internacionales con garantías de adecuación.'},
+      {code:'DPC-INC', name:'Incidentes y Brechas', esPrincipio:false, rel:'Notificación de brechas (72 h)', desc:'Detección, contención y notificación de brechas a la Agencia dentro de 72 horas y a los titulares cuando corresponda. Alineación con la Ley 21.663 (ANCI).'},
+      {code:'DPC-EIA', name:'Evaluación de Impacto y Decisiones Automatizadas', esPrincipio:false, rel:'EIPD · perfilamiento e IA', desc:'Evaluación de Impacto (EIPD) para tratamientos de alto riesgo, y salvaguardas para decisiones automatizadas y perfilamiento: supervisión humana y explicabilidad.'},
+    ];
+    const dev = (arr)=>arr;
+    this.CONTROLS = [
+      {code:'DPC-RES-001', domain:'DPC-RES', name:'Designación formal del Delegado de Protección de Datos (DPD)', status:'parcial', laws:['Ley 21.719'], objetivo:'Formalizar el rol del DPD mediante resolución o acta de directorio, asegurando autonomía y canales de reporte directos a la alta dirección.',
+        detalle:'Este control verifica que la organización cuente con una figura responsable, formalmente designada y con autoridad real, para supervisar el cumplimiento en materia de datos personales. No basta con que alguien "se encargue" del tema: la Ley exige poder demostrar quién responde, con qué mandato y ante quién reporta. Se evalúa la existencia del acto formal de nombramiento, la independencia funcional del cargo y la asignación de recursos suficientes para ejercerlo.',
+        criterios:['Existe un acto formal (acta o resolución) que designa nominalmente al DPD.','El DPD reporta directamente a la alta dirección, sin conflictos de interés con áreas que tratan datos.','El descriptor de cargo define funciones, atribuciones y líneas de escalamiento.','Se asignó presupuesto y tiempo dedicado para ejercer el rol.'],
+        fp:'Ley N° 21.719 — Principio de responsabilidad demostrable.', fc:'Lineamientos de gobernanza APDP.', riesgo:'Ausencia de responsable formal; imposibilidad de acreditar gobernanza ante fiscalización.', evidencias:[{n:'Acta de nombramiento del DPD firmada por directorio', estado:'validada'},{n:'Descriptor de cargo con líneas de reporte', estado:'parcial'},{n:'Asignación presupuestaria explícita', estado:'faltante'}]},
+      {code:'DPC-RES-002', domain:'DPC-RES', name:'Política corporativa de gobierno de datos aprobada por directorio', status:'cumple', laws:['Ley 21.719','ISO 27001'], objetivo:'Contar con una política marco de tratamiento de datos personales, revisada y aprobada al máximo nivel.',
+        detalle:'Se evalúa que exista un documento rector, aprobado al máximo nivel de la organización, que fije los principios, roles y reglas para tratar datos personales. Esta política es el "paraguas" del que dependen todos los demás procedimientos: define qué se puede hacer con los datos, quién decide y bajo qué criterios. La revisión comprueba que sea vigente, versionada, difundida al personal y respaldada por una decisión formal del directorio.',
+        criterios:['La política cubre principios, roles, finalidades y reglas de tratamiento.','Está aprobada formalmente por el directorio o la máxima autoridad.','Se encuentra versionada y con fecha de última revisión vigente.','Fue comunicada y es accesible para todo el personal.'],
+        fp:'Ley N° 21.719 — Deberes del responsable.', fc:'ISO/IEC 27001 (Anexo A).', riesgo:'Gestión informal sin respaldo documental de decisiones.', evidencias:[{n:'Política de tratamiento vigente y versionada', estado:'validada'},{n:'Acta de aprobación de directorio', estado:'validada'}]},
+      {code:'DPC-INV-001', domain:'DPC-INV', name:'Registro de Actividades de Tratamiento (RAT)', status:'parcial', laws:['Ley 21.719'], objetivo:'Levantar un inventario exhaustivo de bases de datos: qué se recolecta, finalidad, ubicación, accesos y plazos de retención.',
+        detalle:'Este control confirma que la organización sabe exactamente qué datos personales trata, para qué, dónde residen y quién accede a ellos. El RAT es la base de todo el sistema de cumplimiento: sin él es imposible responder derechos, evaluar riesgos o notificar brechas. Se evalúa la cobertura del inventario (que no falten procesos), su nivel de detalle y su actualización periódica frente a cambios en el negocio.',
+        criterios:['El RAT cubre todos los procesos de negocio que tratan datos personales.','Cada actividad registra finalidad, categorías de datos, base de licitud y plazo de retención.','Se identifican sistemas, ubicaciones y responsables de cada base.','El registro se actualiza ante nuevos tratamientos o cambios relevantes.'],
+        fp:'Ley N° 21.719 — Registro de actividades.', fc:'Modelo de madurez APDP (Normativa interna).', riesgo:'Falta de visibilidad sobre flujos y categorías de datos tratados internamente.', evidencias:[{n:'Matriz RAT por proceso de negocio', estado:'parcial'},{n:'Diagrama de flujos de datos', estado:'faltante'}]},
+      {code:'DPC-INV-002', domain:'DPC-INV', name:'Mapeo del ciclo de vida y flujos transfronterizos', status:'no', laws:['Ley 21.719'], objetivo:'Documentar el ciclo de vida completo del dato desde su recolección hasta su eliminación, incluyendo transferencias.',
+        detalle:'Se evalúa si la organización tiene trazado el recorrido completo de cada dato: cómo se recolecta, por qué sistemas pasa, con quién se comparte y cuándo se elimina — con especial foco en las salidas al extranjero. Muchas empresas transfieren datos a proveedores cloud o casas matrices sin advertirlo. El control verifica que esos flujos estén identificados y amparados por un mecanismo de transferencia válido.',
+        criterios:['Existe un diagrama del ciclo de vida del dato de extremo a extremo.','Se identifican todas las transferencias hacia terceros y hacia el extranjero.','Cada transferencia internacional cuenta con un mecanismo de resguardo válido.','Se documenta el punto y método de eliminación al final del ciclo.'],
+        fp:'Ley N° 21.719 — Transferencia internacional.', fc:'—', riesgo:'Transferencias no controladas hacia encargados en el extranjero.', evidencias:[{n:'Inventario de flujos transfronterizos', estado:'faltante'}]},
+      {code:'DPC-LIC-001', domain:'DPC-LIC', name:'Validación de bases de licitud y consentimiento', status:'parcial', laws:['Ley 21.719','Ley 19.496'], objetivo:'Revisar términos, condiciones y formularios: el consentimiento debe ser libre, informado, específico, explícito y revocable.',
+        detalle:'Este control determina si cada tratamiento de datos tiene un fundamento legal que lo habilite. No todo requiere consentimiento — pero cuando se usa, debe cumplir estándares estrictos. Se revisan formularios, casillas, políticas de privacidad y flujos de captura para confirmar que el consentimiento sea genuino y que existan mecanismos reales para revocarlo. Se cruza además con las exigencias de SERNAC en materia de cookies y perfilamiento comercial.',
+        criterios:['Cada finalidad de tratamiento tiene identificada su base de licitud.','El consentimiento se obtiene de forma libre, informada, específica y explícita.','Existe un mecanismo operativo para revocar el consentimiento.','Los avisos de privacidad y cookies cumplen las exigencias de la Ley 19.496.'],
+        fp:'Ley N° 21.719 — Bases de licitud.', fc:'Ley N° 19.496 (SERNAC) — cookies y perfilamiento comercial.', riesgo:'Tratamiento sin base legal válida; sanciones por consentimiento defectuoso.', evidencias:[{n:'Inventario de bases de licitud por finalidad', estado:'parcial'},{n:'Formularios de consentimiento actualizados', estado:'parcial'}]},
+      {code:'DPC-DER-001', domain:'DPC-DER', name:'Canal habilitado para derechos ARSOP', status:'cumple', laws:['Ley 21.719'], objetivo:'Habilitar un canal formal exclusivo para Acceso, Rectificación, Supresión, Oposición y Portabilidad.',
+        detalle:'Se evalúa si los titulares de datos pueden ejercer efectivamente sus derechos y si la organización está preparada para responderlos dentro de plazo. No basta con un correo genérico: debe existir un canal identificable, un procedimiento de verificación de identidad y un flujo interno que garantice respuesta oportuna y trazable a cada solicitud.',
+        criterios:['Existe un canal formal, visible y exclusivo para solicitudes ARSOP.','Hay un procedimiento de verificación de identidad del solicitante.','Se cumplen los plazos legales de respuesta con registro de cada gestión.','El flujo interno asigna responsables para tramitar cada tipo de derecho.'],
+        fp:'Ley N° 21.719 — Derechos del titular.', fc:'—', riesgo:'Incumplimiento de plazos legales de respuesta a titulares.', evidencias:[{n:'Formulario web ARSOP publicado', estado:'validada'},{n:'Protocolo de verificación de identidad', estado:'validada'}]},
+      {code:'DPC-SEN-001', domain:'DPC-SEN', name:'Medidas reforzadas para datos biométricos laborales', status:'no', laws:['Código del Trabajo','Ley 21.719'], objetivo:'Aplicar protección especial a datos biométricos de control de asistencia conforme a los dictámenes de la Dirección del Trabajo.',
+        detalle:'Los datos biométricos (huella, rostro) son datos sensibles y su uso para control de asistencia está especialmente regulado. Este control verifica que, cuando se emplea biometría laboral, existan resguardos reforzados: consentimiento o base habilitante adecuada, cifrado irreversible de las plantillas y alternativas para quien no desee entregar su biometría, conforme a los dictámenes de la Dirección del Trabajo.',
+        criterios:['El tratamiento biométrico está justificado y documentado en anexo contractual.','Las plantillas biométricas se almacenan cifradas de forma irreversible (hash).','Existe una alternativa de marcación para trabajadores que no consientan.','Se define enrolamiento controlado y eliminación al término de la relación laboral.'],
+        fp:'Ley N° 21.719 — Datos sensibles.', fc:'Código del Trabajo y dictámenes DT.', riesgo:'Uso de biometría sin resguardo del dato sensible del trabajador.', evidencias:[{n:'Anexo de contrato sobre tratamiento biométrico', estado:'faltante'},{n:'Evidencia de cifrado irreversible (hash) de templates', estado:'faltante'}]},
+      {code:'DPC-SEG-001', domain:'DPC-SEG', name:'Control de accesos y trazabilidad (logs inalterables)', status:'parcial', laws:['Ley 21.459','Ley 21.719'], objetivo:'Implementar políticas de mínimo privilegio y bitácoras inalterables de consulta, modificación o eliminación de datos.',
+        detalle:'Este control comprueba que solo las personas autorizadas accedan a los datos, con el mínimo privilegio necesario, y que toda acción quede registrada de forma inalterable. La trazabilidad permite reconstruir quién hizo qué ante un incidente o una fiscalización. Se evalúa la existencia de un modelo de roles (RBAC), la revisión periódica de accesos y la integridad de las bitácoras de auditoría.',
+        criterios:['Los accesos se otorgan por rol bajo el principio de mínimo privilegio.','Se registran consultas, modificaciones y eliminaciones de datos personales.','Las bitácoras son inalterables y se conservan por un plazo definido.','Existe revisión periódica y revocación oportuna de accesos.'],
+        fp:'Ley N° 21.719 — Medidas de seguridad.', fc:'Ley N° 21.459 — Delitos informáticos (acceso ilícito).', riesgo:'Imposibilidad de acreditar quién accedió a los datos; pérdida de trazabilidad forense.', evidencias:[{n:'Política de control de accesos (RBAC)', estado:'validada'},{n:'Muestra de logs de auditoría inalterables', estado:'parcial'}]},
+      {code:'DPC-SEG-002', domain:'DPC-SEG', name:'Cifrado en tránsito y reposo + MFA', status:'cumple', laws:['Ley 21.719'], objetivo:'Desplegar cifrado de datos en tránsito y reposo, contraseñas robustas, MFA y respaldos periódicos aislados.',
+        detalle:'Se evalúan las medidas técnicas de base que protegen los datos frente a intrusiones o pérdida de dispositivos. El cifrado en tránsito y en reposo asegura que, aun interceptados o robados, los datos sean ilegibles; la autenticación multifactor (MFA) reduce el riesgo de accesos indebidos; y los respaldos aislados garantizan la recuperación ante ransomware o fallas. Se comprueba su implementación efectiva, no solo su enunciado en una política.',
+        criterios:['Los datos se cifran en tránsito (TLS) y en reposo con estándares vigentes.','La autenticación multifactor está activa en accesos críticos.','Existe política de contraseñas robustas aplicada técnicamente.','Se realizan respaldos periódicos, aislados y probados en su restauración.'],
+        fp:'Ley N° 21.719 — Seguridad de la información.', fc:'—', riesgo:'Exposición de datos en caso de intrusión o pérdida de dispositivos.', evidencias:[{n:'Configuración TLS y cifrado en reposo', estado:'validada'},{n:'Política de MFA corporativa', estado:'validada'}]},
+      {code:'DPC-TER-001', domain:'DPC-TER', name:'Contratos con encargados del tratamiento', status:'parcial', laws:['Ley 21.719'], objetivo:'Auditar terceros (hosting, CRM, marketing) e incorporar cláusulas estrictas de cumplimiento y penalizaciones.',
+        detalle:'Cuando un tercero trata datos por cuenta de la organización (hosting, CRM, marketing, nómina), la responsabilidad no se traspasa: se comparte. Este control verifica que todos esos encargados estén identificados, evaluados en su nivel de seguridad y vinculados por un contrato que fije obligaciones de confidencialidad, seguridad, sub-encargo y devolución o eliminación de datos al término del servicio.',
+        criterios:['Existe un inventario actualizado de encargados y sub-encargados.','Cada encargado crítico cuenta con contrato con cláusulas de tratamiento.','Se evalúa el nivel de seguridad del proveedor antes de contratarlo.','El contrato regula confidencialidad, brechas y devolución/eliminación de datos.'],
+        fp:'Ley N° 21.719 — Encargado de tratamiento.', fc:'—', riesgo:'Responsabilidad solidaria por incumplimientos de proveedores.', evidencias:[{n:'Inventario de encargados críticos', estado:'validada'},{n:'Cláusulas de tratamiento en contratos vigentes', estado:'parcial'}]},
+      {code:'DPC-INC-001', domain:'DPC-INC', name:'Plan de respuesta ante brechas de seguridad', status:'parcial', laws:['Ley 21.719','Ley 21.663'], objetivo:'Estructurar un protocolo de incidentes con responsables para contener filtraciones y notificar a la APDP y afectados.',
+        detalle:'Este control evalúa si la organización sabe qué hacer cuando ocurre una brecha. Un plan de respuesta define cómo detectar, contener, evaluar y notificar un incidente, con roles claros y plazos acotados. La Ley obliga a notificar oportunamente a la Agencia y, en ciertos casos, a los afectados; sin un plan, esa notificación llega tarde o no llega, agravando la sanción y el daño.',
+        criterios:['Existe un manual de respuesta con fases de detección, contención y cierre.','Están definidos los roles, responsables y vías de escalamiento.','Se fijan criterios y plazos para notificar a la APDP y a los afectados.','El plan contempla registro y evaluación posterior de cada incidente.'],
+        fp:'Ley N° 21.719 — Notificación de brechas.', fc:'Ley N° 21.663 — Marco de Ciberseguridad (ANCI).', riesgo:'Sanciones por notificación tardía; propagación no contenida del incidente.', evidencias:[{n:'Manual del plan de respuesta a incidentes', estado:'parcial'},{n:'Matriz de roles y escalamiento', estado:'faltante'}]},
+      {code:'DPC-INC-002', domain:'DPC-INC', name:'Protocolo de reporte e historial de incidentes de seguridad', status:'no', laws:['Ley 21.719','Ley 21.663'], objetivo:'Garantizar la capacidad operativa de identificar, mitigar y notificar oportunamente brechas de seguridad que afecten datos personales corporativos.',
+        detalle:'Complementa al plan de respuesta verificando la operación real: que exista un registro histórico centralizado de eventos de seguridad, un protocolo de reporte conocido por el personal y evidencia de que la organización ejercita su capacidad (simulacros). Se evalúa que la doble obligación de notificación —a la APDP por datos personales y a la ANCI/CSIRT por ciberseguridad en servicios esenciales— esté cubierta y sea trazable.',
+        criterios:['Existe un registro histórico y centralizado de eventos e incidentes.','El protocolo de reporte es conocido y accesible para el personal.','Se cubre la doble notificación aplicable: APDP y ANCI/CSIRT.','Se ejecutan simulacros de brecha con evidencia de los últimos 12 meses.'],
+        fp:'Ley N° 21.719 — Obligación de notificación a la Agencia de Protección de Datos.', fc:'Ley N° 21.663 — Marco de Ciberseguridad (notificación a la ANCI / CSIRT nacional para servicios esenciales).', riesgo:'Sanciones por ocultamiento o retraso en reportes de brechas; pérdida de trazabilidad forense.', evidencias:[{n:'Manual del Plan de Respuesta ante Incidentes aprobado por la alta dirección', estado:'faltante'},{n:'Registro o log histórico de eventos de seguridad centralizado', estado:'parcial'},{n:'Evidencia de simulacro de brecha de datos ejecutado en los últimos 12 meses', estado:'faltante'}]},
+      {code:'DPC-FIN-002', domain:'DPC-FIN', name:'Política de retención y borrado seguro', status:'no', laws:['Ley 21.719','Ley 20.584'], objetivo:'Definir plazos legales de almacenamiento (registros tributarios, fichas clínicas) y procedimientos de borrado seguro.',
+        detalle:'Los datos no pueden conservarse indefinidamente: deben eliminarse cuando ya no exista una finalidad o una obligación legal que justifique su almacenamiento. Este control evalúa que la organización tenga definidos, por categoría de dato, los plazos de conservación (por ejemplo tributarios o fichas clínicas bajo la Ley 20.584) y procedimientos de borrado seguro y verificable al vencer esos plazos.',
+        criterios:['Existe una matriz de plazos de retención por categoría de dato.','Los plazos se fundamentan en obligaciones legales o en la finalidad.','El borrado es seguro, verificable y alcanza también a copias y respaldos.','Se ejecutan y registran depuraciones periódicas de datos vencidos.'],
+        fp:'Ley N° 21.719 — Principio de conservación limitada.', fc:'Ley N° 20.584 (Salud) — fichas clínicas.', riesgo:'Conservación indefinida de datos sin base legal; borrado no verificable.', evidencias:[{n:'Matriz de plazos de retención por categoría', estado:'faltante'}]},
+      {code:'DPC-FIN-001', domain:'DPC-FIN', name:'Finalidades determinadas, explícitas y legítimas', status:'parcial', laws:['Ley 21.719'], objetivo:'Declarar para cada tratamiento una finalidad específica y legítima, e impedir su reutilización para fines incompatibles.',
+        detalle:'Este control verifica que cada dato recolectado tenga un "para qué" claro, declarado al titular, y que no se use después para algo distinto sin una nueva base legal. Es frecuente que datos captados para una finalidad (ej. facturación) terminen usándose para otra (ej. marketing) sin aviso: eso vulnera el principio de finalidad. Se evalúa que las finalidades estén documentadas y que existan controles para detectar usos incompatibles.',
+        criterios:['Cada tratamiento del RAT tiene una finalidad determinada y explícita.','Las finalidades son legítimas y se informan al titular al momento de recolectar.','No se reutilizan datos para fines incompatibles sin nueva base o consentimiento.','Los cambios de finalidad se documentan y se comunican al titular.'],
+        fp:'Ley N° 21.719 — Principio de finalidad.', fc:'—', riesgo:'Uso de datos para fines distintos a los informados; pérdida de licitud sobrevenida.', evidencias:[{n:'Catálogo de finalidades por tratamiento', estado:'parcial'},{n:'Cláusulas informativas de finalidad', estado:'faltante'}]},
+      {code:'DPC-PRO-001', domain:'DPC-PRO', name:'Minimización de datos recolectados', status:'no', laws:['Ley 21.719'], objetivo:'Recolectar y conservar únicamente los datos estrictamente necesarios para la finalidad declarada.',
+        detalle:'Se evalúa si la organización recolecta solo lo indispensable o si pide datos "por si acaso". Formularios con campos innecesarios, copias completas de cédula cuando basta un número, o bases con atributos que nadie usa son señales de sobre-recolección. El principio de proporcionalidad exige justificar cada dato frente a su finalidad y eliminar los que sobran.',
+        criterios:['Cada campo recolectado se justifica frente a una finalidad concreta.','Los formularios y sistemas no piden datos innecesarios o excesivos.','Se revisan y depuran atributos que ya no se utilizan.','Se prefiere la seudonimización o la agregación cuando es suficiente.'],
+        fp:'Ley N° 21.719 — Principio de proporcionalidad (minimización).', fc:'—', riesgo:'Superficie de exposición innecesaria; mayor impacto ante una brecha.', evidencias:[{n:'Revisión de formularios y campos por finalidad', estado:'faltante'}]},
+      {code:'DPC-CAL-001', domain:'DPC-CAL', name:'Exactitud y actualización de los datos', status:'parcial', laws:['Ley 21.719'], objetivo:'Mantener los datos exactos, completos y actualizados, con mecanismos de corrección y depuración.',
+        detalle:'Este control comprueba que la organización tenga procesos para que los datos no queden obsoletos o erróneos: actualización periódica, corrección a solicitud del titular y depuración de registros vencidos. Datos inexactos pueden derivar en decisiones equivocadas (cobranzas, scoring, comunicaciones) que afectan al titular y a la organización.',
+        criterios:['Existen procesos para actualizar datos de forma periódica.','Las solicitudes de rectificación se aplican en un plazo definido.','Se detectan y corrigen duplicados e inconsistencias.','Se depuran registros vencidos o sin finalidad vigente.'],
+        fp:'Ley N° 21.719 — Principio de calidad.', fc:'—', riesgo:'Decisiones basadas en datos inexactos; perjuicio al titular.', evidencias:[{n:'Procedimiento de actualización y rectificación', estado:'parcial'},{n:'Registro de depuraciones', estado:'faltante'}]},
+      {code:'DPC-RES-004', domain:'DPC-RES', name:'Modelo de Prevención de Infracciones (MPI)', status:'no', laws:['Ley 21.719'], objetivo:'Adoptar un Modelo de Prevención de Infracciones con sus contenidos mínimos; su certificación opera como atenuante ante la Agencia.',
+        detalle:'El MPI es el marco formal de prevención que la ley incentiva: reúne gobernanza y roles, designación del DPD, inventario y mapeo de flujos, matriz de riesgos y plan de mitigación, políticas y gestión de terceros. Contar con un MPI certificado es una circunstancia atenuante ante la Agencia. Se evalúa que el modelo exista, esté aprobado y sea operativo — no solo documental.',
+        criterios:['El MPI cubre gobernanza, DPD, inventario, matriz de riesgos y gestión de terceros.','Está formalmente aprobado por la alta dirección.','Cuenta con un responsable y un plan de mitigación con seguimiento.','Es operativo y auditable, no meramente declarativo.'],
+        fp:'Ley N° 21.719 — Modelo de Prevención de Infracciones (atenuante).', fc:'ISO/IEC 27001 — sistema de gestión.', riesgo:'Pérdida del atenuante; gestión de riesgos informal y no acreditable.', evidencias:[{n:'Documento del MPI aprobado', estado:'faltante'},{n:'Matriz de riesgos y plan de mitigación', estado:'parcial'}]},
+      {code:'DPC-RES-003', domain:'DPC-RES', name:'Centralización documental de evidencias multi-agencia', status:'cumple', laws:['Ley 21.719'], objetivo:'Resguardar bitácoras y centralizar la prueba admisible ante auditorías o fiscalizaciones de múltiples agencias.',
+        detalle:'El principio de responsabilidad demostrable exige no solo cumplir, sino poder probarlo. Este control evalúa que las evidencias de cumplimiento estén centralizadas, indexadas por control y versionadas, de modo que ante una fiscalización de la APDP —o de otra agencia como la ANCI o SERNAC— la prueba esté disponible de inmediato y sea admisible, sin depender de búsquedas dispersas en correos o carpetas personales.',
+        criterios:['Las evidencias están centralizadas en un repositorio único indexado por control.','Cada evidencia registra versión, fecha y responsable.','La prueba está disponible de forma inmediata ante requerimientos multi-agencia.','Existe control de acceso y trazabilidad sobre el propio repositorio.'],
+        fp:'Ley N° 21.719 — Responsabilidad demostrable.', fc:'—', riesgo:'Evidencia dispersa e indisponible ante inspección de la APDP.', evidencias:[{n:'Repositorio documental indexado', estado:'validada'},{n:'Bitácora de versiones y firmas', estado:'validada'}]},
+      {code:'DPC-TRA-001', domain:'DPC-TRA', name:'Deber de información y política pública de tratamiento (Art. 14 ter)', status:'parcial', laws:['Ley 21.719'], objetivo:'Publicar y mantener disponible la política de tratamiento con su fecha y versión, e informar al titular de forma clara y accesible.',
+        detalle:'La ley obliga a mantener permanentemente a disposición del público —en el sitio web o medio equivalente— la política de tratamiento adoptada, con su fecha y versión, la individualización del responsable y su representante. Este control verifica que esa información exista, esté actualizada y sea comprensible para el titular, no un texto legal ilegible enterrado en el pie de página.',
+        criterios:['La política de tratamiento está publicada y accesible al público.','Indica fecha, versión e individualización del responsable.','La información al titular es clara, precisa e inequívoca.','Se actualiza cuando cambian los tratamientos o la normativa.'],
+        fp:'Ley N° 21.719 — Art. 14 ter, deber de información y transparencia.', fc:'—', riesgo:'Falta de transparencia; infracción por no informar al titular.', evidencias:[{n:'Política de privacidad publicada con versión y fecha', estado:'validada'},{n:'Aviso de tratamiento en puntos de recolección', estado:'parcial'}]},
+      {code:'DPC-CON-001', domain:'DPC-CON', name:'Deber de secreto y acuerdos de confidencialidad', status:'parcial', laws:['Ley 21.719'], objetivo:'Garantizar la confidencialidad de quienes acceden a datos personales, incluso terminada la relación, mediante compromisos formales y capacitación.',
+        detalle:'Quienes tratan datos personales están obligados a guardar secreto, y esa obligación subsiste aun después de terminado el vínculo laboral o contractual. Este control verifica que existan cláusulas de confidencialidad firmadas, que el personal esté capacitado sobre el deber de secreto y que la obligación se extienda a terceros y ex-colaboradores.',
+        criterios:['El personal que accede a datos firma compromisos de confidencialidad.','La obligación de secreto subsiste tras el término de la relación.','Se capacita al personal sobre el deber de confidencialidad.','Las cláusulas se extienden a encargados y terceros.'],
+        fp:'Ley N° 21.719 — Principio de confidencialidad.', fc:'—', riesgo:'Divulgación indebida de datos por personal o ex-colaboradores.', evidencias:[{n:'Cláusulas de confidencialidad firmadas', estado:'parcial'},{n:'Registro de capacitaciones', estado:'faltante'}]},
+      {code:'DPC-TER-002', domain:'DPC-TER', name:'Transferencias internacionales con garantías de adecuación', status:'no', laws:['Ley 21.719'], objetivo:'Asegurar que toda transferencia de datos al extranjero cuente con un mecanismo de resguardo válido conforme a la ley.',
+        detalle:'Cuando los datos salen del país —hacia una casa matriz, un proveedor cloud o un subcontratista— la ley exige que exista una garantía de adecuación o una autorización. Este control identifica todas las transferencias internacionales y verifica que estén amparadas por cláusulas contractuales, normas de adecuación o el consentimiento del titular cuando corresponda.',
+        criterios:['Se identifican todas las transferencias internacionales de datos.','Cada transferencia cuenta con un mecanismo de resguardo válido.','Los contratos con destinatarios en el extranjero incluyen garantías.','Se documenta el país de destino y el nivel de protección.'],
+        fp:'Ley N° 21.719 — Transferencia internacional de datos.', fc:'—', riesgo:'Salida de datos sin garantías; transferencia ilícita.', evidencias:[{n:'Inventario de transferencias internacionales', estado:'faltante'}]},
+      {code:'DPC-EIA-001', domain:'DPC-EIA', name:'Evaluación de Impacto (EIPD) en tratamientos de alto riesgo', status:'no', laws:['Ley 21.719'], objetivo:'Realizar una evaluación de impacto previa y documentada cuando el tratamiento conlleva alto riesgo para los titulares.',
+        detalle:'La EIPD es obligatoria cuando el tratamiento entraña alto riesgo: tratamiento a gran escala de datos sensibles, perfilamiento automatizado, videovigilancia masiva en espacios públicos, o combinación de fuentes que amplíe el riesgo. Este control verifica que la organización identifique esos tratamientos y ejecute la evaluación antes de iniciarlos, documentando riesgos y medidas de mitigación.',
+        criterios:['Se identifican los tratamientos de alto riesgo que requieren EIPD.','La evaluación es previa al inicio del tratamiento.','Documenta riesgos, impacto y medidas de mitigación.','Se revisa periódicamente y ante cambios relevantes.'],
+        fp:'Ley N° 21.719 — Evaluación de impacto en protección de datos.', fc:'—', riesgo:'Tratamiento de alto riesgo sin análisis previo; daño a los titulares.', evidencias:[{n:'Metodología y plantilla de EIPD', estado:'faltante'},{n:'EIPD ejecutadas por tratamiento de alto riesgo', estado:'faltante'}]},
+      {code:'DPC-EIA-002', domain:'DPC-EIA', name:'Salvaguardas para decisiones automatizadas y perfilamiento', status:'no', laws:['Ley 21.719'], objetivo:'Garantizar supervisión humana y explicabilidad cuando se toman decisiones automatizadas que afectan a las personas.',
+        detalle:'Si la organización usa algoritmos para decisiones que afectan a personas —scoring crediticio, preselección de CVs, pricing personalizado— el titular tiene derecho a no quedar sujeto a una decisión basada únicamente en tratamiento automatizado. Este control verifica que exista intervención humana significativa, información sobre la lógica aplicada y un canal para impugnar la decisión.',
+        criterios:['Se inventarían los procesos con decisiones automatizadas o perfilamiento.','Existe supervisión humana significativa sobre la decisión.','Se informa al titular sobre la lógica y consecuencias del tratamiento.','Hay un canal para revisar o impugnar la decisión automatizada.'],
+        fp:'Ley N° 21.719 — Derecho frente a decisiones automatizadas.', fc:'ISO/IEC 42001 — gestión de IA responsable.', riesgo:'Decisiones automatizadas sin control ni explicabilidad; discriminación algorítmica.', evidencias:[{n:'Inventario de sistemas de decisión automatizada', estado:'faltante'},{n:'Procedimiento de revisión humana e impugnación', estado:'faltante'}]},
+    ];
+    this.RUBROS = [
+      {key:'retail', label:'Retail / e-commerce', mult:1.2, laws:['Ley 19.496 (SERNAC)','Ley 21.719']},
+      {key:'fintech', label:'Fintech / Financiero', mult:1.8, laws:['Circulares CMF','Ley 21.663','Ley 21.719']},
+      {key:'salud', label:'Salud', mult:1.7, laws:['Ley 20.584','Ley 21.719','DPC-SEN reforzado']},
+      {key:'b2b', label:'Servicios B2B', mult:1.3, laws:['Código del Trabajo','Ley 21.719']},
+      {key:'telco', label:'Telecomunicaciones', mult:1.6, laws:['Normas SUBTEL','Ley 21.663','Ley 21.719']},
+      {key:'startup', label:'Startup tecnológica', mult:1.1, laws:['Ley 21.719','Ley 21.459']},
+      {key:'estado', label:'Proveedor del Estado', mult:1.5, laws:['Ley 21.663 (ANCI)','Ley 21.719']},
+    ];
+    this.FACTORS = [
+      {label:'Tratamiento de datos sensibles', pts:12},
+      {label:'Volumen de datos sensibles procesados', pts:9},
+      {label:'Actividades de tratamiento identificadas', pts:8},
+      {label:'Sistemas e infraestructura crítica', pts:8},
+      {label:'Dispersión geográfica y sucursales', pts:5},
+      {label:'Proveedores críticos / encargados', pts:6},
+      {label:'Canales de recepción de datos', pts:4},
+    ];
+    this.COMPANIES = [
+      {name:'Clínica Andes Salud', in:'CA', rubro:'Salud', fase:'certification', score:88, pct:82, riesgos:3, dpo:'M. Fuentes', dias:58, inicio:'02 may 2026'},
+      {name:'Aurora Pay', in:'AP', rubro:'Fintech', fase:'remediation', score:94, pct:61, riesgos:7, dpo:'R. Cáceres', dias:41, inicio:'20 may 2026'},
+      {name:'Tienda Norte Retail', in:'TN', rubro:'Retail', fase:'assessment', score:62, pct:34, riesgos:5, dpo:'—', dias:12, inicio:'19 jun 2026'},
+      {name:'Nexo Servicios B2B', in:'NX', rubro:'Servicios B2B', fase:'renewal', score:68, pct:91, riesgos:1, dpo:'C. Álvarez', dias:96, inicio:'26 mar 2026'},
+      {name:'Kappa Labs', in:'KL', rubro:'Startup', fase:'assessment', score:57, pct:22, riesgos:6, dpo:'—', dias:8, inicio:'23 jun 2026'},
+      {name:'RedFibra Telecom', in:'RF', rubro:'Telecom', fase:'remediation', score:83, pct:54, riesgos:4, dpo:'P. Rojas', dias:33, inicio:'29 may 2026'},
+    ];
+    this.RISKS = [
+      {code:'R-001', tipo:'Transversal', desc:'Uso de canales informales (WhatsApp) para envío de documentación con datos personales.', imp:'Medio', prob:'Alta', dominio:'DPC-SEG'},
+      {code:'R-002', tipo:'Transversal', desc:'Ausencia de Registro de Actividades de Tratamiento (RAT) actualizado.', imp:'Medio', prob:'Alta', dominio:'DPC-INV'},
+      {code:'R-004', tipo:'Transversal / Financiero', desc:'Planillas Excel con datos sensibles o financieros sin control de acceso ni cifrado.', imp:'Crítico', prob:'Media', dominio:'DPC-SEG'},
+      {code:'R-005', tipo:'Transversal', desc:'Políticas de privacidad desactualizadas frente a las exigencias de la Ley 21.719.', imp:'Bajo', prob:'Media', dominio:'DPC-LIC'},
+      {code:'R-007', tipo:'Laboral', desc:'Control de asistencia biométrico sin cumplir las exigencias de la Dirección del Trabajo.', imp:'Crítico', prob:'Media', dominio:'DPC-SEN'},
+      {code:'R-008', tipo:'Salud / Fintech', desc:'Cuentas genéricas compartidas para acceder a historial clínico o datos transaccionales.', imp:'Crítico', prob:'Alta', dominio:'DPC-SEG'},
+      {code:'R-009', tipo:'Seguridad', desc:'Inexistencia de un plan de respuesta y notificación ante brechas de seguridad.', imp:'Crítico', prob:'Alta', dominio:'DPC-INC'},
+    ];
+    this.SOLUTIONS = [
+      {problema:'Control biométrico de asistencia sin resguardo del dato sensible del trabajador', dominio:'DPC-SEN', riesgo:'R-007', alternativas:['Reemplazo por un sistema de marcas autorizado explícitamente por la Dirección del Trabajo.','Cifrado irreversible (hash) de los templates biométricos, impidiendo reconstruir huella o rostro fuera del dispositivo.','Anexo de contrato de trabajo específico sobre tratamiento de datos biométricos.','Procedimiento estricto de enrolamiento y eliminación definitiva al término de la relación laboral.']},
+      {problema:'Planillas Excel con datos sensibles sin control de acceso ni cifrado', dominio:'DPC-SEG', riesgo:'R-004', alternativas:['Migración a repositorio corporativo con control de acceso por rol (RBAC).','Cifrado de archivos en reposo y etiquetado de sensibilidad (DLP).','Bitácora de acceso y descarga de archivos con datos personales.']},
+      {problema:'Canales informales de comunicación con datos personales', dominio:'DPC-SEG', riesgo:'R-001', alternativas:['Habilitación de canal corporativo seguro para intercambio de documentación.','Política de uso aceptable y capacitación al personal.','Bloqueo de reenvío externo para categorías sensibles.']},
+    ];
+    this.EVIDENCES = [
+      {name:'Politica_Tratamiento_v3.pdf', control:'DPC-GOV-002', tipo:'Política', estado:'Validado', fecha:'12 jun 2026', size:'1.2 MB'},
+      {name:'Acta_Nombramiento_DPD.pdf', control:'DPC-GOV-001', tipo:'Acta', estado:'Validado', fecha:'10 jun 2026', size:'480 KB'},
+      {name:'Matriz_RAT_procesos.xlsx', control:'DPC-DAT-001', tipo:'Registro', estado:'Pendiente', fecha:'18 jun 2026', size:'2.4 MB'},
+      {name:'Logs_auditoria_Q2.csv', control:'DPC-SEC-001', tipo:'Bitácora', estado:'Pendiente', fecha:'20 jun 2026', size:'8.1 MB'},
+      {name:'Contrato_Encargado_Hosting.pdf', control:'DPC-THD-001', tipo:'Contrato', estado:'Rechazado', fecha:'05 jun 2026', size:'900 KB'},
+      {name:'Config_MFA_corporativa.pdf', control:'DPC-SEC-002', tipo:'Configuración', estado:'Validado', fecha:'14 jun 2026', size:'320 KB'},
+      {name:'Formulario_ARSOP_web.png', control:'DPC-RGT-001', tipo:'Captura', estado:'Validado', fecha:'09 jun 2026', size:'640 KB'},
+    ];
+    this.PLAN = [
+      {tarea:'Redactar anexo de contrato para tratamiento biométrico', dominio:'DPC-SEN', resp:'Legal · A. Soto', estado:'En curso', vence:'15 jul 2026', prog:40},
+      {tarea:'Implementar cifrado hash de templates biométricos', dominio:'DPC-SEN', resp:'TI · Infra', estado:'Pendiente', vence:'30 jul 2026', prog:0},
+      {tarea:'Aprobar manual del plan de respuesta a incidentes', dominio:'DPC-INC', resp:'Dirección', estado:'En revisión', vence:'10 jul 2026', prog:75},
+      {tarea:'Ejecutar simulacro de brecha de datos', dominio:'DPC-INC', resp:'TI · SecOps', estado:'Pendiente', vence:'20 ago 2026', prog:0},
+      {tarea:'Completar Registro de Actividades de Tratamiento', dominio:'DPC-INV', resp:'DPO', estado:'En curso', vence:'25 jul 2026', prog:55},
+      {tarea:'Actualizar cláusulas con encargados de hosting', dominio:'DPC-TER', resp:'Legal', estado:'Completado', vence:'02 jul 2026', prog:100},
+      {tarea:'Definir matriz de plazos de retención', dominio:'DPC-FIN', resp:'DPO', estado:'Pendiente', vence:'12 ago 2026', prog:0},
+    ];
+    this.PRINCIPIOS = [
+      {t:'Objetivo', d:'Criterios de evaluación unificados que eliminan juicios de valor arbitrarios.'},
+      {t:'Repetible', d:'Misma evaluación en distintos momentos u organizaciones con resultados consistentes.'},
+      {t:'Medible', d:'Cuantificación del avance y del nivel de riesgo mediante métricas e indicadores.'},
+      {t:'Auditable', d:'Trazabilidad que permite a un tercero independiente verificar cada conclusión.'},
+      {t:'Basado en evidencia', d:'Todo dictamen requiere respaldos objetivos, documentales o configuracionales.'},
+      {t:'Independiente', d:'Neutralidad metodológica: dos consultores convergen en un resultado idéntico.'},
+    ];
+    this.FASES = [
+      {n:'Fase 1', name:'Diagnóstico', landing:'Evaluación inicial de controles base y sectoriales, y mapeo de brechas normativas cruzadas.'},
+      {n:'Fase 2', name:'Propuesta', landing:'Soluciones parametrizadas por rubro y acompañamiento metodológico en la implementación.'},
+      {n:'Fase 3', name:'Certificación', landing:'Auditoría sobre las evidencias, validación de controles y emisión del Certificado Privado DPC.'},
+      {n:'Fase 4', name:'Revalidación', landing:'Auditoría de seguimiento periódica frente a cambios normativos o nuevas directrices.'},
+    ];
+    const cs = {};
+    this.CONTROLS.forEach(c=>{ cs[c.code]=c.status; });
+    this.state = { route:'landing', authed:false, loginUser:'', loginPass:'', loginErr:false, company:0, selectedDomain:'DPC-INC', selectedControl:'DPC-INC-002', regRubro:'salud', controlStatus:cs, cotSize:'micro', cotSensibles:false, cotRubro:'ninguno', cotIntl:false, cotAuto:false };
+  }
+
+  goLogin(){ return ()=> this.setState(s=> s.authed ? {route:'dashboard'} : {route:'login', loginErr:false}); }
+  setCot(field,value){ return ()=>this.setState({[field]:value}); }
+  doLogin(){
+    const {loginUser, loginPass} = this.state;
+    if(loginUser.trim().toLowerCase()==='admin' && loginPass==='admin'){
+      this.setState({authed:true, route:'dashboard', loginErr:false, loginPass:''});
+    } else {
+      this.setState({loginErr:true});
+    }
+  }
+  logout(){ return ()=> this.setState({authed:false, route:'landing', loginUser:'', loginPass:''}); }
+
+  ic(d){ return React.createElement('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,strokeLinecap:'round',strokeLinejoin:'round'}, (Array.isArray(d)?d:[d]).map((p,i)=>React.createElement('path',{key:i,d:p}))); }
+
+  go(route){ return ()=>this.setState({route}); }
+  cycle(code){ const order={cumple:'parcial',parcial:'no',no:'cumple'}; this.setState(s=>({controlStatus:{...s.controlStatus,[code]:order[s.controlStatus[code]]}})); }
+
+  statusMeta(s){
+    if(s==='cumple') return {label:'Cumple', color:'#075a39', bg:'#e9f2ec', border:'#075a3922'};
+    if(s==='parcial') return {label:'Parcial', color:'#705500', bg:'#f6f0df', border:'#70550022'};
+    return {label:'No cumple', color:'#772322', bg:'#f6e9e8', border:'#77232222'};
+  }
+  evMeta(s){
+    if(s==='validada') return {label:'Validada', color:'#075a39', bg:'#e9f2ec'};
+    if(s==='parcial') return {label:'Parcial', color:'#705500', bg:'#f6f0df'};
+    return {label:'Faltante', color:'#772322', bg:'#f6e9e8'};
+  }
+  repoMeta(s){
+    if(s==='Validado') return {color:'#075a39', bg:'#e9f2ec'};
+    if(s==='Pendiente') return {color:'#705500', bg:'#f6f0df'};
+    return {color:'#772322', bg:'#f6e9e8'};
+  }
+  faseMeta(f){
+    const m={assessment:{label:'Diagnóstico',color:'#6f7988',bg:'#f3f4f6'},remediation:{label:'Propuesta',color:'#705500',bg:'#f6f0df'},certification:{label:'Certificación',color:'#407ff2',bg:'#eaf1fe'},renewal:{label:'Revalidación',color:'#075a39',bg:'#e9f2ec'}};
+    return m[f]||m.assessment;
+  }
+  planMeta(s){
+    const m={'Pendiente':{color:'#6f7988',bg:'#f3f4f6'},'En curso':{color:'#705500',bg:'#f6f0df'},'En revisión':{color:'#407ff2',bg:'#eaf1fe'},'Completado':{color:'#075a39',bg:'#e9f2ec'}};
+    return m[s]||m['Pendiente'];
+  }
+  tier(v){ if(v>=85) return 'Crítico'; if(v>=70) return 'Alto'; if(v>=50) return 'Medio'; return 'Bajo'; }
+  tierColor(v){ if(v>=85) return '#772322'; if(v>=70) return '#705500'; if(v>=50) return '#407ff2'; return '#075a39'; }
+  pctColor(p){ if(p>=80) return '#075a39'; if(p>=50) return '#705500'; return '#772322'; }
+
+  renderVals(){
+    const route = this.state.route;
+    const accent = this.props.accent || '#407ff2';
+    const serifFont = this.props.serifHeadlines===false ? "'Inter',system-ui,sans-serif" : "'Newsreader',Georgia,serif";
+    const showScores = this.props.showComplexityScore !== false;
+
+    const navDefs = [
+      {key:'dashboard', label:'Panel general', icon:this.ic('M3 12l9-9 9 9M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10')},
+      {key:'empresas', label:'Empresas', icon:this.ic(['M3 21h18','M5 21V5a1 1 0 011-1h7a1 1 0 011 1v16','M18 21v-9a1 1 0 00-1-1h-3','M8 8h2M8 12h2M8 16h2'])},
+      {key:'registro', label:'Nueva empresa', icon:this.ic(['M12 5v14','M5 12h14'])},
+      {key:'resumen', label:'Resumen', icon:this.ic(['M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1z','M8 9h8M8 13h5'])},
+      {key:'checklist', label:'Checklist DPC', icon:this.ic(['M9 6h11M9 12h11M9 18h11','M4 6h.01M4 12h.01M4 18h.01'])},
+      {key:'riesgos', label:'Riesgos & Gap', icon:this.ic(['M12 3l9 16H3z','M12 10v4','M12 17h.01'])},
+      {key:'soluciones', label:'Soluciones', icon:this.ic(['M9 18h6','M10 21h4','M12 3a6 6 0 00-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0012 3z'])},
+      {key:'plan', label:'Plan de adecuación', icon:this.ic(['M11 6h9M11 12h9M11 18h9','M3.5 6l1.2 1.2L7 5','M3.5 12l1.2 1.2L7 11','M3.5 18l1.2 1.2L7 17'])},
+      {key:'evidencias', label:'Evidencias', icon:this.ic('M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z')},
+      {key:'certificacion', label:'Certificación', icon:this.ic(['M12 15a6 6 0 100-12 6 6 0 000 12z','M8.5 13.5L7 22l5-3 5 3-1.5-8.5'])},
+    ];
+    const companyRoutes = ['resumen','checklist','control','riesgos','soluciones','plan','evidencias','certificacion'];
+    const adminKeys = ['dashboard','empresas','registro'];
+    const companyKeys = ['resumen','checklist','riesgos','soluciones','plan','evidencias','certificacion'];
+    const inCompany = companyRoutes.includes(route);
+    const activeKey = route==='control' ? 'checklist' : route;
+    const visibleKeys = inCompany ? companyKeys : adminKeys;
+    const navItems = navDefs.filter(n=>visibleKeys.includes(n.key)).map(n=>{
+      const on = n.key===activeKey;
+      return {...n, onClick:this.go(n.key), icColor: on?'#1c1d1f':'#8f99a8',
+        style:`font-family:inherit;display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-size:13px;font-weight:500;padding:8px 10px;border-radius:8px;border:none;cursor:pointer;margin-bottom:1px;letter-spacing:-0.1px;color:${on?'#1c1d1f':'#6f7988'};background:${on?'#f3f4f6':'transparent'};`};
+    });
+
+    const cm = this.COMPANIES.map((c,i)=>{
+      const fm=this.faseMeta(c.fase);
+      return {...c, onClick:()=>this.setState({company:i,route:'resumen'}), faseLabel:fm.label, faseColor:fm.color, faseBg:fm.bg,
+        pct:c.pct+'%', pctW:c.pct+'%', pctColor:this.pctColor(c.pct), scoreColor:this.tierColor(c.score), dias:c.dias+' días'};
+    });
+    const cur = this.COMPANIES[this.state.company];
+    const curFm = this.faseMeta(cur.fase);
+    const current = {...cur, faseLabel:curFm.label, faseColor:curFm.color, faseBg:curFm.bg, scoreTier:this.tier(cur.score)};
+
+    const domains = this.DOMAINS.map(d=>({...d, onClick:()=>this.setState({selectedDomain:d.code,route:'checklist'})}));
+    const domainsPrincipio = domains.filter(d=>d.esPrincipio);
+    const domainsComp = domains.filter(d=>!d.esPrincipio);
+
+    // ADMIN dashboard stats
+    const totalRiesgos = this.COMPANIES.reduce((a,c)=>a+c.riesgos,0);
+    const avgPct = Math.round(this.COMPANIES.reduce((a,c)=>a+c.pct,0)/this.COMPANIES.length);
+    const nEval = this.COMPANIES.filter(c=>c.fase==='assessment'||c.fase==='remediation').length;
+    const nCert = this.COMPANIES.filter(c=>c.fase==='certification'||c.fase==='renewal').length;
+    const tasaCert = Math.round(nCert/this.COMPANIES.length*100);
+    const avgDias = Math.round(this.COMPANIES.reduce((a,c)=>a+c.dias,0)/this.COMPANIES.length);
+    const dashStats = [
+      {label:'Empresas en evaluación', value:String(nEval), delta:this.COMPANIES.length+' en total', deltaColor:'#8f99a8'},
+      {label:'Tasa de certificación', value:tasaCert+'%', delta:nCert+' certificadas', deltaColor:'#075a39'},
+      {label:'Tiempo promedio', value:avgDias+' días', delta:'por proceso activo', deltaColor:'#8f99a8'},
+      {label:'Riesgos abiertos', value:String(totalRiesgos), delta:avgPct+'% cumpl. medio', deltaColor:'#772322'},
+    ];
+    // fase distribution for admin dashboard
+    const faseDist = [
+      {key:'assessment', label:'Diagnóstico'},
+      {key:'remediation', label:'Propuesta'},
+      {key:'certification', label:'Certificación'},
+      {key:'renewal', label:'Revalidación'},
+    ].map(f=>{ const n=this.COMPANIES.filter(c=>c.fase===f.key).length; const m=this.faseMeta(f.key);
+      return {label:f.label, n:String(n), pctW:Math.round(n/this.COMPANIES.length*100)+'%', color:m.color}; });
+
+    // COMPANY resumen (overview of selected company)
+    const _cs = this.state.controlStatus;
+    const curCtrlDone = this.CONTROLS.filter(c=>_cs[c.code]==='cumple').length;
+    const curCtrlTotal = this.CONTROLS.length;
+    const resumen = {
+      name:cur.name, in:cur.in, rubro:cur.rubro, dpo:cur.dpo, inicio:cur.inicio, dias:cur.dias+' días',
+      faseLabel:curFm.label, faseColor:curFm.color, faseBg:curFm.bg,
+      score:cur.score, scoreTier:this.tier(cur.score), scoreColor:this.tierColor(cur.score),
+      pct:cur.pct+'%', pctW:cur.pct+'%', pctColor:this.pctColor(cur.pct),
+      riesgos:String(cur.riesgos), ctrlDone:String(curCtrlDone), ctrlTotal:String(curCtrlTotal),
+    };
+    const resumenDominios = this.DOMAINS.map(d=>{
+      const ctrls=this.CONTROLS.filter(c=>c.domain===d.code);
+      const total=ctrls.length||d.total; const done=ctrls.length?ctrls.filter(c=>_cs[c.code]==='cumple').length:d.done;
+      const pct=Math.round(done/total*100);
+      return {code:d.code, name:d.name, label:done+'/'+total, pctW:pct+'%', pctColor:this.pctColor(pct), onClick:()=>this.setState({selectedDomain:d.code,route:'checklist'})};
+    });
+    const resumenPasos = [
+      {t:'Completar el Registro de Actividades de Tratamiento', dom:'DPC-INV', onClick:this.go('checklist')},
+      {t:'Aprobar el plan de respuesta ante incidentes', dom:'DPC-INC', onClick:this.go('plan')},
+      {t:'Cargar evidencias pendientes de validación', dom:'DPC-EVD', onClick:this.go('evidencias')},
+    ];
+
+    // landing mini data
+    const heroNav = [
+      {label:'Estado de cumplimiento', color:'#1c1d1f', bg:'#eef0f3'},
+      {label:'Checklist DPC', color:'#6f7988', bg:'transparent'},
+      {label:'Riesgos & brechas', color:'#6f7988', bg:'transparent'},
+      {label:'Plan de adecuación', color:'#6f7988', bg:'transparent'},
+      {label:'Evidencias', color:'#6f7988', bg:'transparent'},
+      {label:'Certificación', color:'#6f7988', bg:'transparent'},
+    ];
+    const heroStats = [{v:'72%',l:'Cumplimiento global'},{v:'9/14',l:'Dominios al día'},{v:'Fase 2',l:'Adecuación'},{v:'Media',l:'Complejidad'}];
+    const heroDomains = this.DOMAINS.slice(0,5).map(d=>{ const ctrls=this.CONTROLS.filter(c=>c.domain===d.code); const total=ctrls.length||1; const done=ctrls.filter(c=>c.status==='cumple').length; const pct=Math.round(done/total*100); return {code:d.code, name:d.name, label:done+'/'+total, pctW:pct+'%', pctColor:this.pctColor(pct)}; });
+    const stakes = [
+      {sev:'Infracción leve', utm:'100 – 5.000 UTM', clp:'≈ $7M – $340M', dot:'#b5bdc9'},
+      {sev:'Infracción grave', utm:'5.001 – 10.000 UTM', clp:'≈ $340M – $680M', dot:'#705500'},
+      {sev:'Infracción gravísima', utm:'10.001 – 20.000 UTM', clp:'hasta ≈ $1.360M', dot:'#772322'},
+    ];
+    const agencies = ['APDP','ANCI','SERNAC','CMF','Dirección del Trabajo','SUBTEL'];
+    const footerCols = [
+      {title:'Marco de trabajo', links:['Los 14 dominios','Taxonomía de controles','Catálogo de riesgos','Verticales sectoriales']},
+      {title:'Plataforma', links:['Panel del consultor','Complexity Score','Repositorio de evidencias','Certificación DPC']},
+      {title:'Marco legal', links:['Ley 21.719','Ley 21.663','Ley 19.496','Código del Trabajo']},
+    ].map(col=>({title:col.title, links:col.links.map(l=>({label:l, onClick: l==='Panel del consultor' ? this.goLogin() : undefined}))}));
+    const dossierDocs = [
+      'Registro de Actividades de Tratamiento (RAT)',
+      'Políticas y avisos de privacidad vigentes',
+      'Procedimiento de derechos ARSOP',
+      'Plan de respuesta ante incidentes',
+      'Inventario y mapeo de flujos de datos',
+      'Evidencias por control, versionadas',
+      'Certificado privado DPC con hash de verificación',
+    ];
+    const acompanamiento = [
+      {t:'Consultor asignado', d:'Una persona responsable del proceso completo, que conoce el rubro y el contexto de cada organización de principio a fin.'},
+      {t:'Asesoría personalizada', d:'Interpretación de cómo la Ley 21.719 y sus normas complementarias aplican específicamente a cada operación.'},
+      {t:'Acompañamiento en la implementación', d:'Guía experta para aplicar cada control en la práctica, más allá de la entrega de documentos.'},
+      {t:'Seguimiento posterior', d:'Monitoreo de cambios normativos, revisiones periódicas y revalidación de la certificación para sostener el estándar.'},
+    ];
+    const planes = [
+      {name:'Esencial', forwho:'Baja complejidad · un rubro, sin datos sensibles', recomendado:false, scope:['Diagnóstico sobre los 14 dominios','Adecuación de controles base','Certificación privada DPC inicial','Consultor asignado durante el proyecto']},
+      {name:'Profesional', forwho:'Complejidad media-alta · datos sensibles o múltiples normativas', recomendado:true, scope:['Todo lo del plan Esencial','Controles sectoriales por rubro','Acompañamiento en la implementación','Plan de adecuación con seguimiento']},
+      {name:'Corporativo', forwho:'Complejidad crítica · multi-sede o multi-rubro', recomendado:false, scope:['Todo lo del plan Profesional','Cobertura multi-entidad','DPO como servicio (opcional)','Auditoría y evidencia a la medida']},
+    ];
+    const planesV = planes.map(p=>({...p,
+      cardStyle:`background:#fff;border:1px solid ${p.recomendado?'#1c1d1f':'#e4e7ec'};border-radius:12px;padding:26px;position:relative;${p.recomendado?'box-shadow:rgba(28,40,64,0.12) 0px 12px 32px -12px;':''}`,
+      onClick:this.go('registro')}));
+
+    const cst = this.state.controlStatus;
+
+    // REGISTRO
+    const rubros = this.RUBROS.map(r=>{ const on=r.key===this.state.regRubro; return {...r, active:on, onClick:()=>this.setState({regRubro:r.key}),
+      style:`font-family:inherit;cursor:pointer;text-align:left;font-size:13px;font-weight:500;padding:10px 12px;border-radius:10px;border:1px solid ${on?'#1c1d1f':'#d3d8df'};background:${on?'#1c1d1f':'#fff'};color:${on?'#fff':'#1c1d1f'};transition:all .12s;`}; });
+    const rb = this.RUBROS.find(r=>r.key===this.state.regRubro);
+    const baseScore = this.FACTORS.reduce((a,f)=>a+f.pts,0);
+    const finalScore = Math.round(baseScore*rb.mult);
+    const comp = { base:baseScore, mult:rb.mult.toFixed(1), multPct:'+'+Math.round((rb.mult-1)*100)+'%', final:finalScore, tier:this.tier(finalScore), tierColor:this.tierColor(finalScore), rubroLabel:rb.label, laws:rb.laws };
+    const factors = this.FACTORS.map(f=>({...f, w:Math.round(f.pts/12*100)+'%'}));
+
+    // CHECKLIST
+    const checkDomains = this.DOMAINS.map(d=>{
+      const ctrls=this.CONTROLS.filter(c=>c.domain===d.code);
+      const done=ctrls.length?ctrls.filter(c=>cst[c.code]==='cumple').length:d.done;
+      const total=ctrls.length?ctrls.length:d.total;
+      const pct=Math.round(done/total*100); const on=d.code===this.state.selectedDomain;
+      return {...d, done, total, pctW:pct+'%', selected:on, onClick:()=>this.setState({selectedDomain:d.code}),
+        style:`font-family:inherit;cursor:pointer;text-align:left;width:100%;border:none;background:${on?'#f3f4f6':'transparent'};border-radius:8px;padding:11px 12px;margin-bottom:2px;`};
+    });
+    const selDomain = this.DOMAINS.find(d=>d.code===this.state.selectedDomain) || this.DOMAINS[0];
+    const domainControls = this.CONTROLS.filter(c=>c.domain===this.state.selectedDomain).map(c=>{
+      const st=cst[c.code]; const m=this.statusMeta(st);
+      return {...c, status:st, pillLabel:m.label,
+        pillStyle:`font-size:12px;font-weight:600;color:${m.color};background:${m.bg};border:1px solid ${m.border};border-radius:999px;padding:4px 12px;cursor:pointer;font-family:inherit;`,
+        onClick:()=>this.setState({selectedControl:c.code,route:'control'}), onCycle:(e)=>{e.stopPropagation();this.cycle(c.code);}};
+    });
+
+    // CONTROL DETAIL
+    const scRaw = this.CONTROLS.find(c=>c.code===this.state.selectedControl) || this.CONTROLS[0];
+    const scSt = cst[scRaw.code]; const scm=this.statusMeta(scSt); const scDom=this.DOMAINS.find(d=>d.code===scRaw.domain);
+    const ctrl = {...scRaw, status:scSt, statusLabel:scm.label, statusColor:scm.color, statusBg:scm.bg, statusBorder:scm.border,
+      domainName:scDom?scDom.name:'', onCycle:()=>this.cycle(scRaw.code),
+      criterios:(scRaw.criterios||[]).map((t,i)=>({num:String(i+1), text:t})),
+      evidencias:scRaw.evidencias.map(e=>{const em=this.evMeta(e.estado);return {...e, label:em.label, color:em.color, bg:em.bg};}),
+      evDone:scRaw.evidencias.filter(e=>e.estado==='validada').length, evTotal:scRaw.evidencias.length};
+
+    // RIESGOS
+    const impC=(i)=> (i==='Crítico'||i==='Alto')?'#772322':i==='Medio'?'#705500':'#075a39';
+    const impB=(i)=> (i==='Crítico'||i==='Alto')?'#f6e9e8':i==='Medio'?'#f6f0df':'#e9f2ec';
+    const risks = this.RISKS.map(r=>({...r, impColor:impC(r.imp), impBg:impB(r.imp)}));
+    const rowsP=['Alta','Media','Baja']; const colIdx=(i)=> i==='Bajo'?0:i==='Medio'?1:2;
+    const matrixCols=['Bajo','Medio','Alto / Crítico'];
+    const matrixRows = rowsP.map((rl,ri)=>({label:rl, cells:matrixCols.map((cl,ci)=>{
+      const sc=(2-ri)+ci; const tone= sc>=3?{bg:'#f6e9e8'}: sc===2?{bg:'#f6f0df'}:{bg:'#e9f2ec'};
+      const codes=this.RISKS.filter(r=>r.prob===rl && colIdx(r.imp)===ci).map(r=>r.code);
+      return {bg:tone.bg, codes};
+    })}));
+
+    // SOLUCIONES
+    const solutions = this.SOLUTIONS.map(s=>{ const d=this.DOMAINS.find(x=>x.code===s.dominio);
+      return {...s, domName:d?d.name:'', alts:s.alternativas.map((t,i)=>({num:String(i+1), text:t}))}; });
+
+    // PLAN
+    const plan = this.PLAN.map(p=>{ const m=this.planMeta(p.estado);
+      return {...p, estadoColor:m.color, estadoBg:m.bg, progW:p.prog+'%', progColor:this.pctColor(p.prog||0)}; });
+    const planSummary = [
+      {l:'Total tareas', v:String(this.PLAN.length)},
+      {l:'Completadas', v:String(this.PLAN.filter(p=>p.estado==='Completado').length)},
+      {l:'En curso', v:String(this.PLAN.filter(p=>p.estado==='En curso'||p.estado==='En revisión').length)},
+      {l:'Pendientes', v:String(this.PLAN.filter(p=>p.estado==='Pendiente').length)},
+    ];
+
+    // EVIDENCIAS
+    const evidences = this.EVIDENCES.map(e=>{ const m=this.repoMeta(e.estado); return {...e, estColor:m.color, estBg:m.bg}; });
+    const evSummary = [
+      {l:'Documentos', v:String(this.EVIDENCES.length)},
+      {l:'Validados', v:String(this.EVIDENCES.filter(e=>e.estado==='Validado').length)},
+      {l:'Pendientes', v:String(this.EVIDENCES.filter(e=>e.estado==='Pendiente').length)},
+      {l:'Rechazados', v:String(this.EVIDENCES.filter(e=>e.estado==='Rechazado').length)},
+    ];
+
+    // CERTIFICACIÓN
+    const order=['assessment','remediation','certification','renewal'];
+    const curIdx=order.indexOf(cur.fase);
+    const psMeta=(s)=> s==='done'?{c:'#075a39',b:'#e9f2ec',l:'Completada'}: s==='current'?{c:'#407ff2',b:'#eaf1fe',l:'En curso'}:{c:'#8f99a8',b:'#f3f4f6',l:'Pendiente'};
+    const certPhases=this.FASES.map((f,i)=>{ const st=i<curIdx?'done':i===curIdx?'current':'pending'; const pm=psMeta(st);
+      return {...f, num:String(i+1), stColor:pm.c, stBg:pm.b, stLabel:pm.l}; });
+    const scCount={cumple:0,parcial:0,no:0}; this.CONTROLS.forEach(c=>{scCount[cst[c.code]]++;});
+    const emitida = cur.fase==='certification'||cur.fase==='renewal';
+    const cert = { company:cur.name, rubro:cur.rubro, code:'DPC-'+cur.in+'-2026-'+String(1001+this.state.company),
+      hash:'0x'+cur.in.toLowerCase()+'a3f9c72e1d84b6', emitida, estadoLabel:emitida?'Certificado vigente':'Pendiente de emisión',
+      estadoColor:emitida?'#075a39':'#705500', estadoBg:emitida?'#e9f2ec':'#f6f0df',
+      fecha:'28 jun 2026', vence:'28 jun 2027', pct:cur.pct+'%',
+      cumple:String(scCount.cumple), parcial:String(scCount.parcial), no:String(scCount.no), totalCtrl:String(this.CONTROLS.length) };
+
+    // COTIZADOR (autoevaluación en línea)
+    const segBtn=(on)=>`font-family:inherit;cursor:pointer;font-size:13px;font-weight:500;padding:9px 15px;border-radius:10px;border:1px solid ${on?'#1c1d1f':'#d3d8df'};background:${on?'#1c1d1f':'#fff'};color:${on?'#fff':'#1c1d1f'};`;
+    const cs2 = this.state;
+    const cotSizes = [
+      {key:'micro', label:'Microempresa', sub:'Hasta 9 personas'},
+      {key:'pequena', label:'Pequeña', sub:'10 a 49 personas'},
+      {key:'mediana', label:'Mediana o grande', sub:'50 o más personas'},
+    ].map(o=>({...o, active:cs2.cotSize===o.key, onClick:this.setCot('cotSize',o.key), style:segBtn(cs2.cotSize===o.key)}));
+    const cotRubros = [
+      {key:'ninguno', label:'Otros'},
+      {key:'salud', label:'Salud'},
+      {key:'fintech', label:'Fintech / Financiero'},
+      {key:'esenciales', label:'Servicios esenciales'},
+    ].map(o=>({...o, active:cs2.cotRubro===o.key, onClick:this.setCot('cotRubro',o.key), style:segBtn(cs2.cotRubro===o.key)}));
+    const yn=(field,val)=>({active:cs2[field]===val, onClick:this.setCot(field,val), style:segBtn(cs2[field]===val)});
+    const cotToggles = [
+      {key:'cotSensibles', q:'¿Tratan datos sensibles? (salud, biométricos, financieros)', si:yn('cotSensibles',true), no:yn('cotSensibles',false)},
+      {key:'cotIntl', q:'¿Transfieren datos al extranjero o usan proveedores cloud fuera de Chile?', si:yn('cotIntl',true), no:yn('cotIntl',false)},
+      {key:'cotAuto', q:'¿Usan decisiones automatizadas o perfilamiento? (scoring, IA)', si:yn('cotAuto',true), no:yn('cotAuto',false)},
+    ];
+    const cotFactors = [];
+    if(cs2.cotSensibles) cotFactors.push('Datos sensibles');
+    if(cs2.cotRubro!=='ninguno') cotFactors.push('Rubro regulado');
+    if(cs2.cotIntl) cotFactors.push('Transferencias internacionales');
+    if(cs2.cotAuto) cotFactors.push('Decisiones automatizadas / IA');
+    const cotEnterprise = cs2.cotSize==='mediana';
+    const cotValor = [
+      {t:'Protección económica', d:'El costo de la certificación es una fracción de lo que representa una sola multa por incumplimiento.'},
+      {t:'Cumplimiento demostrable', d:'Evidencia estructurada y auditable, lista para responder ante una fiscalización de la Agencia.'},
+      {t:'Prestigio y confianza', d:'Ser certificado comunica seriedad a clientes, socios y proveedores, y diferencia frente a la competencia.'},
+    ];
+    const cotBaseMap = {micro:{t:'Microempresa', base:'Desde 5 UF + IVA'}, pequena:{t:'Pequeña empresa', base:'Desde 15 UF + IVA'}};
+    const cotTierName = cotEnterprise ? 'Enterprise' : cotBaseMap[cs2.cotSize].t;
+    const cotPrice = cotEnterprise ? 'Bajo cotización' : cotBaseMap[cs2.cotSize].base;
+    const cotHasFactors = cotFactors.length>0;
+    const cotNote = cotEnterprise
+      ? 'Por su tamaño, la certificación se cotiza a la medida según el alcance del diagnóstico.'
+      : (cotHasFactors
+        ? 'El caso incluye factores que pueden ajustar el valor final sobre la base:'
+        : 'El caso se ajusta al valor base referencial.');
+
+    return {
+      accent, serifFont, showScores,
+      isLanding:route==='landing', isLogin:route==='login', isCotizador:route==='cotizador', isApp:route!=='landing' && route!=='login' && route!=='cotizador',
+      isDashboard:route==='dashboard', isEmpresas:route==='empresas', isRegistro:route==='registro', isResumen:route==='resumen', isChecklist:route==='checklist',
+      inCompany, navLabel: inCompany ? 'Empresa' : 'Consultoría', isAdminView: !inCompany,
+      isControl:route==='control', isRiesgos:route==='riesgos', isSoluciones:route==='soluciones',
+      isPlan:route==='plan', isEvidencias:route==='evidencias', isCertificacion:route==='certificacion',
+      goPlatform:this.goLogin(), goLogin:this.goLogin(), goLanding:this.go('landing'), goCotizador:this.go('cotizador'), goDashboard:this.go('dashboard'), goEmpresas:this.go('empresas'), goRegistro:this.go('registro'), goChecklist:this.go('checklist'),
+      doLogin:()=>this.doLogin(), logout:this.logout(),
+      loginUser:this.state.loginUser, loginPass:this.state.loginPass, loginErr:this.state.loginErr,
+      onLoginUser:(e)=>this.setState({loginUser:e.target.value, loginErr:false}),
+      onLoginPass:(e)=>this.setState({loginPass:e.target.value, loginErr:false}),
+      onLoginKey:(e)=>{ if(e.key==='Enter') this.doLogin(); },
+      navItems, companies:cm, current, domains, domainsPrincipio, domainsComp, dashStats, faseDist,
+      resumen, resumenDominios, resumenPasos,
+      heroNav, heroStats, heroDomains, stakes, agencies, footerCols,
+      acompanamiento, planes:planesV, dossierDocs,
+      cotSizes, cotRubros, cotToggles, cotFactors, cotEnterprise, cotTierName, cotPrice, cotHasFactors, cotNote, cotValor,
+      cotSize:cs2.cotSize, cotRubro:cs2.cotRubro,
+      onCotSize:(e)=>this.setState({cotSize:e.target.value}), onCotRubro:(e)=>this.setState({cotRubro:e.target.value}),
+      fases:this.FASES, principios:this.PRINCIPIOS,
+      rubros, comp, factors,
+      checkDomains, selDomain, domainControls,
+      ctrl,
+      risks, matrixCols, matrixRows,
+      solutions,
+      plan, planSummary,
+      evidences, evSummary,
+      certPhases, cert,
+    };
+  }
+}
+</script>
+</body>
+</html>
