@@ -12,8 +12,8 @@ import { WhatsAppButton } from "./whatsapp-button";
  * en UTM/CLP. Sin plazos comprometidos: solo la fecha de vigencia de la ley.
  * Desviación normalizada (prototype-analysis §9.2.2): los rojos saturados de
  * urgencia del prototipo (#e5342b/#a1231f/#fdf3f2) se reemplazan por los
- * tokens semánticos danger-red y sus tintes (#f6e9e8) — la única excepción
- * saturada permitida es el verde WhatsApp.
+ * tokens semánticos danger-red y sus tintes (#f6e9e8). La excepción verde
+ * de WhatsApp fue retirada el 2026-07-03: la paleta es 100% monocroma.
  */
 export async function Hero() {
   const t = await getTranslations("landing");
@@ -35,9 +35,8 @@ export async function Hero() {
 
       <h1 className="mx-auto max-w-[820px] font-serif text-heading font-medium leading-heading tracking-heading text-ink sm:text-heading-lg sm:leading-heading-lg sm:tracking-heading-lg lg:text-display lg:leading-display lg:tracking-display">
         {t("hero.title")}
-        {/* Decisión registrada: excepción de marca del prototipo — icono (no
-            texto) en success-green dentro del H1. */}
-        <span className="ml-[14px] inline-flex -translate-y-[3px] align-middle text-success-green">
+        {/* Check del titular en Ink: titular monocromo (decisión 2026-07-03). */}
+        <span className="ml-[14px] inline-flex -translate-y-[3px] align-middle text-ink">
           <CheckCircleIcon className="max-sm:h-[36px] max-sm:w-[36px]" />
         </span>
       </h1>
