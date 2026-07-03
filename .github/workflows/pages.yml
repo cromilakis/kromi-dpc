@@ -1,0 +1,68 @@
+# Demo estática de la cara pública en GitHub Pages
+# (https://cromilakis.github.io/kromi-dpc). La plataforma interna requiere
+# servidor + Postgres y NO forma parte de esta demo (se despliega en Vercel
+# en la fase Connect). Ver next.config.ts (GITHUB_PAGES=1).
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Preparar demo estática (excluir rutas con servidor)
+        run: |
+          # output:export no soporta middleware, server actions ni SSR dinámico:
+          # se excluyen las superficies que los usan (quedan solo landing +
+          # autoevaluador, que es client-side).
+          rm -rf app/app app/login app/verificar middleware.ts
+          # La server action del lead se stubea: la UI degrada a CTA WhatsApp.
+          cp lib/actions/self-assessment.demo.ts lib/actions/self-assessment.ts
+
+      - name: Build estático
+        env:
+          GITHUB_PAGES: "1"
+          NEXT_PUBLIC_STATIC_DEMO: "1"
+        run: |
+          pnpm build
+          touch out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
