@@ -1,0 +1,55 @@
+{
+  "app": {
+    "shell": {
+      "brand": "DPC · Marco de trabajo",
+      "consultingGroup": "Consultoría",
+      "companyGroup": "Empresa",
+      "backToCompanies": "← Todas las empresas",
+      "sidebarLabel": "Navegación principal",
+      "adminBreadcrumb": "Panel de administración",
+      "companyLoading": "Cargando datos de la empresa…",
+      "complexityScore": "Complexity Score",
+      "loading": "Cargando…",
+      "phases": {
+        "diagnostico": "Diagnóstico",
+        "propuesta": "Propuesta",
+        "certificacion": "Certificación",
+        "revalidacion": "Revalidación"
+      },
+      "userMenu": {
+        "signOut": "Cerrar sesión",
+        "roles": {
+          "consultant": "Consultor",
+          "admin": "Administrador"
+        }
+      },
+      "error": {
+        "title": "Algo salió mal",
+        "text": "No fue posible cargar esta vista. Se puede reintentar; si el problema persiste, contactar al equipo.",
+        "retry": "Reintentar"
+      }
+    },
+    "nav": {
+      "panel": "Panel general",
+      "companies": "Empresas",
+      "newCompany": "Nueva empresa",
+      "summary": "Resumen",
+      "checklist": "Checklist DPC",
+      "risks": "Riesgos & Gap",
+      "solutions": "Soluciones",
+      "plan": "Plan de adecuación",
+      "evidence": "Evidencias",
+      "certification": "Certificación"
+    },
+    "auth": {
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "nombre@dpc.cl",
+      "submitting": "Ingresando…",
+      "errors": {
+        "validation": "Se necesita un correo válido y una contraseña.",
+        "credentials": "Correo o contraseña incorrectos.",
+        "unavailable": "No es posible iniciar sesión en este momento. Se puede intentar nuevamente en unos minutos."
+      }
+    }
+  }
+}

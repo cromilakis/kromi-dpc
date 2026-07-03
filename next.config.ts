@@ -6,7 +6,12 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // i18n/request.ts lee messages/app/*.json vía fs en runtime (deep-merge por
+  // módulo): se declaran aquí para que el file tracing de `next build` los
+  // incluya en el server bundle (el import estático de es.json ya se tracea).
+  outputFileTracingIncludes: {
+    "/**": ["./messages/app/*.json"],
+  },
 };
 
 export default withNextIntl(nextConfig);

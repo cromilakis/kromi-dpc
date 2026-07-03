@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seed:consultant": "node scripts/create-consultant.mjs"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.63.0",

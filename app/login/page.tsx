@@ -1,18 +1,38 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { Button, Field, Input, Logo } from "@/components/ui";
+import { LoginForm } from "@/components/auth/login-form";
+import { Logo } from "@/components/ui";
 
 /**
- * /login — placeholder VISUAL del login del prototipo (sección isLogin):
- * card centrada sobre #fbfbfc con logo + tagline, campos deshabilitados y
- * botón inactivo. SIN lógica: la autenticación se implementa en la spec auth
- * (Fase C). Acceso discreto desde el footer de la landing (RFC §11).
+ * /login — login FUNCIONAL del equipo (spec auth, prototipo isLogin): card
+ * centrada sobre #fbfbfc con logo + tagline, email + contraseña y server
+ * action signInWithPassword (lib/actions/auth.ts). El middleware redirige
+ * aquí (/login?next=…) los accesos a /app sin sesión, y de vuelta a /app si
+ * ya hay sesión. Acceso discreto desde el footer de la landing (RFC §11).
+ *
+ * Reparto de strings (documentado): los textos que ya existían en
+ * messages/es.json bajo `login.*` (title, subtitle, password*, submit,
+ * backToSite, placeholderNote) se reutilizan tal cual; los NUEVOS del flujo
+ * real (email*, submitting, errores) viven en messages/app/shell.json bajo
+ * `app.auth.*` (este módulo es dueño de ese archivo). `login.userLabel` y
+ * `login.userPlaceholder` quedan sin uso (el login real es por email) — no se
+ * tocan porque es.json no pertenece a esta spec.
+ *
  * Desviaciones normalizadas por .kromi/design.md: H1 serif a 28px (el
  * prototipo usa 26px; serif solo >= 28px) y tagline en Inter itálica.
  */
-export default async function LoginPage() {
-  const t = await getTranslations("login");
-  const tCommon = await getTranslations("common");
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string | string[] }>;
+}) {
+  const [{ next }, t, tAuth, tCommon] = await Promise.all([
+    searchParams,
+    getTranslations("login"),
+    getTranslations("app.auth"),
+    getTranslations("common"),
+  ]);
+  const nextParam = typeof next === "string" ? next : undefined;
 
   return (
     /* Landmark <main> con id="main" (destino del skip-link del layout). */
@@ -41,28 +61,23 @@ export default async function LoginPage() {
             {t("subtitle")}
           </p>
 
-          {/* Campos deshabilitados: placeholder visual, sin lógica de auth. */}
-          <Field label={t("userLabel")} htmlFor="login-user" className="mb-[14px]">
-            <Input
-              id="login-user"
-              name="user"
-              placeholder={t("userPlaceholder")}
-              disabled
-            />
-          </Field>
-          <Field label={t("passwordLabel")} htmlFor="login-password" className="mb-8">
-            <Input
-              id="login-password"
-              name="password"
-              type="password"
-              placeholder={t("passwordPlaceholder")}
-              disabled
-            />
-          </Field>
+          <LoginForm
+            next={nextParam}
+            labels={{
+              email: tAuth("emailLabel"),
+              emailPlaceholder: tAuth("emailPlaceholder"),
+              password: t("passwordLabel"),
+              passwordPlaceholder: t("passwordPlaceholder"),
+              submit: t("submit"),
+              submitting: tAuth("submitting"),
+              errors: {
+                validation: tAuth("errors.validation"),
+                credentials: tAuth("errors.credentials"),
+                unavailable: tAuth("errors.unavailable"),
+              },
+            }}
+          />
 
-          <Button className="mt-20 w-full px-[18px] py-[11px]" disabled>
-            {t("submit")}
-          </Button>
           <Link
             href="/"
             className="mt-8 block w-full rounded-buttons p-8 text-center text-[13px] font-medium text-metal transition-colors hover:bg-ash hover:text-ink"
