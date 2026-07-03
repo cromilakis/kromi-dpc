@@ -17,6 +17,10 @@ import { useShellCompany } from "./shell-context";
  * Activo = ítem cuyo href coincidente es el más largo (así las fichas de
  * control bajo /checklist marcan "Checklist DPC", regla del prototipo).
  * A11y establecida: labels ≤13px en Carbon (Metal del prototipo fallaba AA).
+ * DECISIÓN (desviación del prototipo §1.4): el footer del sidebar con el
+ * botón "Cerrar sesión" se relocalizó al menú de usuario del topbar — el
+ * prototipo no tenía menú de usuario y duplicar la salida en dos lugares
+ * era redundante; el sidebar queda sin footer a propósito.
  */
 
 interface NavItem {

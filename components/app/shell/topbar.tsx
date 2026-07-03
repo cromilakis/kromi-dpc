@@ -1,18 +1,25 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { signOut } from "@/lib/actions/auth";
-import { useShellCompany, type CompanyPhase } from "./shell-context";
+import {
+  useShellCompany,
+  type CompanyPhase,
+  type ShellScoreTier,
+} from "./shell-context";
 
 /**
  * Topbar del shell interno — prototipo §1.4: 56px, borde inferior Stone,
  * sticky. Izquierda: breadcrumb simple — "Panel de administración" en modo
  * consultoría; nombre de empresa + pill de fase (StatusBadge, mapa §3.5) +
- * Complexity Score en modo empresa (datos vía ShellContext, skeleton mientras
- * llegan). Derecha: menú de usuario (<details>, sin JS) con nombre, rol y
- * "Cerrar sesión" (server action signOut).
+ * "Complexity Score {n} · {tramo}" en modo empresa (datos vía ShellContext,
+ * skeleton mientras llegan; el tramo llega ya resuelto en servidor).
+ * Derecha: menú de usuario (<details> mejorado: se cierra con Escape —
+ * devolviendo el foco al trigger — y al interactuar/tabular fuera) con
+ * nombre, rol y "Cerrar sesión" (server action signOut).
  * A11y establecida: texto ≤13px en Carbon (el #8f99a8 del prototipo falla AA).
  */
 
@@ -21,6 +28,14 @@ const PHASE_VARIANT: Record<CompanyPhase, StatusBadgeVariant> = {
   propuesta: "warning",
   certificacion: "active",
   revalidacion: "positive",
+};
+
+/** Tramo del score → variante semántica (tierColor del prototipo §3.5). */
+const SCORE_TIER_VARIANT: Record<ShellScoreTier, StatusBadgeVariant> = {
+  low: "positive",
+  medium: "active",
+  high: "warning",
+  critical: "negative",
 };
 
 export interface AppTopbarProps {
@@ -32,8 +47,29 @@ export interface AppTopbarProps {
 export function AppTopbar({ userName, userInitials, userRole }: AppTopbarProps) {
   const pathname = usePathname();
   const t = useTranslations("app.shell");
+  // Labels de tramo compartidos con el módulo empresas (misma práctica que
+  // las fases: un solo catálogo de textos para el mismo concepto).
+  const tTiers = useTranslations("app.companies.scoreTiers");
   const { company } = useShellCompany();
   const inCompany = /^\/app\/empresas\/(?!nueva(\/|$))[^/]+/.test(pathname);
+
+  // Menú de usuario: <details> con cierre por Escape (foco de vuelta al
+  // trigger) y por interacción fuera del menú (click/tap).
+  const menuRef = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    function onPointerDown(event: PointerEvent) {
+      const menu = menuRef.current;
+      if (
+        menu?.open &&
+        event.target instanceof Node &&
+        !menu.contains(event.target)
+      ) {
+        menu.open = false;
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, []);
 
   return (
     <header className="sticky top-0 z-20 flex h-[56px] shrink-0 items-center justify-between border-b border-stone bg-white px-24">
@@ -48,11 +84,18 @@ export function AppTopbar({ userName, userInitials, userRole }: AppTopbarProps) 
                 {t(`phases.${company.phase}`)}
               </StatusBadge>
               {company.complexityScore !== null ? (
-                <span className="whitespace-nowrap text-caption text-carbon">
-                  {t("complexityScore")}{" "}
-                  <b className="font-semibold text-ink">
-                    {company.complexityScore}
-                  </b>
+                <span className="flex items-center gap-8 whitespace-nowrap text-caption text-carbon">
+                  <span>
+                    {t("complexityScore")}{" "}
+                    <b className="font-semibold text-ink">
+                      {company.complexityScore}
+                    </b>
+                  </span>
+                  {company.scoreTier !== null ? (
+                    <StatusBadge variant={SCORE_TIER_VARIANT[company.scoreTier]}>
+                      {tTiers(company.scoreTier)}
+                    </StatusBadge>
+                  ) : null}
                 </span>
               ) : null}
             </>
@@ -72,7 +115,29 @@ export function AppTopbar({ userName, userInitials, userRole }: AppTopbarProps) 
         )}
       </div>
 
-      <details className="group relative">
+      <details
+        ref={menuRef}
+        className="group relative"
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && menuRef.current?.open) {
+            menuRef.current.open = false;
+            menuRef.current.querySelector<HTMLElement>("summary")?.focus();
+          }
+        }}
+        onBlur={(event) => {
+          // Tab fuera del menú abierto → se cierra (focusout burbujea).
+          const menu = menuRef.current;
+          if (
+            menu?.open &&
+            !(
+              event.relatedTarget instanceof Node &&
+              menu.contains(event.relatedTarget)
+            )
+          ) {
+            menu.open = false;
+          }
+        }}
+      >
         <summary className="flex cursor-pointer list-none items-center gap-8 rounded-buttons px-8 py-4 transition-colors hover:bg-ash [&::-webkit-details-marker]:hidden">
           <span
             aria-hidden="true"

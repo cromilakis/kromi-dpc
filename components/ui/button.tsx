@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "./cn";
 
 /**
@@ -33,7 +33,8 @@ export function buttonClasses(
   return cn(baseClasses, variantClasses[variant], className);
 }
 
-export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
+/** ComponentProps (React 19): incluye `ref`, que fluye vía el spread. */
+export interface ButtonProps extends ComponentProps<"button"> {
   variant?: ButtonVariant;
 }
 

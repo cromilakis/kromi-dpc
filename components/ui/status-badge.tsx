@@ -8,7 +8,9 @@ import { cn } from "./cn";
  * - warning:   #705500 sobre #f6f0df (Parcial / Pendiente / En curso / Propuesta)
  * - negative:  #772322 sobre #f6e9e8 (No cumple / Faltante / Rechazado / Crítico)
  * - active:    #2f66c9 sobre #eaf1fe (Activo / En revisión / Certificación)
- * - neutral:   #6f7988 sobre #f3f4f6 (Diagnóstico / Pendiente de fase)
+ * - neutral:   carbon sobre #f3f4f6 (Diagnóstico / Pendiente de fase) — el
+ *   prototipo usa #6f7988, pero falla AA a 11px/600 sobre ash (regla a11y
+ *   del proyecto: texto ≤13px nunca más claro que carbon)
  * Los fondos-tinte no son tokens del @theme: se fijan como valores arbitrarios
  * exactos del prototipo. Texto: 11px/600, radius tags 4px, padding 2px 8px.
  * `pill` opcional reproduce las pills de estado/fase (radius 999) del prototipo §3.4.
@@ -27,7 +29,7 @@ const variantClasses: Record<StatusBadgeVariant, string> = {
   // Único hex fuera del Style Reference: action-blue oscurecido para AA en
   // 11px sobre #eaf1fe.
   active: "text-[#2f66c9] bg-[#eaf1fe]",
-  neutral: "text-metal bg-ash",
+  neutral: "text-carbon bg-ash",
 };
 
 export interface StatusBadgeProps extends ComponentPropsWithoutRef<"span"> {

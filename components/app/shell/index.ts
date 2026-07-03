@@ -11,7 +11,11 @@ export { AppTopbar } from "./topbar";
 export type { AppTopbarProps } from "./topbar";
 
 export { ShellProvider, CompanyScope, useShellCompany } from "./shell-context";
-export type { ShellCompany, CompanyPhase } from "./shell-context";
+export type {
+  ShellCompany,
+  CompanyPhase,
+  ShellScoreTier,
+} from "./shell-context";
 
 export { NavIcon } from "./nav-icon";
 export type { NavIconName } from "./nav-icon";

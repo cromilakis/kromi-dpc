@@ -11,6 +11,11 @@
  * Lee NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY de .env.local
  * (parseo manual, sin dotenv). SOLO para entorno local/desarrollo: la service
  * role key jamás debe usarse así contra producción.
+ *
+ * Guard de entorno (enforced, no solo comentario): si la URL no apunta a
+ * 127.0.0.1/localhost el script ABORTA, salvo que se pase --allow-remote
+ * explícito; y aun con el flag, contra un destino remoto se exige contraseña
+ * por argumento (jamás la DEFAULT_PASSWORD, que es pública en el repo).
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -69,10 +74,47 @@ if (!url || !serviceRoleKey) {
   fail("faltan NEXT_PUBLIC_SUPABASE_URL y/o SUPABASE_SERVICE_ROLE_KEY en .env.local.");
 }
 
-const [, , emailArg, passwordArg, nameArg] = process.argv;
+// --allow-remote es un flag posicional-independiente: se filtra de argv antes
+// de leer los argumentos posicionales (email, password, nombre).
+const rawArgs = process.argv.slice(2);
+const allowRemote = rawArgs.includes("--allow-remote");
+const [emailArg, passwordArg, nameArg] = rawArgs.filter(
+  (arg) => arg !== "--allow-remote",
+);
+
+/** Hosts considerados Supabase LOCAL (supabase start). */
+const LOCAL_HOSTS = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
+
+let targetHost;
+try {
+  targetHost = new URL(url).hostname;
+} catch {
+  fail(`NEXT_PUBLIC_SUPABASE_URL no es una URL válida: ${url}`);
+}
+const isLocalTarget = LOCAL_HOSTS.has(targetHost);
+
+// Guard duro: sin --allow-remote este script solo opera contra el local.
+if (!isLocalTarget && !allowRemote) {
+  fail(
+    `la URL de destino (${targetHost}) no es local. Este script de bootstrap ` +
+      `usa la service role key y por defecto SOLO opera contra 127.0.0.1/` +
+      `localhost. Si realmente corresponde (p. ej. un staging), reintentar ` +
+      `con --allow-remote y contraseña explícita.`,
+  );
+}
+
 const email = emailArg ?? DEFAULT_EMAIL;
 const password = passwordArg ?? DEFAULT_PASSWORD;
 const fullName = nameArg ?? DEFAULT_FULL_NAME;
+
+// Contra un destino remoto la contraseña por defecto (pública en el repo)
+// queda prohibida: se exige una por argumento.
+if (!isLocalTarget && (!passwordArg || passwordArg === DEFAULT_PASSWORD)) {
+  fail(
+    "destino remoto: pasar una contraseña propia por argumento " +
+      "(la DEFAULT_PASSWORD del repo está prohibida fuera del entorno local).",
+  );
+}
 
 const admin = createClient(url, serviceRoleKey, {
   auth: { persistSession: false, autoRefreshToken: false },

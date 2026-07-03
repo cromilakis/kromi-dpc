@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { CompanyScope, type ShellCompany } from "@/components/app/shell";
+import { scoreTierOf } from "@/lib/companies/scoring.server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -56,6 +57,12 @@ export default async function CompanyLayout({
     sectorName: company.sectors?.name ?? null,
     phase: company.phase,
     complexityScore: company.complexity_score,
+    // Tramo calculado en servidor (scoring server-only): el topbar lo muestra
+    // junto al score ("Complexity Score {n} · {tramo}", prototipo §1.4).
+    scoreTier:
+      company.complexity_score !== null
+        ? scoreTierOf(company.complexity_score)
+        : null,
   };
 
   return <CompanyScope company={shellCompany}>{children}</CompanyScope>;

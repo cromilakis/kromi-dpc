@@ -1,0 +1,186 @@
+{
+  "app": {
+    "evidences": {
+      "meta": {
+        "title": "Evidencias"
+      },
+      "loading": "Cargando evidencias…",
+      "eyebrow": "Repositorio · {company}",
+      "title": "Evidencias documentales",
+      "description": "Repositorio documental de la empresa: documentos versionados por control, con estado de validación del equipo consultor.",
+      "summary": {
+        "documents": "Documentos",
+        "validated": "Validadas",
+        "pending": "Pendientes",
+        "rejected": "Rechazadas"
+      },
+      "statuses": {
+        "validated": "Validada",
+        "partial": "Pendiente",
+        "missing": "Faltante",
+        "rejected": "Rechazada"
+      },
+      "filters": {
+        "legend": "Filtros del repositorio",
+        "statusLabel": "Estado",
+        "controlLabel": "Control",
+        "allStatuses": "Todos los estados",
+        "allControls": "Todos los controles",
+        "noControl": "Sin control vinculado",
+        "clear": "Limpiar filtros",
+        "updating": "Actualizando resultados…"
+      },
+      "table": {
+        "title": "Documentos del repositorio",
+        "count": "{count, plural, =0 {Sin documentos} one {# documento} other {# documentos}}",
+        "document": "Documento",
+        "control": "Control",
+        "version": "Versión",
+        "status": "Estado",
+        "date": "Fecha",
+        "uploadedBy": "Subido por",
+        "actions": "Acciones",
+        "versionShort": "v{version}",
+        "none": "—"
+      },
+      "empty": {
+        "title": "Repositorio vacío",
+        "text": "Esta empresa aún no tiene evidencias cargadas. Subir el primer documento con el formulario de arriba."
+      },
+      "noResults": {
+        "title": "Sin resultados",
+        "text": "Ningún documento coincide con los filtros seleccionados."
+      },
+      "upload": {
+        "title": "Subir evidencia",
+        "hint": "El documento queda en el bucket privado de evidencias, versionado por nombre y pendiente de validación.",
+        "fileLabel": "Documento",
+        "fileHint": "Máximo {maxMb} MB. Formatos: PDF, imágenes (PNG/JPG/WebP), Office (Word, Excel, PowerPoint) y CSV.",
+        "controlLabel": "Control vinculado",
+        "controlNone": "Sin control vinculado",
+        "submit": "Subir evidencia",
+        "submitting": "Subiendo…",
+        "success": "Evidencia «{name}» subida. Queda pendiente de validación.",
+        "errors": {
+          "validation": "Los datos del formulario no son válidos. Revisar y reintentar.",
+          "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+          "file_missing": "Seleccionar un archivo antes de subir.",
+          "file_too_large": "El archivo supera el máximo de {maxMb} MB.",
+          "file_type": "Tipo de archivo no permitido. Usar PDF, imágenes, Office o CSV.",
+          "unavailable": "No fue posible subir el documento (falla de red o del servicio). Reintentar en unos minutos."
+        }
+      },
+      "download": {
+        "action": "Descargar",
+        "actionAria": "Descargar el documento {name}",
+        "preparing": "Generando enlace…",
+        "noFileTitle": "Sin archivo adjunto",
+        "errors": {
+          "validation": "La solicitud de descarga no es válida.",
+          "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+          "not_found": "El documento ya no existe en el repositorio.",
+          "no_file": "Esta evidencia no tiene un archivo adjunto.",
+          "unavailable": "No fue posible generar el enlace de descarga. Reintentar."
+        }
+      },
+      "review": {
+        "selectAria": "Cambiar el estado de validación de {name}",
+        "keepCurrent": "Estado actual: {status}",
+        "errors": {
+          "validation": "El cambio de estado no es válido.",
+          "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+          "not_found": "La evidencia ya no existe. Recargar la vista.",
+          "no_file": "La evidencia no tiene documento adjunto: subir el archivo antes de validarla.",
+          "unavailable": "No fue posible guardar el estado. Reintentar."
+        }
+      }
+    },
+    "certification": {
+      "meta": {
+        "title": "Certificación DPC"
+      },
+      "loading": "Cargando certificación…",
+      "eyebrow": "Certificación DPC · {company}",
+      "title": "Certificado privado de cumplimiento",
+      "description": "Emisión y verificación criptográfica del sello DPC según el estado del assessment activo.",
+      "eligibility": {
+        "title": "Elegibilidad de emisión",
+        "summaryLine": "{total, plural, one {# control evaluado} other {# controles evaluados}} · {pct}% de cumplimiento global",
+        "cycleLabel": "Ciclo {cycle}",
+        "progressLabel": "Cumplimiento global del assessment activo",
+        "counters": {
+          "compliant": "Cumple",
+          "partial": "Parcial",
+          "nonCompliant": "No cumple",
+          "pending": "Pendiente"
+        },
+        "thresholdNote": "Umbral de emisión: {threshold}% de los controles del assessment activo en «Cumple».",
+        "hardRuleNote": "Regla dura: cero controles «No cumple» en los dominios {domains} (pendiente de validación del equipo).",
+        "eligibleTitle": "Empresa elegible",
+        "eligibleText": "El assessment activo cumple el umbral y la regla dura de dominios críticos. Se puede emitir el certificado.",
+        "gapsTitle": "Qué falta para emitir",
+        "gaps": {
+          "noAssessment": "La empresa no tiene ningún ciclo de evaluación. Iniciar un assessment y evaluar los controles.",
+          "noEvaluatedControls": "El assessment activo no tiene controles asociados. Revisar la carga del checklist.",
+          "belowThreshold": "Cumplimiento global {pct}% — bajo el umbral de {threshold}%. {missing, plural, one {Falta # control adicional en «Cumple»} other {Faltan # controles adicionales en «Cumple»}}.",
+          "criticalNonCompliant": "Dominio crítico {domain} con controles en «No cumple»: {controls}."
+        }
+      },
+      "certificate": {
+        "brand": "DPC Certification",
+        "grantedTo": "Certificado de cumplimiento otorgado a",
+        "meta": "Rubro {sector} · Estándar DPC v0.4",
+        "metaNoSector": "Estándar DPC v0.4",
+        "codeLabel": "Código",
+        "complianceLabel": "Cumplimiento",
+        "issuedLabel": "Emitido",
+        "validUntilLabel": "Vence",
+        "revalidatedLabel": "Última revalidación",
+        "hashLabel": "Hash de verificación",
+        "verify": "Verificar certificado",
+        "pendingTitle": "Pendiente de emisión",
+        "pendingText": "La empresa aún no tiene un certificado vigente. Al emitirlo aparecerá aquí con su código verificable públicamente."
+      },
+      "statuses": {
+        "active": "Certificado vigente",
+        "expired": "Vencido",
+        "revoked": "Revocado"
+      },
+      "actions": {
+        "issue": "Emitir certificado",
+        "issuing": "Emitiendo…",
+        "issueBlocked": "La emisión se habilita cuando la empresa es elegible.",
+        "revalidate": "Revalidar por 12 meses",
+        "revalidating": "Revalidando…",
+        "revoke": "Revocar certificado",
+        "revoking": "Revocando…",
+        "revokeConfirmTitle": "¿Revocar el certificado?",
+        "revokeConfirmText": "El certificado quedará revocado y la verificación pública lo mostrará como no vigente. Esta acción queda en la bitácora de auditoría.",
+        "revokeConfirm": "Sí, revocar",
+        "cancel": "Cancelar",
+        "errors": {
+          "validation": "Los datos enviados no son válidos. Recargar la vista.",
+          "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+          "not_found": "El registro ya no existe. Recargar la vista.",
+          "not_eligible": "La empresa ya no es elegible: revisar la elegibilidad y reintentar.",
+          "already_active": "La empresa ya tiene un certificado vigente.",
+          "not_active": "El certificado no está vigente: no admite esta operación.",
+          "unavailable": "No fue posible completar la operación. Reintentar en unos minutos."
+        }
+      },
+      "history": {
+        "title": "Historial de certificados",
+        "count": "{count, plural, =0 {Sin emisiones} one {# emisión} other {# emisiones}}",
+        "code": "Código",
+        "status": "Estado",
+        "issued": "Emisión",
+        "validUntil": "Vigencia",
+        "revalidated": "Revalidación",
+        "verify": "Verificar",
+        "verifyAria": "Verificar el certificado {code} en la página pública",
+        "empty": "Esta empresa aún no tiene certificados emitidos.",
+        "none": "—"
+      }
+    }
+  }
+}

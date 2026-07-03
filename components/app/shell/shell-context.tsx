@@ -22,6 +22,14 @@ import type { Database } from "@/lib/supabase/types";
 
 export type CompanyPhase = Database["public"]["Enums"]["company_phase"];
 
+/**
+ * Tramo del Complexity Score (unión local: el tipo canónico vive en
+ * lib/companies/scoring.server.ts, que es server-only y no puede importarse
+ * desde este módulo cliente; el layout de empresa calcula el tramo en
+ * servidor y lo publica ya resuelto).
+ */
+export type ShellScoreTier = "low" | "medium" | "high" | "critical";
+
 export interface ShellCompany {
   id: string;
   name: string;
@@ -30,6 +38,8 @@ export interface ShellCompany {
   sectorName: string | null;
   phase: CompanyPhase;
   complexityScore: number | null;
+  /** Tramo del score (null si no hay score calculado). */
+  scoreTier: ShellScoreTier | null;
 }
 
 interface ShellContextValue {

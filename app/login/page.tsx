@@ -80,7 +80,7 @@ export default async function LoginPage({
 
           <Link
             href="/"
-            className="mt-8 block w-full rounded-buttons p-8 text-center text-[13px] font-medium text-metal transition-colors hover:bg-ash hover:text-ink"
+            className="mt-8 block w-full rounded-buttons p-8 text-center text-[13px] font-medium text-carbon transition-colors hover:bg-ash hover:text-ink"
           >
             {t("backToSite")}
           </Link>

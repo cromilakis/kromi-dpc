@@ -1,0 +1,147 @@
+{
+  "app": {
+    "risks": {
+      "meta": {
+        "title": "Riesgos & Gap"
+      },
+      "loading": "Cargando riesgos…",
+      "eyebrow": "Gap Analysis · {company}",
+      "title": "Riesgos & matriz de brechas",
+      "description": "Riesgos identificados para la empresa, con impacto y probabilidad evaluados por el equipo consultor.",
+      "severities": {
+        "low": "Bajo",
+        "medium": "Medio",
+        "high": "Alto"
+      },
+      "matrix": {
+        "title": "Matriz de riesgo",
+        "axesNote": "Eje vertical: probabilidad · Eje horizontal: impacto",
+        "cellLabel": "Impacto {impact}, probabilidad {probability}: {count, plural, =0 {sin riesgos} one {# riesgo} other {# riesgos}}"
+      },
+      "table": {
+        "title": "Riesgos asignados",
+        "count": "{count, plural, =0 {Sin riesgos asignados} one {# riesgo asignado} other {# riesgos asignados}}",
+        "code": "Código",
+        "description": "Descripción",
+        "classification": "Clasificación",
+        "impactShort": "I",
+        "impactFull": "Impacto",
+        "probabilityShort": "P",
+        "probabilityFull": "Probabilidad",
+        "severity": "Severidad",
+        "actions": "Acciones",
+        "empty": "Esta empresa aún no tiene riesgos asignados. Se pueden asignar desde el catálogo.",
+        "classifications": {
+          "transversal": "Transversal",
+          "sectorial": "Sectorial"
+        },
+        "edit": "Editar",
+        "editAria": "Editar riesgo {code}",
+        "remove": "Quitar",
+        "removeAria": "Quitar riesgo {code}",
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "cancel": "Cancelar",
+        "confirmRemove": "¿Quitar el riesgo de la empresa?",
+        "confirmYes": "Sí, quitar",
+        "removing": "Quitando…"
+      },
+      "assign": {
+        "title": "Asignar riesgo del catálogo",
+        "riskLabel": "Riesgo",
+        "riskPlaceholder": "Seleccionar un riesgo…",
+        "impactLabel": "Impacto (1–5)",
+        "probabilityLabel": "Probabilidad (1–5)",
+        "hint": "Al elegir un riesgo se precargan el impacto y la probabilidad por defecto del catálogo.",
+        "submit": "Asignar riesgo",
+        "submitting": "Asignando…",
+        "allAssigned": "Todos los riesgos del catálogo ya están asignados a esta empresa."
+      },
+      "errors": {
+        "validation": "Los datos enviados no son válidos. Revisar y reintentar.",
+        "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+        "conflict": "Ese riesgo ya está asignado a la empresa.",
+        "not_found": "El registro ya no existe. Recargar la vista.",
+        "unavailable": "No fue posible guardar el cambio. Reintentar en unos minutos."
+      }
+    },
+    "solutions": {
+      "meta": {
+        "title": "Soluciones"
+      },
+      "loading": "Cargando soluciones…",
+      "eyebrow": "Catálogo de soluciones · {company}",
+      "title": "Remedios parametrizados",
+      "description": "Alternativas de solución predefinidas del Marco DPC. Las elegidas se agregan al plan de adecuación de la empresa.",
+      "filterLabel": "Filtrar soluciones",
+      "filterPlaceholder": "Buscar por título, control o etiqueta…",
+      "results": "{count, plural, =0 {Sin soluciones} one {# solución} other {# soluciones}}",
+      "relatedControl": "Control relacionado",
+      "addToPlan": "Agregar al plan",
+      "adding": "Agregando…",
+      "inPlan": "En el plan",
+      "empty": "El catálogo de soluciones está vacío. Se administra desde el catálogo del Marco DPC.",
+      "noMatches": "Ninguna solución coincide con el filtro.",
+      "errors": {
+        "validation": "Los datos enviados no son válidos. Revisar y reintentar.",
+        "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+        "conflict": "Esta solución ya está en el plan de la empresa.",
+        "not_found": "La solución ya no existe en el catálogo.",
+        "unavailable": "No fue posible guardar el cambio. Reintentar en unos minutos."
+      }
+    },
+    "plan": {
+      "meta": {
+        "title": "Plan de adecuación"
+      },
+      "loading": "Cargando plan de adecuación…",
+      "eyebrow": "Plan de adecuación · {company}",
+      "title": "Seguimiento de remediación",
+      "description": "Tareas del plan de adecuación con responsable, vencimiento y estado, ordenadas por vencimiento.",
+      "summary": {
+        "total": "Total tareas",
+        "done": "Completadas",
+        "inProgress": "En curso",
+        "pending": "Pendientes"
+      },
+      "progress": {
+        "title": "Avance del plan",
+        "detail": "{done} de {total} tareas completadas"
+      },
+      "table": {
+        "title": "Tareas del plan",
+        "task": "Tarea",
+        "solution": "Solución vinculada",
+        "responsible": "Responsable",
+        "due": "Vence",
+        "status": "Estado",
+        "none": "—",
+        "empty": "El plan aún no tiene tareas. Se pueden agregar desde el catálogo de soluciones o crear una tarea manual.",
+        "statusButton": "Cambiar estado de «{task}» (actual: {status})",
+        "statusAnnouncement": "Tarea «{task}»: {status}"
+      },
+      "statuses": {
+        "pending": "Pendiente",
+        "in_progress": "En curso",
+        "done": "Completada"
+      },
+      "create": {
+        "title": "Nueva tarea manual",
+        "taskLabel": "Tarea",
+        "taskPlaceholder": "p. ej. Redactar política de retención",
+        "responsibleLabel": "Responsable",
+        "responsiblePlaceholder": "Área · Persona",
+        "dueLabel": "Vencimiento",
+        "submit": "Crear tarea",
+        "submitting": "Creando…"
+      },
+      "errors": {
+        "validation": "Los datos enviados no son válidos. Revisar y reintentar.",
+        "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+        "conflict": "Esta solución ya está en el plan de la empresa.",
+        "not_found": "La tarea ya no existe. Recargar la vista.",
+        "unavailable": "No fue posible guardar el cambio. Reintentar en unos minutos."
+      }
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "app": {
+    "checklist": {
+      "meta": {
+        "title": "Checklist DPC",
+        "controlTitle": "Control {code}"
+      },
+      "eyebrow": "Checklist DPC · {company}",
+      "title": "Checklist multiregulatorio",
+      "description": "Evaluación por dominios del Marco DPC. Hacer clic en el estado de un control para pasarlo al siguiente.",
+      "cycleBadge": "Ciclo {cycle}",
+      "loading": "Cargando checklist…",
+      "summary": {
+        "title": "Resumen de controles",
+        "progressLabel": "Cumplimiento global",
+        "progressText": "{pct}% de cumplimiento global · {compliant} de {total} controles cumplen"
+      },
+      "statuses": {
+        "pending": "Pendiente",
+        "compliant": "Cumple",
+        "partial": "Parcial",
+        "non_compliant": "No cumple"
+      },
+      "statusButton": {
+        "action": "Estado del control {code}: {status}. Activar para cambiar al siguiente estado.",
+        "announcement": "Control {code}: {status}",
+        "change": "cambiar",
+        "error": "No fue posible guardar el estado. Intentar nuevamente."
+      },
+      "filters": {
+        "legend": "Filtros del checklist",
+        "statusLabel": "Estado",
+        "allStatuses": "Todos los estados",
+        "clear": "Limpiar filtro",
+        "updating": "Actualizando resultados…"
+      },
+      "rail": {
+        "label": "Dominios del Marco DPC",
+        "counter": "{count, plural, one {# dominio} other {# dominios}}",
+        "all": "Todos los dominios"
+      },
+      "domain": {
+        "counter": "{done}/{total}",
+        "progressLabel": "Controles que cumplen en el dominio {code}"
+      },
+      "row": {
+        "evidences": "{uploaded}/{required} evidencias",
+        "open": "Abrir la ficha del control {code} — {name}"
+      },
+      "empty": {
+        "noAssessment": {
+          "title": "Sin evaluación abierta",
+          "text": "Esta empresa no tiene un ciclo de evaluación abierto. El checklist se habilita al iniciar un assessment desde la ficha de la empresa; no se crea automáticamente desde esta vista.",
+          "back": "Ir al resumen de la empresa"
+        },
+        "noControls": {
+          "title": "Evaluación sin controles",
+          "text": "La evaluación abierta no tiene controles asociados. Revisar la carga del catálogo del Marco DPC."
+        },
+        "noResults": {
+          "title": "Sin resultados",
+          "text": "Ningún control coincide con los filtros seleccionados.",
+          "clear": "Limpiar filtros"
+        }
+      },
+      "control": {
+        "loading": "Cargando ficha de control…",
+        "backToChecklist": "← Volver al checklist",
+        "sections": {
+          "objective": "Objetivo del control",
+          "criteria": "Qué se evalúa · criterios de verificación",
+          "legalPrimary": "Fundamento legal primario",
+          "legalConnected": "Fundamento legal conectado",
+          "risk": "Riesgo mitigado",
+          "none": "—"
+        },
+        "result": {
+          "title": "Métrica de resultado",
+          "lawsLabel": "Marco legal aplicable",
+          "noAssessment": "Sin evaluación abierta: el estado del control se gestiona dentro de un ciclo de assessment activo.",
+          "notInAssessment": "Este control no forma parte de la evaluación abierta de la empresa."
+        },
+        "evidences": {
+          "title": "Evidencias requeridas",
+          "counterLabel": "{done} de {total} validadas",
+          "none": "Este control no define evidencias requeridas.",
+          "uploadedTitle": "Documentos cargados",
+          "uploadedEmpty": "Aún no hay documentos cargados para este control.",
+          "version": "v{version}",
+          "statuses": {
+            "validated": "Validada",
+            "partial": "Parcial",
+            "missing": "Faltante",
+            "rejected": "Rechazada"
+          }
+        },
+        "notes": {
+          "title": "Hallazgos y notas",
+          "findingsLabel": "Hallazgos",
+          "findingsPlaceholder": "Brechas detectadas al evaluar el control…",
+          "notesLabel": "Notas internas",
+          "notesPlaceholder": "Contexto de trabajo para el equipo consultor…",
+          "save": "Guardar cambios",
+          "saving": "Guardando…",
+          "saved": "Cambios guardados.",
+          "errors": {
+            "validation": "Revisar los campos: máximo 4000 caracteres por campo.",
+            "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+            "not_found": "El control evaluado ya no está disponible.",
+            "unavailable": "No fue posible guardar. Intentar nuevamente en unos minutos."
+          }
+        },
+        "nav": {
+          "label": "Controles del dominio {code}",
+          "position": "Control {index} de {total} · {domain}",
+          "prev": "← {code}",
+          "next": "{code} →"
+        }
+      }
+    }
+  }
+}

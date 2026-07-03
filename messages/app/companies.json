@@ -1,0 +1,298 @@
+{
+  "app": {
+    "dashboard": {
+      "meta": {
+        "title": "Panel general"
+      },
+      "title": "Panel general",
+      "description": "Visión de administración del portafolio de evaluaciones DPC.",
+      "stats": {
+        "activeCompanies": "Empresas activas",
+        "activeCompaniesSub": "en la cartera del equipo",
+        "inDiagnosis": "En diagnóstico",
+        "inDiagnosisSub": "levantamiento en curso",
+        "certified": "Certificadas",
+        "certifiedSub": "en certificación o revalidación",
+        "controlsEvaluated": "Controles evaluados",
+        "controlsEvaluatedSub": "de {total} en evaluaciones abiertas"
+      },
+      "portfolio": {
+        "title": "Cartera de empresas",
+        "viewAll": "Ver todas →",
+        "columns": {
+          "company": "Empresa",
+          "sector": "Rubro",
+          "size": "Tamaño",
+          "phase": "Fase",
+          "progress": "Avance",
+          "risks": "Riesgos"
+        },
+        "progressLabel": "Avance del checklist de {name}",
+        "progressValue": "{pct}%",
+        "noAssessment": "Sin evaluación",
+        "open": "Abrir la ficha de {name}"
+      },
+      "empty": {
+        "title": "Todavía no hay empresas en la cartera",
+        "text": "El panel se activa con la primera empresa registrada: fase del ciclo, avance del checklist y riesgos quedan visibles acá.",
+        "cta": "Registrar la primera empresa"
+      }
+    },
+    "companies": {
+      "meta": {
+        "listTitle": "Empresas",
+        "newTitle": "Nueva empresa",
+        "detailTitle": "Resumen de empresa"
+      },
+      "none": "—",
+      "sizeTiers": {
+        "micro": "Microempresa",
+        "small": "Pequeña empresa",
+        "enterprise": "Mediana o grande"
+      },
+      "sizeTierSubs": {
+        "micro": "Hasta 9 personas",
+        "small": "10 a 49 personas",
+        "enterprise": "50 o más personas"
+      },
+      "scoreTiers": {
+        "low": "Bajo",
+        "medium": "Medio",
+        "high": "Alto",
+        "critical": "Crítico"
+      },
+      "list": {
+        "title": "Empresas",
+        "description": "Registro y clasificación de las empresas cliente del ciclo DPC.",
+        "newCompany": "+ Nueva empresa",
+        "filters": {
+          "legend": "Filtros del listado",
+          "searchLabel": "Buscar por nombre",
+          "searchPlaceholder": "p. ej. Clínica Andes",
+          "phaseLabel": "Fase",
+          "sectorLabel": "Rubro",
+          "allPhases": "Todas las fases",
+          "allSectors": "Todos los rubros",
+          "apply": "Filtrar",
+          "clear": "Limpiar filtros"
+        },
+        "count": "{count, plural, =0 {Sin resultados} one {# empresa} other {# empresas}}",
+        "columns": {
+          "company": "Empresa",
+          "sector": "Rubro",
+          "phase": "Fase",
+          "progress": "Cumplimiento",
+          "score": "Score",
+          "risks": "Riesgos",
+          "time": "Tiempo"
+        },
+        "progressLabel": "Avance del checklist de {name}",
+        "progressValue": "{pct}%",
+        "noAssessment": "Sin evaluación",
+        "daysValue": "{days, plural, one {# día} other {# días}}",
+        "open": "Abrir la ficha de {name}",
+        "empty": {
+          "title": "Todavía no hay empresas registradas",
+          "text": "El ciclo DPC parte acá: registrar la primera empresa crea su evaluación ciclo 1 con todos los controles aplicables a su rubro.",
+          "cta": "Registrar la primera empresa"
+        },
+        "noResults": {
+          "title": "Sin resultados",
+          "text": "Ninguna empresa coincide con la búsqueda o los filtros aplicados.",
+          "clear": "Limpiar filtros"
+        }
+      },
+      "wizard": {
+        "eyebrow": "Alta de empresa · Paso {step} de {total}",
+        "title": "Registrar y clasificar empresa",
+        "description": "El rubro activa las leyes complementarias; la clasificación y los factores alimentan el Complexity Score interno.",
+        "steps": {
+          "identification": "Identificación",
+          "classification": "Clasificación",
+          "factors": "Factores de complejidad",
+          "confirm": "Confirmación"
+        },
+        "stepLabel": "Pasos del alta de empresa",
+        "panelLabel": "{name} · Paso {step} de {total}",
+        "identification": {
+          "legend": "Datos de la empresa",
+          "hint": "Identificación legal y contacto operativo del cliente.",
+          "nameLabel": "Razón social",
+          "namePlaceholder": "p. ej. Clínica Andes Salud SpA",
+          "rutLabel": "RUT",
+          "rutPlaceholder": "76.421.905-K",
+          "rutHint": "Con o sin puntos y guion; se valida el dígito verificador.",
+          "contactLegend": "Contacto en la empresa",
+          "contactNameLabel": "Nombre del contacto",
+          "contactNamePlaceholder": "p. ej. Carolina Díaz",
+          "contactEmailLabel": "Correo del contacto (opcional)",
+          "contactEmailPlaceholder": "nombre@empresa.cl",
+          "contactPhoneLabel": "Teléfono del contacto (opcional)",
+          "contactPhonePlaceholder": "+56 9 1234 5678"
+        },
+        "classification": {
+          "sectorLegend": "Rubro corporativo",
+          "sectorHint": "Determina el régimen sectorial: leyes complementarias y multiplicador del score.",
+          "lawsLabel": "Leyes complementarias activadas",
+          "sizeLegend": "Tamaño de la organización",
+          "sizeHint": "Tramos según la clasificación chilena (Ley 20.416).",
+          "employeesLabel": "N° de colaboradores",
+          "employeesPlaceholder": "p. ej. 480"
+        },
+        "factors": {
+          "legend": "Factores de complejidad",
+          "hint": "RFC §14.3 — amplían el alcance del diagnóstico y ajustan el Complexity Score interno.",
+          "note": "El Complexity Score se calcula en el servidor al crear la empresa y es de uso interno del equipo consultor.",
+          "options": {
+            "sensitive_data": {
+              "label": "Datos sensibles",
+              "sub": "Salud, biométricos, financieros u otras categorías especiales."
+            },
+            "international_transfers": {
+              "label": "Transferencias internacionales",
+              "sub": "Datos al extranjero o proveedores cloud fuera de Chile."
+            },
+            "automated_decisions": {
+              "label": "Decisiones automatizadas / IA",
+              "sub": "Scoring, perfilamiento o decisiones sin intervención humana."
+            },
+            "multi_site": {
+              "label": "Multi-sede",
+              "sub": "Opera en más de una sede, sucursal u oficina."
+            },
+            "critical_providers": {
+              "label": "Proveedores críticos",
+              "sub": "Encargados externos tratan datos por cuenta de la organización."
+            },
+            "low_maturity": {
+              "label": "Madurez inicial baja",
+              "sub": "Parte de cero: sin políticas ni protocolos de datos previos."
+            }
+          }
+        },
+        "confirm": {
+          "legend": "Confirmación",
+          "hint": "Revisar el resumen antes de crear la empresa.",
+          "identification": "Identificación",
+          "classification": "Clasificación",
+          "factors": "Factores de complejidad",
+          "noFactors": "Sin factores adicionales declarados",
+          "employeesValue": "{count, plural, one {# colaborador} other {# colaboradores}}",
+          "createNote": "Al crear la empresa se calcula su Complexity Score interno y se abre la evaluación ciclo 1 con todos los controles aplicables al rubro en estado pendiente."
+        },
+        "fieldErrors": {
+          "name": "La razón social necesita entre 3 y 160 caracteres.",
+          "rut": "El RUT no es válido (se verifica el dígito verificador).",
+          "contactName": "El nombre del contacto necesita al menos 2 caracteres.",
+          "contactEmail": "El correo del contacto no es válido.",
+          "contactPhone": "El teléfono supera el largo permitido.",
+          "sectorCode": "Elegir un rubro para continuar.",
+          "sizeTier": "Elegir un tramo de tamaño para continuar.",
+          "employeesCount": "Ingresar la dotación como número entero (0 o más)."
+        },
+        "errors": {
+          "validation": "Hay datos inválidos en el formulario. Revisar los pasos y reintentar.",
+          "session": "La sesión expiró. Iniciar sesión nuevamente.",
+          "rutTaken": "Ya existe una empresa registrada con ese RUT.",
+          "unavailable": "No fue posible crear la empresa. Reintentar en unos minutos."
+        },
+        "nav": {
+          "back": "← Volver",
+          "next": "Continuar",
+          "submit": "Crear empresa",
+          "submitting": "Creando empresa…"
+        },
+        "catalogEmpty": {
+          "title": "Catálogo de rubros no disponible",
+          "text": "El alta necesita el catálogo de rubros del Marco DPC. Revisar la carga de seeds de la base de datos."
+        }
+      },
+      "detail": {
+        "eyebrow": "Resumen de la evaluación",
+        "subtitle": "{sector} · {size} · en cartera desde {date}",
+        "stats": {
+          "phase": "Fase actual",
+          "score": "Complexity Score",
+          "scoreInternal": "Uso interno del equipo",
+          "scoreMissing": "Sin calcular",
+          "progress": "Avance del checklist",
+          "progressSub": "{evaluated} de {total} controles evaluados",
+          "risks": "Riesgos identificados",
+          "risksSub": "asignados desde el catálogo"
+        },
+        "checklist": {
+          "title": "Checklist por estado",
+          "cycle": "Ciclo {cycle}",
+          "donutLabel": "Distribución de los controles por estado",
+          "centerLabel": "cumple",
+          "statuses": {
+            "compliant": "Cumple",
+            "partial": "Parcial",
+            "non_compliant": "No cumple",
+            "pending": "Pendiente"
+          },
+          "statusPct": "{pct}%",
+          "open": "Abrir checklist →",
+          "empty": "Esta empresa no tiene una evaluación creada. El ciclo 1 se genera al registrar la empresa; revisar la carga de datos."
+        },
+        "risks": {
+          "title": "Riesgos principales",
+          "impactProbability": "I{impact} × P{probability}",
+          "severities": {
+            "low": "Bajo",
+            "medium": "Medio",
+            "high": "Alto"
+          },
+          "viewAll": "Ver riesgos →",
+          "empty": "Sin riesgos asignados todavía. Se asignan desde la vista Riesgos & Gap."
+        },
+        "activity": {
+          "title": "Últimos movimientos",
+          "empty": "Sin movimientos visibles para esta empresa. La bitácora completa está disponible para el rol administrador.",
+          "actions": {
+            "companyCreated": "Empresa creada",
+            "companyUpdated": "Ficha actualizada",
+            "phaseChanged": "Cambio de fase del ciclo",
+            "controlStatusChanged": "Estado de control actualizado",
+            "controlNotesUpdated": "Hallazgos y notas de control",
+            "evidenceUploaded": "Evidencia cargada",
+            "evidenceStatusChanged": "Estado de evidencia actualizado",
+            "riskAssigned": "Riesgo asignado",
+            "riskUpdated": "Riesgo actualizado",
+            "riskRemoved": "Riesgo quitado",
+            "remediationItemAdded": "Tarea agregada al plan",
+            "remediationStatusChanged": "Estado de tarea del plan",
+            "certificateIssued": "Certificado emitido",
+            "certificateRevalidated": "Certificado revalidado",
+            "certificateRevoked": "Certificado revocado",
+            "certificateUpdated": "Certificado actualizado"
+          }
+        },
+        "record": {
+          "title": "Ficha de la empresa",
+          "rut": "RUT",
+          "contact": "Contacto",
+          "employees": "Dotación",
+          "employeesValue": "{count, plural, one {# colaborador} other {# colaboradores}}",
+          "sector": "Rubro",
+          "laws": "Marco legal aplicable",
+          "notes": "Notas internas"
+        },
+        "phaseForm": {
+          "title": "Cambiar fase del ciclo",
+          "hint": "El cambio queda registrado en la bitácora de auditoría.",
+          "label": "Nueva fase",
+          "submit": "Guardar fase",
+          "saving": "Guardando…",
+          "success": "Fase actualizada.",
+          "errors": {
+            "validation": "La fase enviada no es válida.",
+            "session": "La sesión expiró. Iniciar sesión nuevamente.",
+            "rutTaken": "Conflicto de datos al guardar. Recargar la vista.",
+            "unavailable": "No fue posible guardar el cambio. Reintentar en unos minutos."
+          }
+        }
+      }
+    }
+  }
+}

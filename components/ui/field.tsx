@@ -3,7 +3,9 @@ import { cn } from "./cn";
 
 /**
  * Field — label + control + error/hint. Prototipo §3.6:
- * label 12px/500 Metal con margin-bottom 6px; error en Danger Red.
+ * label 12px/500 con margin-bottom 6px (Carbon, no el Metal del prototipo:
+ * regla a11y del proyecto — texto ≤13px nunca más claro que carbon);
+ * error en Danger Red.
  * Textos SIEMPRE por props (cero strings hardcodeados).
  * Si se pasa `htmlFor`, el error recibe id `{htmlFor}-error` y el hint
  * `{htmlFor}-hint` para que el consumidor los enlace vía aria-describedby
@@ -31,7 +33,7 @@ export function Field({
     <div className={cn("flex flex-col", className)}>
       <label
         htmlFor={htmlFor}
-        className="mb-[6px] text-caption leading-caption tracking-caption font-medium text-metal"
+        className="mb-[6px] text-caption leading-caption tracking-caption font-medium text-carbon"
       >
         {label}
       </label>
