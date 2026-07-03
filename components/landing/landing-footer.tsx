@@ -14,6 +14,9 @@ import { FOOTER_COLUMNS } from "./data";
 export async function LandingFooter() {
   const t = await getTranslations("landing.footer");
   const tCommon = await getTranslations("common");
+  // Demo estática (GitHub Pages): /login queda fuera del export — el acceso
+  // del consultor se muestra como entrada informativa sin destino.
+  const isStaticDemo = process.env.NEXT_PUBLIC_STATIC_DEMO === "1";
 
   return (
     <footer className="bg-abyss text-white">
@@ -40,7 +43,7 @@ export async function LandingFooter() {
             <ul className="flex flex-col gap-[10px]">
               {column.links.map((link) => (
                 <li key={link.key}>
-                  {link.href ? (
+                  {link.href && !(isStaticDemo && link.href === "/login") ? (
                     <Link
                       href={link.href}
                       className="text-body-sm text-overcast transition-colors hover:text-white"
