@@ -7,8 +7,8 @@ import { NAV_LINKS } from "./data";
  * NAV sticky de la landing (prototipo isLanding §NAV): fondo blanco
  * translúcido con blur, borde Stone, 64px de alto. La derecha queda vacía a
  * propósito: el acceso al panel es discreto vía footer (RFC §11).
- * Desviación normalizada: la tagline del prototipo va en serif 17px, pero
- * .kromi/design.md prohíbe serif <28px → se sirve en Inter itálica 500.
+ * Excepción de marca del lockup logo+tagline: serif Newsreader 17px medium
+ * (registrada en .kromi/design.md); la regla "serif >= 28px" rige el resto.
  */
 export async function LandingNav() {
   const t = await getTranslations("landing.nav");
@@ -24,7 +24,7 @@ export async function LandingNav() {
             height={44}
             priority
           />
-          <span className="text-[17px] font-medium italic tracking-[-0.2px] text-ink">
+          <span className="font-serif text-[17px] font-medium tracking-[-0.2px] text-ink">
             {tCommon("tagline")}
           </span>
         </Link>

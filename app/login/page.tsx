@@ -18,8 +18,9 @@ import { Logo } from "@/components/ui";
  * `login.userPlaceholder` quedan sin uso (el login real es por email) — no se
  * tocan porque es.json no pertenece a esta spec.
  *
- * Desviaciones normalizadas por .kromi/design.md: H1 serif a 28px (el
- * prototipo usa 26px; serif solo >= 28px) y tagline en Inter itálica.
+ * Desviación normalizada por .kromi/design.md: H1 serif a 28px (el
+ * prototipo usa 26px; serif solo >= 28px). La tagline usa la excepción de
+ * marca del lockup: serif Newsreader 17px medium (ver .kromi/design.md).
  */
 export default async function LoginPage({
   searchParams,
@@ -48,7 +49,7 @@ export default async function LoginPage({
             height={40}
             priority
           />
-          <span className="text-[17px] font-medium italic tracking-[-0.2px] text-ink">
+          <span className="font-serif text-[17px] font-medium tracking-[-0.2px] text-ink">
             {tCommon("tagline")}
           </span>
         </div>

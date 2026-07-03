@@ -6,8 +6,8 @@ import { Logo } from "@/components/ui";
  * /verificar/[codigo]) — réplica del topbar del cotizador del prototipo
  * (sticky, logo 36px + tagline, botón "← Volver al sitio").
  * Presentacional: los textos llegan por props desde el server component
- * (cero strings hardcodeados). Desviación normalizada por .kromi/design.md:
- * la tagline va en Inter itálica (serif solo >= 28px), como en LandingNav.
+ * (cero strings hardcodeados). Excepción de marca del lockup logo+tagline:
+ * serif Newsreader medium (registrada en .kromi/design.md), como en LandingNav.
  */
 export interface PublicTopbarProps {
   logoAlt: string;
@@ -21,7 +21,7 @@ export function PublicTopbar({ logoAlt, tagline, backLabel }: PublicTopbarProps)
       <div className="mx-auto flex h-[64px] w-full max-w-[1080px] items-center justify-between px-32 max-sm:px-16">
         <Link href="/" className="flex items-center gap-[10px]">
           <Logo alt={logoAlt} height={36} priority />
-          <span className="text-body font-medium italic tracking-[-0.2px] text-ink max-sm:hidden">
+          <span className="font-serif text-body font-medium tracking-[-0.2px] text-ink max-sm:hidden">
             {tagline}
           </span>
         </Link>

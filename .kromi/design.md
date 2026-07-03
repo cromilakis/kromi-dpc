@@ -173,6 +173,11 @@ Background: Abyss (#000000). Organized into columns. Column titles use White (#f
 
 ### Don't
 - Don't use Tiempos Text for body copy or any text smaller than 28px.
+
+> **Excepción de marca (2026-07-03):** el lockup logo + tagline
+> ("Protección Certificada") usa la serif del sistema (Tiempos Text /
+> Newsreader) en 15–17px weight 500, sin itálica. Es la ÚNICA serif
+> permitida bajo 28px; no aplica a ningún otro texto de UI.
 - Don't use color in headlines or primary buttons.
 - Don't use fill-based colors unless for semantic status indicators.
 - Don't apply shadows to buttons, inputs, or simple cards.
