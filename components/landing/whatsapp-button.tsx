@@ -5,9 +5,9 @@ import { WhatsAppIcon } from "./icons";
 import { whatsappUrl } from "./whatsapp";
 
 /**
- * CTA de WhatsApp — EXCEPCIÓN documentada del design system
- * (prototype-analysis.md §9.2.1 + tarea landing): el verde de marca #25D366
- * se permite ÚNICAMENTE en este botón. No reutilizar en ningún otro elemento.
+ * CTA de WhatsApp — botón primario del design system (Ink #1c1d1f, texto
+ * blanco). Decisión 2026-07-03: se elimina la excepción verde #25D366
+ * (prototype-analysis §9.2.1); el canal se señala solo con el ícono.
  * Server component (async): resuelve el aviso sr-only de target="_blank"
  * (common.opensInNewWindow) sin exigirlo por props en cada call site.
  */
@@ -32,7 +32,7 @@ export async function WhatsAppButton({
       rel="noopener noreferrer"
       className={cn(
         "inline-flex items-center justify-center gap-[9px] rounded-buttons",
-        "border border-[#25D366] bg-[#25D366] text-white",
+        "border border-ink bg-ink text-white",
         "px-[18px] py-[11px] text-body-sm leading-body-sm tracking-body-sm font-medium",
         "transition-opacity hover:opacity-90",
         className,
