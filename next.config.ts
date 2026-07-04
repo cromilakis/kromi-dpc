@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from "next-intl/plugin";
 
 // Wiring next-intl (overlay kromi single-locale): la request config vive en
@@ -28,4 +29,19 @@ const nextConfig: NextConfig = {
     : {}),
 };
 
-export default withNextIntl(nextConfig);
+const config = withNextIntl(nextConfig);
+
+// Sentry envuelve la config salvo en el build estático de GitHub Pages
+// (output:export no es compatible con la instrumentación server de Sentry, y esa
+// demo excluye las rutas con servidor de todas formas). La subida de source maps
+// solo ocurre si hay SENTRY_AUTH_TOKEN; sin él, el SDK funciona igual (sin maps).
+export default isGitHubPages
+  ? config
+  : withSentryConfig(config, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      silent: !process.env.CI,
+      widenClientFileUpload: true,
+      disableLogger: true,
+      sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+    });
