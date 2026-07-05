@@ -64,6 +64,25 @@
         }
       }
     },
+    "recert": {
+      "title": "Solicita tu re-certificación",
+      "explain": "Tu certificación está por vencer o ya venció. Para mantenerla vigente, inicia un nuevo ciclo de re-certificación; nuestro equipo evaluará tu caso según su nivel de complejidad.",
+      "consentText": "Autorizo a DPC a iniciar el proceso de re-certificación de mi empresa y declaro que la información que entregaré durante la re-evaluación es veraz y completa. (TODO-LEGAL: texto placeholder, pendiente de revisión por abogado antes de producción.)",
+      "consentCheckbox": "He leído y acepto",
+      "startButton": "Iniciar re-certificación",
+      "starting": "Iniciando…",
+      "result": {
+        "self_service_pending": "Tu re-certificación fue iniciada. Pronto podrás completar tu re-evaluación aquí.",
+        "consultant_review": "Tu solicitud fue registrada. Nuestro equipo revisará tu re-certificación y te contactará."
+      },
+      "errors": {
+        "validation": "No se pudo procesar la solicitud. Intenta nuevamente.",
+        "unauthorized": "Tu sesión no tiene acceso a esta operación.",
+        "not_eligible": "Tu certificación aún no está en condiciones de re-certificarse.",
+        "already_open": "Ya tienes una re-certificación en curso.",
+        "unavailable": "No se pudo iniciar la re-certificación. Intenta nuevamente."
+      }
+    },
     "paidNotice": {
       "title": "Estamos confirmando tu pago…",
       "description": "Recibimos tu pago en Stripe; puede tardar unos segundos en reflejarse aquí. Actualiza la página en un momento."
