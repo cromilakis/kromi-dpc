@@ -8,9 +8,9 @@ import {
   createDiagnosisShareLink,
   materializeDiagnosis,
   saveDiagnosisDraft,
-  type DiagnosisAnswers,
   type InterviewActionError,
 } from "@/lib/actions/interview";
+import type { DiagnosisAnswers } from "@/lib/interview/answers-schema";
 import { normalizeAnswers } from "@/lib/interview/normalize-answers";
 import type { ComplianceQuestion } from "@/lib/interview/questions";
 import { ComplianceForm } from "./compliance-form";

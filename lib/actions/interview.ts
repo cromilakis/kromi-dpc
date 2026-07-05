@@ -2,13 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { diagnosisAnswersSchema, type DiagnosisAnswers } from "@/lib/interview/answers-schema";
+import { diagnosisAnswersSchema } from "@/lib/interview/answers-schema";
 import { generateShareToken, hashShareToken } from "@/lib/share/token";
 import { selectControlUpdates } from "@/lib/interview/select-control-updates";
 import { createClient } from "@/lib/supabase/server";
 import type { TablesInsert } from "@/lib/supabase/types";
-
-export type { DiagnosisAnswers };
 
 /**
  * Server actions del módulo entrevista/diagnóstico (spec diagnóstico, risk

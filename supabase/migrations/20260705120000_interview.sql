@@ -72,6 +72,18 @@ create policy is_rw on public.interview_sessions for all
 create policy sl_rw on public.share_links for all
   using (is_consultant()) with check (is_consultant());
 
+-- authenticated: se parte de cero (los defaults legacy dejan REFERENCES/TRIGGER/
+-- TRUNCATE, y TRUNCATE BYPASEA RLS) y se otorga solo DML — mismo criterio que
+-- rls.sql. Sin estos grants el rol no tiene privilegio de tabla y recibe
+-- "permission denied" (los RPC SECURITY DEFINER no dependen de esto; el acceso
+-- directo del consultor sí). anon queda fuera: solo entra por los RPC por token.
+revoke all on
+  public.processing_activities, public.interview_sessions, public.share_links
+from authenticated;
+grant select, insert, update, delete on
+  public.processing_activities, public.interview_sessions, public.share_links
+to authenticated;
+
 create trigger set_pa_updated before update on public.processing_activities
   for each row execute function set_updated_at();
 create trigger set_is_updated before update on public.interview_sessions

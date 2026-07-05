@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { PublicDiagnosisManager } from "@/components/interview/public-diagnosis-manager";
 import { PublicTopbar } from "@/components/self-assessment/public-topbar";
 import { loadPublicDiagnosis } from "@/lib/actions/diagnosis-public";
@@ -38,10 +39,12 @@ export default async function DiagnosisTokenPage({ params }: DiagnosisTokenPageP
     // Token con escapes malformados: se consulta tal cual llegó.
   }
 
-  const [t, tCommon, state] = await Promise.all([
+  const [t, tCommon, state, locale, messages] = await Promise.all([
     getTranslations("app.diagnosis.public"),
     getTranslations("common"),
     loadPublicDiagnosis(token),
+    getLocale(),
+    getMessages(),
   ]);
 
   return (
@@ -83,12 +86,20 @@ export default async function DiagnosisTokenPage({ params }: DiagnosisTokenPageP
                 {t("description")}
               </p>
             </header>
-            <PublicDiagnosisManager
-              token={token}
-              initialStatus={state.status}
-              questions={state.questions}
-              initialAnswers={state.answers}
-            />
+            {/* La ruta self está fuera del shell interno → provee el contexto
+                i18n al manager cliente (mismo patrón que /self-assessment).
+                Solo viajan los namespaces necesarios. */}
+            <NextIntlClientProvider
+              locale={locale}
+              messages={{ app: messages.app, common: messages.common }}
+            >
+              <PublicDiagnosisManager
+                token={token}
+                initialStatus={state.status}
+                questions={state.questions}
+                initialAnswers={state.answers}
+              />
+            </NextIntlClientProvider>
           </>
         )}
       </main>
