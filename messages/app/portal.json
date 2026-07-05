@@ -67,6 +67,37 @@
     "paidNotice": {
       "title": "Estamos confirmando tu pago…",
       "description": "Recibimos tu pago en Stripe; puede tardar unos segundos en reflejarse aquí. Actualiza la página en un momento."
+    },
+    "evidences": {
+      "title": "Tus evidencias",
+      "subtitle": "Sube los documentos que respaldan cada control aplicable a tu empresa.",
+      "empty": "Todavía no tienes evidencias pendientes.",
+      "columns": {
+        "control": "Control",
+        "evidence": "Evidencia",
+        "status": "Estado",
+        "action": "Acción"
+      },
+      "status": {
+        "validated": "Validada",
+        "partial": "Parcial",
+        "rejected": "Rechazada",
+        "in_review": "En revisión",
+        "pending": "Pendiente"
+      },
+      "upload": "Subir",
+      "uploading": "Subiendo…",
+      "download": "Descargar",
+      "downloading": "Descargando…",
+      "chooseFile": "Selecciona un archivo",
+      "errors": {
+        "validation": "No se pudo procesar la solicitud. Revisa el archivo e intenta nuevamente.",
+        "unauthorized": "Tu sesión no tiene acceso a esta evidencia.",
+        "not_found": "No encontramos el control asociado.",
+        "too_large": "El archivo supera el tamaño máximo permitido.",
+        "bad_type": "Ese tipo de archivo no está permitido.",
+        "unavailable": "No se pudo completar la operación. Intenta nuevamente."
+      }
     }
   }
 }

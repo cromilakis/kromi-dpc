@@ -49,3 +49,7 @@ next-env.d.ts
 
 # SDD scratch (ledger/briefs)
 .superpowers/
+
+# skills instaladas via 'npx skills add' (tooling local)
+.agents/
+skills-lock.json

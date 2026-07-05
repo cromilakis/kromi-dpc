@@ -1,9 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { Card, ProgressBar, StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { ProposalCard } from "@/components/portal/proposal-card";
+import { EvidenceSection } from "@/components/portal/evidence-section";
 import { progressFillClass } from "@/lib/companies/display";
 import { certificateStanding, type CertStanding } from "@/lib/portal/certificate-status";
 import { loadClientDashboard } from "@/lib/portal/load-dashboard.server";
+import { loadClientEvidences } from "@/lib/portal/load-evidences.server";
 
 /**
  * /portal — dashboard de cumplimiento de solo lectura del cliente (spec
@@ -35,13 +37,15 @@ export default async function PortalPage({
 }: {
   searchParams: Promise<{ paid?: string | string[] }>;
 }) {
-  const [{ company, cert, progress, proposal }, t, tHome, tPaid, params] = await Promise.all([
-    loadClientDashboard(),
-    getTranslations("portal.dashboard"),
-    getTranslations("portal.home"),
-    getTranslations("portal.paidNotice"),
-    searchParams,
-  ]);
+  const [{ company, cert, progress, proposal }, evidenceSlots, t, tHome, tPaid, params] =
+    await Promise.all([
+      loadClientDashboard(),
+      loadClientEvidences(),
+      getTranslations("portal.dashboard"),
+      getTranslations("portal.home"),
+      getTranslations("portal.paidNotice"),
+      searchParams,
+    ]);
   // El estado real de pago lo fija el webhook (fuente de verdad, tarea 5),
   // NUNCA este query param del redirect de retorno (manipulable por el
   // cliente): acá solo se usa para mostrar un aviso transitorio.
@@ -125,6 +129,10 @@ export default async function PortalPage({
           <ProposalCard proposal={proposal} />
         </div>
       ) : null}
+
+      <div className="mt-16">
+        <EvidenceSection slots={evidenceSlots} />
+      </div>
     </div>
   );
 }
