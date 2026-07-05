@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { diagnosisAnswersSchema, type DiagnosisAnswers } from "@/lib/interview/answers-schema";
-import { mapAnswersToControlStatus } from "@/lib/interview/auto-map";
 import { generateShareToken, hashShareToken } from "@/lib/share/token";
+import { selectControlUpdates } from "@/lib/interview/select-control-updates";
 import { createClient } from "@/lib/supabase/server";
 import type { TablesInsert } from "@/lib/supabase/types";
 
@@ -456,7 +456,12 @@ export async function materializeDiagnosis(
     }
 
     // 2. compliance[controlCode] → assessment_controls (upsert idempotente).
-    const controlCodes = Object.keys(answers.compliance);
+    // Solo se propagan controles EVALUADOS por la sesión (selectControlUpdates
+    // descarta los "pending" — normalizeAnswers rellena todo el catálogo con
+    // "unknown", así que un control sin tocar no debe pisar el progreso que
+    // ya tenga el checklist en la misma tabla `assessment_controls`).
+    const controlUpdates = selectControlUpdates(answers.compliance);
+    const controlCodes = controlUpdates.map((u) => u.controlCode);
     if (controlCodes.length > 0) {
       const { data: controls, error: controlsError } = await supabase
         .from("controls")
@@ -472,17 +477,14 @@ export async function materializeDiagnosis(
 
       const codeToId = new Map((controls ?? []).map((c) => [c.code, c.id]));
       const now = new Date().toISOString();
-      const upsertRows: TablesInsert<"assessment_controls">[] = controlCodes
-        .filter((code) => codeToId.has(code))
-        .map((code) => {
-          const status = mapAnswersToControlStatus(answers.compliance[code]);
-          return {
-            assessment_id: assessmentId,
-            control_id: codeToId.get(code)!,
-            status,
-            evaluated_at: status === "pending" ? null : now,
-          };
-        });
+      const upsertRows: TablesInsert<"assessment_controls">[] = controlUpdates
+        .filter((update) => codeToId.has(update.controlCode))
+        .map((update) => ({
+          assessment_id: assessmentId,
+          control_id: codeToId.get(update.controlCode)!,
+          status: update.status,
+          evaluated_at: now,
+        }));
 
       if (upsertRows.length > 0) {
         const { error: upsertError } = await supabase
