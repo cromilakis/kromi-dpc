@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      '@': fileURLToPath(
+        new URL('.', import.meta.url),
+      ),
       // `server-only` lanza al importarse fuera de React Server; en vitest se
       // stubea vacío (el guard real lo aplica el build de Next). Permite
       // testear lib/self-assessment/scoring.server.ts en aislamiento.

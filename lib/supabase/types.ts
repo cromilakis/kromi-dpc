@@ -466,6 +466,150 @@ export type Database = {
           },
         ]
       }
+      interview_sessions: {
+        Row: {
+          answers: Json
+          assessment_id: string | null
+          company_id: string
+          id: string
+          mode: Database["public"]["Enums"]["interview_mode"]
+          progress: number
+          respondent: Json
+          reviewed_at: string | null
+          started_at: string
+          status: Database["public"]["Enums"]["interview_status"]
+          submitted_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          answers?: Json
+          assessment_id?: string | null
+          company_id: string
+          id?: string
+          mode?: Database["public"]["Enums"]["interview_mode"]
+          progress?: number
+          respondent?: Json
+          reviewed_at?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["interview_status"]
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          answers?: Json
+          assessment_id?: string | null
+          company_id?: string
+          id?: string
+          mode?: Database["public"]["Enums"]["interview_mode"]
+          progress?: number
+          respondent?: Json
+          reviewed_at?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["interview_status"]
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_sessions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interview_sessions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      processing_activities: {
+        Row: {
+          area: string
+          company_id: string
+          created_at: string
+          data_categories: string[]
+          data_subjects: string[]
+          id: string
+          intl_countries: string[]
+          intl_transfer: boolean
+          is_sensitive: boolean
+          legal_basis: string
+          name: string
+          notes: string | null
+          processors: string[]
+          purpose: string
+          recipients: string[]
+          retention: string
+          security_measures: string[]
+          source: string
+          source_session_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          area: string
+          company_id: string
+          created_at?: string
+          data_categories?: string[]
+          data_subjects?: string[]
+          id?: string
+          intl_countries?: string[]
+          intl_transfer?: boolean
+          is_sensitive?: boolean
+          legal_basis?: string
+          name: string
+          notes?: string | null
+          processors?: string[]
+          purpose?: string
+          recipients?: string[]
+          retention?: string
+          security_measures?: string[]
+          source?: string
+          source_session_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          company_id?: string
+          created_at?: string
+          data_categories?: string[]
+          data_subjects?: string[]
+          id?: string
+          intl_countries?: string[]
+          intl_transfer?: boolean
+          is_sensitive?: boolean
+          legal_basis?: string
+          name?: string
+          notes?: string | null
+          processors?: string[]
+          purpose?: string
+          recipients?: string[]
+          retention?: string
+          security_measures?: string[]
+          source?: string
+          source_session_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "processing_activities_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "processing_activities_source_session_id_fkey"
+            columns: ["source_session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -618,6 +762,57 @@ export type Database = {
         }
         Relationships: []
       }
+      share_links: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          kind: Database["public"]["Enums"]["share_kind"]
+          revoked_at: string | null
+          target_id: string
+          token_hash: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["share_kind"]
+          revoked_at?: string | null
+          target_id: string
+          token_hash: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["share_kind"]
+          revoked_at?: string | null
+          target_id?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "share_links_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "share_links_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       self_assessments: {
         Row: {
           answers: Json
@@ -700,8 +895,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      diagnosis_questions: {
+        Args: { p_token: string }
+        Returns: {
+          code: string
+          name: string
+          verification_criteria: string[]
+        }[]
+      }
       is_admin: { Args: never; Returns: boolean }
       is_consultant: { Args: never; Returns: boolean }
+      open_diagnosis: {
+        Args: { p_token: string }
+        Returns: {
+          answers: Json
+          company_name: string
+          session_id: string
+          status: Database["public"]["Enums"]["interview_status"]
+        }[]
+      }
+      save_diagnosis_answers: {
+        Args: { p_answers: Json; p_token: string }
+        Returns: undefined
+      }
       verify_certificate: {
         Args: { cert_code: string }
         Returns: {
@@ -724,8 +940,11 @@ export type Database = {
       control_result: "pending" | "compliant" | "partial" | "non_compliant"
       domain_kind: "principle" | "complementary"
       evidence_status: "validated" | "partial" | "missing" | "rejected"
+      interview_mode: "assisted" | "self"
+      interview_status: "draft" | "in_progress" | "submitted" | "reviewed"
       remediation_status: "pending" | "in_progress" | "done"
       risk_classification: "transversal" | "sectorial"
+      share_kind: "diagnosis" | "certificate" | "document"
       user_role: "consultant" | "admin"
     }
     CompositeTypes: {
@@ -869,8 +1088,11 @@ export const Constants = {
       control_result: ["pending", "compliant", "partial", "non_compliant"],
       domain_kind: ["principle", "complementary"],
       evidence_status: ["validated", "partial", "missing", "rejected"],
+      interview_mode: ["assisted", "self"],
+      interview_status: ["draft", "in_progress", "submitted", "reviewed"],
       remediation_status: ["pending", "in_progress", "done"],
       risk_classification: ["transversal", "sectorial"],
+      share_kind: ["diagnosis", "certificate", "document"],
       user_role: ["consultant", "admin"],
     },
   },

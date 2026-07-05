@@ -46,3 +46,6 @@ next-env.d.ts
 # herramientas locales de diseño (skills impeccable/taste + artefactos de crítica)
 .claude/
 .impeccable/
+
+# SDD scratch (ledger/briefs)
+.superpowers/
