@@ -37,14 +37,24 @@ const RAT_FIELD_DEFAULTS: RatActivity = {
   notes: "",
 };
 
-/** Combina los defaults del RAT con los `fields` parciales sugeridos por el
- * LLM (solo lo que vino con evidencia llega hasta acá — ver
- * `sanitizeExtraction`). El resultado se valida con `ratActivitySchema`
- * antes de aceptarlo: si faltan campos obligatorios (área/nombre/finalidad/
- * base de licitud) la sugerencia no se acepta automáticamente y el
- * consultor debe completarla a mano en el RatForm. */
+/** Placeholder para campos de texto OBLIGATORIOS que el LLM no extrajo — sobre
+ * todo `area`, que es una clasificación organizacional (no un dato personal) y
+ * casi nunca aparece en la transcripción. Deja la actividad válida y aceptable,
+ * marcada visiblemente para que el consultor la complete en el RatForm. No
+ * inventa datos del tratamiento: solo etiqueta lo que falta clasificar. */
+const NEEDS_REVIEW = "Por completar";
+
+/** Combina los defaults del RAT con los `fields` parciales sugeridos por el LLM
+ * (solo lo que vino con evidencia llega hasta acá — ver `sanitizeExtraction`) y
+ * rellena los campos de texto obligatorios ausentes con un placeholder de
+ * revisión, para que `ratActivitySchema` valide y la sugerencia sea aceptable;
+ * el consultor la afina en el RatForm que queda montado debajo. */
 function buildRatActivity(fields: RatSuggestion["fields"]): RatActivity {
-  return { ...RAT_FIELD_DEFAULTS, ...fields };
+  const merged = { ...RAT_FIELD_DEFAULTS, ...fields };
+  if (!merged.area.trim()) merged.area = NEEDS_REVIEW;
+  if (!merged.name.trim()) merged.name = merged.purpose.trim() || NEEDS_REVIEW;
+  if (!merged.purpose.trim()) merged.purpose = merged.name.trim() || NEEDS_REVIEW;
+  return merged;
 }
 
 function formatFieldValue(value: unknown): string {

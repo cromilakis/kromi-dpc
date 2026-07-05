@@ -4,39 +4,54 @@ import { chatJSON, LlmError, type ChatMessage } from "@/lib/llm/deepseek";
 import { LEGAL_BASES } from "@/lib/interview/rat-schema";
 import type { ControlLike } from "@/lib/interview/questions";
 
-const ratFieldsSchema = z
-  .object({
-    area: z.string().optional(),
-    name: z.string().optional(),
-    purpose: z.string().optional(),
-    legalBasis: z.enum(LEGAL_BASES).optional(),
-    dataCategories: z.array(z.string()).optional(),
-    dataSubjects: z.array(z.string()).optional(),
-    source: z.string().optional(),
-    recipients: z.array(z.string()).optional(),
-    processors: z.array(z.string()).optional(),
-    intlTransfer: z.boolean().optional(),
-    intlCountries: z.array(z.string()).optional(),
-    retention: z.string().optional(),
-    securityMeasures: z.array(z.string()).optional(),
-    isSensitive: z.boolean().optional(),
-  })
-  .strict();
+// Campo de lista tolerante: el LLM a veces devuelve un string suelto donde el
+// RAT espera string[] (p. ej. dataSubjects: "clientes"). Se normaliza a arreglo
+// —coerción segura, no inventa datos— en vez de descartar la actividad entera.
+const stringArrayField = z
+  .preprocess(
+    (v) => (typeof v === "string" ? (v.trim() ? [v] : []) : v),
+    z.array(z.string()),
+  )
+  .optional();
+
+// `fields` SIN `.strict()`: si el LLM agrega una llave no reconocida, Zod la
+// descarta en vez de tumbar todo el item (parseo tolerante). `legalBasis` con
+// `.catch(undefined)`: si viene un valor fuera del enum (p. ej. "contrato
+// (implícito...)"), se descarta ese campo en vez de invalidar la actividad.
+const ratFieldsSchema = z.object({
+  area: z.string().optional(),
+  name: z.string().optional(),
+  purpose: z.string().optional(),
+  legalBasis: z.enum(LEGAL_BASES).optional().catch(undefined),
+  dataCategories: stringArrayField,
+  dataSubjects: stringArrayField,
+  source: z.string().optional(),
+  recipients: stringArrayField,
+  processors: stringArrayField,
+  intlTransfer: z.boolean().optional(),
+  intlCountries: stringArrayField,
+  retention: z.string().optional(),
+  securityMeasures: stringArrayField,
+  isSensitive: z.boolean().optional(),
+});
 
 const ratSuggestionSchema = z.object({
   fields: ratFieldsSchema,
-  evidence: z.record(z.string(), z.string()),
+  // Default {} para que un item sin evidencia PARSEE y sea descartado a
+  // `unassigned` por sanitizeExtraction, en vez de romper la extracción entera.
+  evidence: z.record(z.string(), z.string()).default({}),
 });
 
 const complianceSuggestionSchema = z.object({
   controlCode: z.string(),
   criterionIndex: z.number().int().min(0),
   answer: z.enum(["yes", "partial", "no"]),
-  evidence: z.string().min(1),
+  evidence: z.string().default(""),
 });
 
 const unassignedSchema = z.object({ text: z.string(), reason: z.string() });
 
+// Forma canónica de salida (todas las listas presentes) — tipo de retorno.
 export const extractionResultSchema = z.object({
   rat: z.array(ratSuggestionSchema),
   compliance: z.array(complianceSuggestionSchema),
@@ -44,6 +59,19 @@ export const extractionResultSchema = z.object({
 });
 
 export type ExtractionResult = z.infer<typeof extractionResultSchema>;
+
+// Schema de ENTRADA tolerante: cada lista top-level cae a [] si falta o no es
+// arreglo; cada elemento se valida individualmente en sanitizeExtraction. Así
+// ninguna respuesta JSON válida del LLM (con llaves faltantes o de más) tumba
+// toda la extracción — el determinismo se aplica descartando lo que no calza,
+// no fallando en bloque.
+const rawExtractionSchema = z
+  .object({
+    rat: z.array(z.unknown()).catch([]).default([]),
+    compliance: z.array(z.unknown()).catch([]).default([]),
+    unassigned: z.array(z.unknown()).catch([]).default([]),
+  })
+  .catch({ rat: [], compliance: [], unassigned: [] });
 
 const SYSTEM_PROMPT = `Eres un asistente que extrae información ESTRICTAMENTE explícita de una transcripción de reunión sobre tratamiento de datos personales (Ley 21.719, Chile), para llenar un Registro de Actividades de Tratamiento (RAT) y un checklist de cumplimiento.
 
@@ -98,29 +126,48 @@ export function sanitizeExtraction(
   raw: unknown,
   controls: ControlLike[],
 ): ExtractionResult {
-  const parsed = extractionResultSchema.parse(raw);
+  // Parseo tolerante: nunca lanza para un objeto JSON — las listas ausentes o
+  // mal formadas caen a []; cada elemento se valida individualmente abajo.
+  const top = rawExtractionSchema.parse(raw);
 
-  const unassigned = [...parsed.unassigned];
+  const unassigned: ExtractionResult["unassigned"] = [];
   const rat: ExtractionResult["rat"] = [];
   const compliance: ExtractionResult["compliance"] = [];
 
-  for (const suggestion of parsed.rat) {
-    const evidenceKeys = Object.keys(suggestion.evidence);
-    const fieldKeys = Object.keys(suggestion.fields) as Array<
-      keyof typeof suggestion.fields
-    >;
-    const hasEvidence = evidenceKeys.length > 0;
-    const evidenceMatchesFields =
-      hasEvidence &&
-      evidenceKeys.every((key) =>
-        fieldKeys.includes(key as keyof typeof suggestion.fields),
-      );
+  for (const item of top.unassigned) {
+    const parsed = unassignedSchema.safeParse(item);
+    if (parsed.success) unassigned.push(parsed.data);
+  }
 
-    if (hasEvidence && evidenceMatchesFields) {
-      rat.push(suggestion);
+  for (const item of top.rat) {
+    const parsed = ratSuggestionSchema.safeParse(item);
+    if (!parsed.success) {
+      unassigned.push({ text: JSON.stringify(item), reason: "formato inválido" });
+      continue;
+    }
+    const { fields, evidence } = parsed.data;
+    // Se conservan SOLO los campos con una cita textual de respaldo (no vacía).
+    // Un campo sin evidencia se descarta; una cita sin campo se ignora. Así se
+    // acepta lo trazable sin tirar toda la actividad por un campo sin respaldo.
+    const backedFields: Record<string, unknown> = {};
+    const backedEvidence: Record<string, string> = {};
+    for (const key of Object.keys(fields)) {
+      const cite = evidence[key];
+      const value = (fields as Record<string, unknown>)[key];
+      if (value !== undefined && typeof cite === "string" && cite.trim()) {
+        backedFields[key] = value;
+        backedEvidence[key] = cite;
+      }
+    }
+
+    if (Object.keys(backedFields).length > 0) {
+      rat.push({
+        fields: backedFields as ExtractionResult["rat"][number]["fields"],
+        evidence: backedEvidence,
+      });
     } else {
       unassigned.push({
-        text: JSON.stringify(suggestion.fields),
+        text: JSON.stringify(fields),
         reason: "sin evidencia textual",
       });
     }
@@ -128,7 +175,13 @@ export function sanitizeExtraction(
 
   const controlsByCode = new Map(controls.map((c) => [c.code, c]));
 
-  for (const suggestion of parsed.compliance) {
+  for (const item of top.compliance) {
+    const parsed = complianceSuggestionSchema.safeParse(item);
+    if (!parsed.success) {
+      unassigned.push({ text: JSON.stringify(item), reason: "formato inválido" });
+      continue;
+    }
+    const suggestion = parsed.data;
     const control = controlsByCode.get(suggestion.controlCode);
     const hasEvidence = suggestion.evidence.trim().length > 0;
     const controlExists = control !== undefined;
