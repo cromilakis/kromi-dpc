@@ -22,7 +22,6 @@ export async function PricingSection() {
     >
       <SectionHeading
         align="center"
-        eyebrow={t("eyebrow")}
         title={t("title")}
         description={t("description")}
         className="mb-40"
@@ -53,7 +52,7 @@ export async function PricingSection() {
                 <div className="text-caption text-carbon">{t("from")}</div>
                 <div className="font-serif text-[34px] font-medium leading-[1.15] tracking-[-0.6px] text-ink">
                   {t(`tiers.${tier.key}.price`)}{" "}
-                  <span className="font-sans text-body-sm text-metal">
+                  <span className="font-sans text-body-sm text-carbon">
                     {t("vat")}
                   </span>
                 </div>
@@ -81,7 +80,7 @@ export async function PricingSection() {
           {t("disclaimer")}
         </p>
         {/* Mismo orden que el hero: Cotizar (primario) → Autoevaluación. */}
-        <div className="flex shrink-0 flex-wrap items-center gap-[10px]">
+        <div className="flex flex-wrap items-center gap-[10px]">
           <WhatsAppButton message={tWhatsApp("quoteMessage")}>
             {t("ctaWhatsApp")}
           </WhatsAppButton>

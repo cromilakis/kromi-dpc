@@ -151,3 +151,23 @@ body {
   outline-offset: 2px;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus-blue) 40%, transparent);
 }
+
+/* Lenis (scroll suave) — CSS recomendado por darkroom.engineering. Las clases
+   .lenis las agrega el runtime solo cuando el scroll suave está activo; bajo
+   prefers-reduced-motion el provider no inicia Lenis y esto queda inerte. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}

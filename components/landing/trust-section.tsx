@@ -22,7 +22,7 @@ export async function TrustSection() {
             <div className="mb-[6px] text-body font-semibold tracking-[-0.2px] text-ink">
               {t("standard.title")}
             </div>
-            <p className="text-body-sm leading-[1.55] text-metal">
+            <p className="text-body-sm leading-[1.55] text-carbon">
               {t("standard.text")}
             </p>
           </div>
@@ -35,7 +35,7 @@ export async function TrustSection() {
             <div className="mb-[6px] text-body font-semibold tracking-[-0.2px] text-ink">
               {t("dogfooding.title")}
             </div>
-            <p className="text-body-sm leading-[1.55] text-metal">
+            <p className="text-body-sm leading-[1.55] text-carbon">
               {t("dogfooding.text")}
             </p>
           </div>
@@ -48,7 +48,7 @@ export async function TrustSection() {
             <div className="mb-[6px] text-body font-semibold tracking-[-0.2px] text-ink">
               {t("confidentiality.title")}
             </div>
-            <p className="text-body-sm leading-[1.55] text-metal">
+            <p className="text-body-sm leading-[1.55] text-carbon">
               {t("confidentiality.text")}
             </p>
           </div>

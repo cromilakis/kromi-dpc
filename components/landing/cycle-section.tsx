@@ -22,24 +22,39 @@ export async function CycleSection() {
           title={t("title")}
           className="mb-48"
         />
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
-          {CYCLE_PHASES.map((phase) => (
-            <div
-              key={phase}
-              className="rounded-cards border border-stone bg-white p-[22px]"
-            >
-              {/* Contraste AA en texto pequeño: carbon (lead no llegaba ni a 3:1). */}
-              <div className="mb-[14px] text-caption font-semibold text-carbon">
-                {t(`phases.${phase}.number`)}
-              </div>
-              <div className="mb-8 text-[18px] font-semibold tracking-[-0.3px] text-ink">
-                {t(`phases.${phase}.name`)}
-              </div>
-              <p className="text-[13px] leading-[1.5] text-metal">
-                {t(`phases.${phase}.description`)}
-              </p>
-            </div>
-          ))}
+        {/* Línea de tiempo conectada: es una secuencia real (4 fases), así que
+            los números encadenados comunican orden en vez de 4 tarjetas sueltas
+            (quiebre de ritmo 2026-07-05). */}
+        <div className="relative">
+          {/* Riel conector center-to-center (solo desktop). */}
+          <div
+            aria-hidden="true"
+            data-cy-rail
+            className="absolute left-[12.5%] right-[12.5%] top-[19px] hidden h-px bg-stone lg:block"
+          />
+          <ol className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
+            {CYCLE_PHASES.map((phase, i) => (
+              <li
+                key={phase}
+                className="relative flex items-start gap-16 lg:flex-col lg:items-center lg:gap-0 lg:text-center"
+              >
+                <span
+                  data-cy-node
+                  className="relative z-10 flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-stone bg-white font-serif text-[18px] leading-none text-ink"
+                >
+                  {i + 1}
+                </span>
+                <div className="lg:mt-16">
+                  <div className="text-[18px] font-semibold tracking-[-0.3px] text-ink">
+                    {t(`phases.${phase}.name`)}
+                  </div>
+                  <p className="mt-6 text-[13px] leading-[1.5] text-carbon lg:mx-auto lg:max-w-[220px]">
+                    {t(`phases.${phase}.description`)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>

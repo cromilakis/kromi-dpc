@@ -37,7 +37,12 @@ export function HeroCipher() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     // Perceptible pero de fondo: rango bajo con algo de textura por celda.
-    const randAlpha = () => 0.07 + Math.random() * 0.1;
+    // En móvil se atenúa aún más: el subtítulo va sobre el cifrado y la máscara
+    // no lo despeja del todo en pantallas angostas.
+    const randAlpha = () => {
+      const mobile = window.innerWidth < 640;
+      return (mobile ? 0.04 : 0.07) + Math.random() * (mobile ? 0.055 : 0.1);
+    };
     const randDigit = () => (Math.random() * 2) | 0; // binario: 0 / 1
 
     let cols = 0;

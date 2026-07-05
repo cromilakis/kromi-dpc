@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/ui";
 import { NAV_LINKS } from "./data";
+import { MenuIcon } from "./icons";
 import { WhatsAppButton } from "./whatsapp-button";
 
 /**
@@ -39,7 +40,7 @@ export async function LandingNav() {
               <a
                 key={link.key}
                 href={link.href}
-                className="rounded-buttons px-[10px] py-[6px] text-body-sm font-medium text-metal transition-colors hover:bg-ash hover:text-ink"
+                className="rounded-buttons px-[10px] py-[6px] text-body-sm font-medium text-carbon transition-colors hover:bg-ash hover:text-ink"
               >
                 {t(link.key)}
               </a>
@@ -51,6 +52,27 @@ export async function LandingNav() {
           >
             {t("cta")}
           </WhatsAppButton>
+          {/* Menú móvil sin JS (CSS-only <details>): recupera los anchors de
+              sección en teléfono, que antes solo existían en desktop. */}
+          <details className="relative md:hidden">
+            <summary
+              className="flex h-[38px] w-[38px] cursor-pointer list-none items-center justify-center rounded-buttons border border-slate text-ink [&::-webkit-details-marker]:hidden"
+              aria-label={t("menu")}
+            >
+              <MenuIcon />
+            </summary>
+            <nav className="absolute right-0 top-[calc(100%+8px)] flex w-[220px] flex-col rounded-cards border border-stone bg-white p-8 shadow-subtle-2">
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.key}
+                  href={link.href}
+                  className="rounded-buttons px-12 py-[12px] text-body-sm font-medium text-carbon transition-colors hover:bg-ash hover:text-ink"
+                >
+                  {t(link.key)}
+                </a>
+              ))}
+            </nav>
+          </details>
         </div>
       </div>
     </header>

@@ -16,12 +16,15 @@ export interface WhatsAppButtonProps {
   message: string;
   children: ReactNode;
   className?: string;
+  /** Invertido para fondos oscuros: blanco sobre ink en vez de ink sobre blanco. */
+  inverted?: boolean;
 }
 
 export async function WhatsAppButton({
   message,
   children,
   className,
+  inverted = false,
 }: WhatsAppButtonProps) {
   const tCommon = await getTranslations("common");
 
@@ -32,7 +35,9 @@ export async function WhatsAppButton({
       rel="noopener noreferrer"
       className={cn(
         "inline-flex items-center justify-center gap-[9px] rounded-buttons",
-        "border border-ink bg-ink text-white",
+        inverted
+          ? "border border-white bg-white text-ink"
+          : "border border-ink bg-ink text-white",
         "px-[18px] py-[11px] text-body-sm leading-body-sm tracking-body-sm font-medium",
         "transition-opacity hover:opacity-90",
         className,

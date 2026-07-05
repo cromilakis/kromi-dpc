@@ -12,7 +12,8 @@
       "cycle": "Ciclo de servicio",
       "model": "Modelo",
       "certification": "Certificación",
-      "cta": "Cotizar"
+      "cta": "Cotizar",
+      "menu": "Abrir menú"
     },
     "hero": {
       "lawBadge": "Ley 21.719",
@@ -233,7 +234,6 @@
       "ctaSelfAssessment": "Autoevaluación gratis"
     },
     "support": {
-      "eyebrow": "Acompañamiento",
       "title": "Un consultor asignado en cada fase.",
       "description": "La metodología da rigor; el consultor da criterio. Combinamos una plataforma estructurada con acompañamiento humano real.",
       "items": {
@@ -256,23 +256,21 @@
       }
     },
     "model": {
-      "eyebrow": "Modelo de servicio",
       "title": "Un acompañamiento que perdura.",
       "description": "El servicio se estructura en dos etapas: la certificación inicial que lleva a la organización al estándar, y una suscripción que lo mantiene vigente en el tiempo.",
       "initial": {
-        "chip": "01 · Certificación inicial",
+        "chip": "Certificación inicial",
         "title": "Ruta al estándar",
         "text": "Llevamos a la organización hasta el estándar: diagnóstico, cierre de brechas y la certificación privada DPC. El alcance del trabajo se ajusta a la complejidad de cada organización."
       },
       "recurring": {
-        "chip": "02 · Revalidación periódica",
+        "chip": "Revalidación periódica",
         "title": "Aseguramiento continuo",
         "text": "Acompañamos a la organización para sostener el estándar en el tiempo: monitoreo de cambios normativos, revisiones periódicas, soporte ante incidentes y la <b>renovación de la certificación</b>.",
         "note": "Suscripción renovable, con la periodicidad que mejor se adapte."
       }
     },
     "pricing": {
-      "eyebrow": "La inversión",
       "title": "El valor, a la medida de cada organización.",
       "description": "Cada organización parte de un valor base accesible y acorde a su tamaño. Ese valor puede ajustarse tras el diagnóstico según la complejidad real de sus tratamientos y la presencia de datos sensibles.",
       "from": "Desde",
@@ -298,7 +296,6 @@
       "ctaWhatsApp": "Cotiza tu certificación"
     },
     "faq": {
-      "eyebrow": "Preguntas frecuentes",
       "title": "Resolvemos tus dudas.",
       "items": {
         "obligation": {

@@ -9,6 +9,8 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 import { LandingNav } from "@/components/landing/landing-nav";
 import { ModelSection } from "@/components/landing/model-section";
 import { PricingSection } from "@/components/landing/pricing-section";
+import { SmoothScrollProvider } from "@/components/landing/smooth-scroll-provider";
+import { StakesSection } from "@/components/landing/stakes-section";
 import { SupportSection } from "@/components/landing/support-section";
 import { TrustSection } from "@/components/landing/trust-section";
 
@@ -22,15 +24,19 @@ import { TrustSection } from "@/components/landing/trust-section";
  */
 export default function LandingPage() {
   return (
+    <SmoothScrollProvider>
     <div className="flex min-h-full flex-1 flex-col overflow-x-clip bg-white">
       <LandingNav />
       <main id="main" className="flex-1">
         <Hero />
+        {/* Beat de riesgo (2026-07-05): Hero (intro) → Stakes (miedo) → Trust
+            (reaseguro) → marco. */}
+        <StakesSection />
+        <TrustSection />
         <DomainsSection />
         <AgenciesCloud />
         <CycleSection />
         <DeliverableSection />
-        <TrustSection />
         <CtaBand />
         <SupportSection />
         <ModelSection />
@@ -39,5 +45,6 @@ export default function LandingPage() {
       </main>
       <LandingFooter />
     </div>
+    </SmoothScrollProvider>
   );
 }

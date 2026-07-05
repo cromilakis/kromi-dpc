@@ -5,8 +5,7 @@ import { AGENCIES } from "./data";
  * Logo cloud del ecosistema regulatorio (prototipo isLanding §LOGO CLOUD):
  * wordmarks tipográficos grises, sin logos gráficos (Style Reference
  * "Logo Cloud Item": grayscale, sin fondo ni borde).
- * Contraste: label 13px en Carbon (AA); wordmarks 16px/600 en Metal
- * (decorativo logo-cloud: metal alcanza 3:1 para texto grande).
+ * Contraste: label 13px y wordmarks 16px/600 en Carbon (AA ≥7:1).
  */
 export async function AgenciesCloud() {
   const t = await getTranslations("landing.agencies");
@@ -20,7 +19,7 @@ export async function AgenciesCloud() {
         {AGENCIES.map((agency) => (
           <li
             key={agency}
-            className="text-body font-semibold tracking-[-0.2px] text-metal"
+            className="text-body font-semibold tracking-[-0.2px] text-carbon"
           >
             {t(`items.${agency}`)}
           </li>

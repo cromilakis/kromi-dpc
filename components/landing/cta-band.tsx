@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { buttonClasses } from "@/components/ui";
 import { DocumentIcon } from "./icons";
 import { WhatsAppButton } from "./whatsapp-button";
 
@@ -17,15 +16,19 @@ export async function CtaBand() {
 
   return (
     <section className="mx-auto w-full max-w-[1180px] px-32 py-40 max-sm:px-16">
-      <div className="rounded-xl border border-stone bg-[#fbfbfc] px-32 py-[56px] text-center max-sm:px-20 max-sm:py-40">
-        <h2 className="font-serif text-heading-sm font-medium leading-heading-sm tracking-heading-sm text-ink">
+      {/* Banda oscura invertida: ancla visual a mitad de página que rompe la
+          racha de secciones claras y hace resaltar el CTA (optimización de
+          ritmo 2026-07-05). */}
+      <div className="overflow-hidden rounded-xl bg-ink px-32 py-[60px] text-center max-sm:px-20 max-sm:py-44">
+        <h2 className="font-serif text-heading-sm font-medium leading-heading-sm tracking-heading-sm text-white">
           {t("title")}
         </h2>
-        <p className="mx-auto mt-[14px] max-w-[560px] text-body leading-body tracking-body text-metal">
+        <p className="mx-auto mt-[14px] max-w-[560px] text-body leading-body tracking-body text-slate">
           {t("subtitle")}
         </p>
         <div className="mt-28 flex flex-wrap items-center justify-center gap-[10px]">
           <WhatsAppButton
+            inverted
             message={tWhatsApp("quoteMessage")}
             className="px-[22px] py-[13px] text-body"
           >
@@ -33,7 +36,7 @@ export async function CtaBand() {
           </WhatsAppButton>
           <Link
             href="/autoevaluacion"
-            className={buttonClasses("secondary", "gap-[9px] px-[18px] py-[11px]")}
+            className="inline-flex items-center gap-[9px] rounded-buttons border border-white/25 px-[18px] py-[11px] text-body-sm font-medium text-white transition-colors hover:bg-white/10"
           >
             <DocumentIcon className="shrink-0" />
             {t("ctaSelfAssessment")}

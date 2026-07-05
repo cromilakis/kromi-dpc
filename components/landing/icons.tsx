@@ -142,6 +142,26 @@ export function ShieldCheckIcon({ size = 22, className }: IconProps) {
   );
 }
 
+/** Menú hamburguesa (nav móvil de la landing). */
+export function MenuIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
 /** Billete (multa del caso hipotético en "Lo que está en juego"). */
 export function MoneyIcon({ size = 20, className }: IconProps) {
   return (

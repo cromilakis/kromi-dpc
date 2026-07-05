@@ -17,7 +17,6 @@ export async function FaqSection() {
     <section className="mx-auto w-full max-w-[820px] px-32 py-80 max-sm:px-16 max-sm:py-60">
       <SectionHeading
         align="center"
-        eyebrow={t("eyebrow")}
         title={t("title")}
         className="mb-40"
       />
@@ -27,9 +26,9 @@ export async function FaqSection() {
             <details className="group rounded-cards border border-stone bg-white [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-16 px-20 py-[18px] text-body font-semibold tracking-[-0.2px] text-ink">
                 {t(`items.${item}.q`)}
-                <ChevronDownIcon className="shrink-0 text-metal transition-transform duration-200 group-open:rotate-180" />
+                <ChevronDownIcon className="shrink-0 text-carbon transition-transform duration-200 group-open:rotate-180" />
               </summary>
-              <p className="px-20 pb-[18px] text-body-sm leading-[1.6] text-metal">
+              <p className="px-20 pb-[18px] text-body-sm leading-[1.6] text-carbon">
                 {t(`items.${item}.a`)}
               </p>
             </details>

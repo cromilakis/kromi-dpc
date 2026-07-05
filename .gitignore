@@ -42,3 +42,7 @@ next-env.d.ts
 
 # kromi: .env.example se commitea (solo placeholders)
 !.env.example
+
+# herramientas locales de diseño (skills impeccable/taste + artefactos de crítica)
+.claude/
+.impeccable/

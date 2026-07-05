@@ -34,21 +34,19 @@ export const COMPLEMENTARY_DOMAINS: DomainRef[] = [
 
 /**
  * Sanciones de la Ley 21.719 (banda "Lo que está en juego").
- * El color y el nivel son semánticos y usan tokens del design system:
- * lead (leve) / warning-yellow (grave) / danger-red (gravísima). `level`
- * (1→3) alimenta el medidor de barras ascendentes que comunica la escala
- * de gravedad de la menos a la más grave.
+ * `level` (1→3) alimenta el medidor monocromo de barras ascendentes que
+ * comunica la escala de gravedad por cantidad/altura (no por color), de la
+ * menos a la más grave.
  */
 export interface StakeRef {
   key: string;
-  colorClass: string;
   level: number; // 1..3
 }
 
 export const STAKES: StakeRef[] = [
-  { key: "minor", colorClass: "bg-lead", level: 1 },
-  { key: "serious", colorClass: "bg-warning-yellow", level: 2 },
-  { key: "severe", colorClass: "bg-danger-red", level: 3 },
+  { key: "minor", level: 1 },
+  { key: "serious", level: 2 },
+  { key: "severe", level: 3 },
 ];
 
 /** Ciclo de servicio: 4 fases (landing.cycle.phases). */

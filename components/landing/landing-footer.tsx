@@ -53,7 +53,7 @@ export async function LandingFooter() {
                 if (!link.href || hidden) {
                   return (
                     <li key={link.key}>
-                      <span className="text-body-sm text-overcast">{label}</span>
+                      <span className="text-body-sm text-metal">{label}</span>
                     </li>
                   );
                 }

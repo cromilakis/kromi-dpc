@@ -17,7 +17,6 @@ export async function ModelSection() {
       <div className="mx-auto w-full max-w-[1180px] px-32 py-80 max-sm:px-16 max-sm:py-60">
         <SectionHeading
           align="center"
-          eyebrow={t("eyebrow")}
           title={t("title")}
           description={t("description")}
           className="mb-44"
@@ -32,7 +31,7 @@ export async function ModelSection() {
             <div className="mb-8 text-subheading font-semibold tracking-[-0.3px] text-ink">
               {t("initial.title")}
             </div>
-            <p className="text-body-sm leading-[1.6] text-metal">
+            <p className="text-body-sm leading-[1.6] text-carbon">
               {t("initial.text")}
             </p>
           </div>
@@ -45,7 +44,7 @@ export async function ModelSection() {
             <div className="mb-8 text-subheading font-semibold tracking-[-0.3px] text-ink">
               {t("recurring.title")}
             </div>
-            <p className="mb-16 text-body-sm leading-[1.6] text-metal">
+            <p className="mb-16 text-body-sm leading-[1.6] text-carbon">
               {t.rich("recurring.text", {
                 b: (chunks) => (
                   <b className="font-semibold text-ink">{chunks}</b>

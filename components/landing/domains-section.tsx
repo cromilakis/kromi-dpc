@@ -45,9 +45,34 @@ function DomainCards({ domains, t }: DomainCardsProps) {
           <div className="mb-[6px] text-[15px] font-semibold tracking-[-0.2px] text-ink">
             {t(`items.${domain.key}.name`)}
           </div>
-          <p className="text-[13px] leading-[1.5] text-metal">
+          <p className="text-[13px] leading-[1.5] text-carbon">
             {t(`items.${domain.key}.simple`)}
           </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * Los complementarios como lista compacta (no cards): otra textura visual que
+ * corta el "muro de tarjetas iguales" y jerarquiza — principios = núcleo (cards),
+ * complementarios = obligaciones operativas (lista con divisores).
+ */
+function DomainList({ domains, t }: DomainCardsProps) {
+  return (
+    <ul className="grid grid-cols-1 gap-x-40 sm:grid-cols-2">
+      {domains.map((domain) => (
+        <li
+          key={domain.code}
+          className="flex flex-col border-t border-ash py-[14px]"
+        >
+          <span className="text-[14px] font-semibold tracking-[-0.2px] text-ink">
+            {t(`items.${domain.key}.name`)}
+          </span>
+          <span className="mt-[3px] text-[13px] leading-[1.5] text-carbon">
+            {t(`items.${domain.key}.simple`)}
+          </span>
         </li>
       ))}
     </ul>
@@ -79,7 +104,7 @@ export async function DomainsSection() {
         label={t("complementaryLabel")}
         note={t("complementaryNote")}
       />
-      <DomainCards domains={COMPLEMENTARY_DOMAINS} t={t} />
+      <DomainList domains={COMPLEMENTARY_DOMAINS} t={t} />
     </section>
   );
 }

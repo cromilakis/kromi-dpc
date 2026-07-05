@@ -13,7 +13,6 @@ export async function SupportSection() {
     <section className="mx-auto w-full max-w-[1180px] px-32 py-80 max-sm:px-16 max-sm:py-60">
       <SectionHeading
         align="center"
-        eyebrow={t("eyebrow")}
         title={t("title")}
         description={t("description")}
         className="mb-48"
@@ -27,7 +26,7 @@ export async function SupportSection() {
             <div className="mb-[10px] text-body font-semibold tracking-[-0.2px] text-ink">
               {t(`items.${item}.title`)}
             </div>
-            <p className="text-[13px] leading-[1.55] text-metal">
+            <p className="text-[13px] leading-[1.55] text-carbon">
               {t(`items.${item}.text`)}
             </p>
           </div>

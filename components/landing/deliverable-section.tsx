@@ -24,7 +24,7 @@ export async function DeliverableSection() {
             title={t("title")}
             className="mb-16"
           />
-          <p className="mb-24 text-body leading-body tracking-body text-metal">
+          <p className="mb-24 text-body leading-body tracking-body text-carbon">
             {t("description")}
           </p>
           <ul className="flex flex-col gap-[14px]">
@@ -44,7 +44,10 @@ export async function DeliverableSection() {
         </div>
 
         {/* Mock del expediente de cumplimiento */}
-        <div className="overflow-hidden rounded-xl border border-stone bg-white shadow-[rgba(28,40,64,0.1)_0px_16px_40px_-16px,rgba(28,40,64,0.05)_0px_4px_8px_-4px]">
+        <div
+          data-dossier
+          className="overflow-hidden rounded-xl border border-stone bg-white shadow-[rgba(28,40,64,0.1)_0px_16px_40px_-16px,rgba(28,40,64,0.05)_0px_4px_8px_-4px]"
+        >
           <div className="flex items-center justify-between border-b border-ash bg-[#fbfbfc] px-20 py-16">
             <div className="flex items-center gap-[10px]">
               <span className="flex h-[26px] w-[26px] items-center justify-center rounded-inputs bg-ink text-white">
@@ -64,7 +67,10 @@ export async function DeliverableSection() {
                 key={doc}
                 className="flex items-center gap-12 border-b border-ash py-12 last:border-b-0"
               >
-                <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] bg-[#e9f2ec] text-success-green">
+                <span
+                  data-doc-check
+                  className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] bg-[#e9f2ec] text-success-green"
+                >
                   <CheckIcon size={11} />
                 </span>
                 <span className="text-[13px] text-ink">
