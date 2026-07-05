@@ -39,6 +39,21 @@
         "copied": "Copiado",
         "close": "Cerrar"
       },
+      "transcript": {
+        "button": "Importar desde transcripción",
+        "buttonUnavailable": "El diagnóstico debe iniciarse antes de importar una transcripción.",
+        "panelTitle": "Importar desde transcripción",
+        "placeholder": "Pegar aquí la transcripción de la reunión…",
+        "privacyNote": "El texto pegado se enviará a DeepSeek (proveedor externo) para su análisis. No incluir información que no deba salir de la organización.",
+        "analyze": "Analizar",
+        "analyzing": "Analizando…",
+        "cancel": "Cancelar",
+        "errors": {
+          "llm_disabled": "Esta función no está configurada todavía. Contactar al equipo.",
+          "llm_failed": "No fue posible analizar la transcripción. Reintentar.",
+          "generic": "Ocurrió un error inesperado. Reintentar."
+        }
+      },
       "sections": {
         "rat": {
           "title": "A · Registro de Actividades de Tratamiento (RAT)",
