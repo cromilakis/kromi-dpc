@@ -495,15 +495,15 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                 ))}
               </div>
               {selectedSector ? (
-                <div className="mt-16 rounded-cards bg-ash px-16 pb-4 pt-14">
-                  <div className="flex items-start gap-10">
+                <div className="mt-16 rounded-cards bg-ash px-16 pb-4 pt-16">
+                  <div className="flex items-center gap-[10px]">
                     <span
                       aria-hidden="true"
-                      className="mt-[1px] flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-ink text-white"
+                      className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-ink text-white"
                     >
                       <svg
-                        width={13}
-                        height={13}
+                        width={15}
+                        height={15}
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -511,7 +511,8 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        <path d="M12 3v18M7 21h10M5 7h14l-2.5 6.5a4 4 0 0 1-9 0L5 7ZM3 7l2-4 2 4M17 7l2-4 2 4" />
+                        <path d="M12 3 5 6v5c0 4.4 3 7.4 7 9 4-1.6 7-4.6 7-9V6l-7-3Z" />
+                        <path d="m9 12 2 2 4-4" />
                       </svg>
                     </span>
                     <div className="min-w-0">
@@ -529,7 +530,7 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                       const isBase = slug === "l21719";
                       return (
                         <li key={law} className="flex flex-col gap-[5px] py-12">
-                          <span className="flex items-center gap-6">
+                          <span className="flex items-center gap-[6px]">
                             <span className="inline-flex items-center rounded-tags border border-stone bg-white px-8 py-[3px] text-[12px] font-semibold text-ink">
                               {law}
                             </span>
