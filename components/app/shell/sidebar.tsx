@@ -37,10 +37,10 @@ export interface AppSidebarProps {
   userRole: "consultant" | "admin" | null;
 }
 
-/** id de empresa del pathname (/app/companies/[id]/…); "nueva" no es empresa. */
+/** id de empresa del pathname (/app/companies/[id]/…); "new" (alta) no es empresa. */
 function companyIdFromPathname(pathname: string): string | null {
   const match = pathname.match(/^\/app\/companies\/([^/]+)/);
-  if (!match || match[1] === "nueva") return null;
+  if (!match || match[1] === "new") return null;
   return match[1];
 }
 

@@ -153,7 +153,7 @@
           "sectorLegend": "Rubro corporativo",
           "sectorHint": "Define qué leyes aplican además de la Ley 21.719, que rige para todos.",
           "lawsLabel": "Leyes aplicables",
-          "lawsDerivedHint": "Se derivan del rubro elegido — no requieren selección.",
+          "lawsDerivedHint": "Se derivan del rubro elegido.",
           "lawsBaseTag": "Base",
           "sizeLegend": "Tamaño de la organización",
           "sizeHint": "Tramos según la clasificación chilena (Ley 20.416).",
