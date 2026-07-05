@@ -18,7 +18,7 @@ import { LEGAL_BASES, ratActivitySchema, type RatActivity } from "@/lib/intervie
  * / materializeDiagnosis) antes de aceptar la actividad en el array.
  */
 
-function emptyActivity(): RatActivity {
+function emptyActivity(companyFactors?: string[]): RatActivity {
   return {
     area: "",
     name: "",
@@ -33,7 +33,7 @@ function emptyActivity(): RatActivity {
     intlCountries: [],
     retention: "",
     securityMeasures: [],
-    isSensitive: false,
+    isSensitive: companyFactors?.includes("sensitive_data") ?? false,
     notes: "",
   };
 }
@@ -45,12 +45,29 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
+/**
+ * Aplicabilidad de un bloque atado a un factor (Tarea 5): si `companyFactors`
+ * no se pasa (modo self, sin datos de la empresa cargados) se muestra todo,
+ * sin ocultar de más. Si se pasa (aunque sea `[]`), un bloque solo se
+ * considera "declarado" cuando el factor está en la lista.
+ */
+function factorApplies(factor: string, companyFactors: string[] | undefined): boolean {
+  if (companyFactors === undefined) return true;
+  return companyFactors.includes(factor);
+}
+
+type RevealedBlocks = { intl: boolean; processors: boolean };
+
+const NO_REVEAL: RevealedBlocks = { intl: false, processors: false };
+
 export function RatForm({
   activities,
   onChange,
+  companyFactors,
 }: {
   activities: RatActivity[];
   onChange: (next: RatActivity[]) => void;
+  companyFactors?: string[];
 }) {
   const t = useTranslations("app.diagnosis.rat");
   const tLegal = useTranslations("app.diagnosis.rat.legalBases");
@@ -58,23 +75,34 @@ export function RatForm({
   const [draft, setDraft] = useState<RatActivity | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [error, setError] = useState(false);
+  const [revealed, setRevealed] = useState<RevealedBlocks>(NO_REVEAL);
 
   function startAdd() {
-    setDraft(emptyActivity());
+    setDraft(emptyActivity(companyFactors));
     setEditingIndex(null);
     setError(false);
+    setRevealed(NO_REVEAL);
   }
 
   function startEdit(index: number) {
-    setDraft({ ...activities[index]! });
+    const activity = activities[index]!;
+    setDraft({ ...activity });
     setEditingIndex(index);
     setError(false);
+    // Un draft existente con datos ya capturados en un bloque atado a factor
+    // se muestra igual, aunque la empresa no haya declarado el factor —
+    // nunca se ocultan datos ya cargados.
+    setRevealed({
+      intl: activity.intlTransfer || activity.intlCountries.length > 0,
+      processors: activity.processors.length > 0,
+    });
   }
 
   function cancel() {
     setDraft(null);
     setEditingIndex(null);
     setError(false);
+    setRevealed(NO_REVEAL);
   }
 
   function remove(index: number) {
@@ -234,20 +262,21 @@ export function RatForm({
             />
           </Field>
 
-          <div className="grid gap-12 sm:grid-cols-2">
-            <Field
-              label={t("fields.recipients")}
-              htmlFor="rat-recipients"
-              hint={t("fields.recipientsHint")}
-            >
-              <Input
-                id="rat-recipients"
-                value={draft.recipients.join(", ")}
-                onChange={(event) =>
-                  setDraft({ ...draft, recipients: splitList(event.target.value) })
-                }
-              />
-            </Field>
+          <Field
+            label={t("fields.recipients")}
+            htmlFor="rat-recipients"
+            hint={t("fields.recipientsHint")}
+          >
+            <Input
+              id="rat-recipients"
+              value={draft.recipients.join(", ")}
+              onChange={(event) =>
+                setDraft({ ...draft, recipients: splitList(event.target.value) })
+              }
+            />
+          </Field>
+
+          {factorApplies("critical_providers", companyFactors) || revealed.processors ? (
             <Field
               label={t("fields.processors")}
               htmlFor="rat-processors"
@@ -261,32 +290,54 @@ export function RatForm({
                 }
               />
             </Field>
-          </div>
+          ) : (
+            <button
+              type="button"
+              className="w-fit cursor-pointer text-left text-caption leading-caption text-carbon underline hover:text-ink"
+              onClick={() => setRevealed({ ...revealed, processors: true })}
+            >
+              {t("exception", { field: t("fields.processors") })}
+            </button>
+          )}
 
-          <label className="flex items-center gap-8 text-body-sm text-ink">
-            <input
-              type="checkbox"
-              className="h-16 w-16 shrink-0 rounded-[4px] border-slate accent-ink"
-              checked={draft.intlTransfer}
-              onChange={(event) => setDraft({ ...draft, intlTransfer: event.target.checked })}
-            />
-            {t("fields.intlTransfer")}
-          </label>
+          {factorApplies("international_transfers", companyFactors) || revealed.intl ? (
+            <>
+              <label className="flex items-center gap-8 text-body-sm text-ink">
+                <input
+                  type="checkbox"
+                  className="h-16 w-16 shrink-0 rounded-[4px] border-slate accent-ink"
+                  checked={draft.intlTransfer}
+                  onChange={(event) =>
+                    setDraft({ ...draft, intlTransfer: event.target.checked })
+                  }
+                />
+                {t("fields.intlTransfer")}
+              </label>
 
-          <Field
-            label={t("fields.intlCountries")}
-            htmlFor="rat-intl-countries"
-            hint={t("fields.intlCountriesHint")}
-          >
-            <Input
-              id="rat-intl-countries"
-              disabled={!draft.intlTransfer}
-              value={draft.intlCountries.join(", ")}
-              onChange={(event) =>
-                setDraft({ ...draft, intlCountries: splitList(event.target.value) })
-              }
-            />
-          </Field>
+              <Field
+                label={t("fields.intlCountries")}
+                htmlFor="rat-intl-countries"
+                hint={t("fields.intlCountriesHint")}
+              >
+                <Input
+                  id="rat-intl-countries"
+                  disabled={!draft.intlTransfer}
+                  value={draft.intlCountries.join(", ")}
+                  onChange={(event) =>
+                    setDraft({ ...draft, intlCountries: splitList(event.target.value) })
+                  }
+                />
+              </Field>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="w-fit cursor-pointer text-left text-caption leading-caption text-carbon underline hover:text-ink"
+              onClick={() => setRevealed({ ...revealed, intl: true })}
+            >
+              {t("exception", { field: t("intlBadge") })}
+            </button>
+          )}
 
           <Field label={t("fields.retention")} htmlFor="rat-retention">
             <Input

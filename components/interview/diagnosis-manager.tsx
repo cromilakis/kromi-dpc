@@ -283,6 +283,7 @@ export function DiagnosisManager({
         <RatForm
           activities={answers.rat}
           onChange={(rat) => updateAnswers((current) => ({ ...current, rat }))}
+          companyFactors={companyFactors}
         />
       </section>
 

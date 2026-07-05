@@ -58,6 +58,7 @@
         "empty": "Aún no se ha registrado ninguna actividad de tratamiento.",
         "sensitiveBadge": "Datos sensibles",
         "intlBadge": "Transferencia internacional",
+        "exception": "Esta actividad es una excepción: mostrar {field}",
         "fields": {
           "area": "Área / departamento",
           "name": "Nombre de la actividad",
