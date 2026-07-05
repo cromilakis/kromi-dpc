@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import {
-  EVIDENCE_ALLOWED_MIME_TYPES,
   EVIDENCE_MAX_FILE_BYTES,
   isAllowedEvidenceMimeType,
   sanitizeEvidenceFileName,
@@ -269,7 +268,7 @@ export async function getEvidenceDownloadUrl(evidenceId: string): Promise<Downlo
     return { ok: false, error: "unavailable" };
   }
 }
-
-/** Reexport de los límites del bucket, por si la UI del portal (Tarea 2) los
- * necesita para pre-validar antes de enviar el FormData. */
-export { EVIDENCE_ALLOWED_MIME_TYPES, EVIDENCE_MAX_FILE_BYTES };
+// NOTA: un archivo "use server" SOLO puede exportar funciones async. Los límites
+// del bucket (EVIDENCE_ALLOWED_MIME_TYPES / EVIDENCE_MAX_FILE_BYTES) se importan
+// directo desde `@/lib/evidences/constraints` donde se necesiten (la UI ya lo
+// hace); re-exportarlos acá rompe la carga del módulo de server actions.
