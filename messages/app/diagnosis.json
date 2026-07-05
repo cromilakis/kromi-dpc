@@ -1,0 +1,122 @@
+{
+  "app": {
+    "diagnosis": {
+      "meta": {
+        "title": "Diagnóstico"
+      },
+      "eyebrow": "Diagnóstico · {company}",
+      "title": "Entrevista de diagnóstico",
+      "description": "Registro de Actividades de Tratamiento (RAT) y evaluación de cumplimiento por control, para alimentar el checklist y la elegibilidad de certificación.",
+      "cycleBadge": "Ciclo {cycle}",
+      "start": {
+        "title": "Sin diagnóstico iniciado",
+        "text": "Esta empresa aún no tiene una sesión de diagnóstico. Se puede iniciar la entrevista asistida desde aquí; una vez iniciada también se puede generar un enlace de autodiagnóstico para que la empresa la complete por su cuenta.",
+        "button": "Iniciar diagnóstico",
+        "starting": "Iniciando…"
+      },
+      "status": {
+        "draft": "Borrador",
+        "in_progress": "En curso",
+        "submitted": "Enviado",
+        "reviewed": "Revisado"
+      },
+      "autosave": {
+        "saving": "Guardando…",
+        "saved": "Guardado",
+        "error": "No fue posible guardar."
+      },
+      "actions": {
+        "shareLink": "Generar enlace de autodiagnóstico",
+        "generatingLink": "Generando…",
+        "materialize": "Materializar / revisar",
+        "materializing": "Materializando…",
+        "materialized": "Diagnóstico materializado: el RAT y el checklist quedaron actualizados."
+      },
+      "shareLink": {
+        "title": "Enlace de autodiagnóstico generado",
+        "text": "Este enlace solo se muestra una vez. Copiarlo y enviarlo a la empresa antes de cerrar esta ventana.",
+        "copy": "Copiar",
+        "copied": "Copiado",
+        "close": "Cerrar"
+      },
+      "sections": {
+        "rat": {
+          "title": "A · Registro de Actividades de Tratamiento (RAT)",
+          "description": "Actividades de tratamiento de datos personales identificadas en la organización."
+        },
+        "compliance": {
+          "title": "B · Evaluación de cumplimiento",
+          "description": "Para cada criterio de verificación del control, indicar si la organización lo cumple."
+        }
+      },
+      "rat": {
+        "add": "Agregar actividad",
+        "edit": "Editar",
+        "remove": "Eliminar",
+        "cancel": "Cancelar",
+        "save": "Guardar actividad",
+        "empty": "Aún no se ha registrado ninguna actividad de tratamiento.",
+        "sensitiveBadge": "Datos sensibles",
+        "intlBadge": "Transferencia internacional",
+        "fields": {
+          "area": "Área / departamento",
+          "name": "Nombre de la actividad",
+          "namePlaceholder": "p. ej. Gestión de nómina",
+          "purpose": "Finalidad",
+          "purposePlaceholder": "Para qué se trata la información…",
+          "legalBasis": "Base de licitud",
+          "dataCategories": "Categorías de datos",
+          "dataCategoriesHint": "Separadas por coma.",
+          "dataSubjects": "Titulares de los datos",
+          "dataSubjectsHint": "Separados por coma. p. ej. Trabajadores, Clientes",
+          "source": "Origen de los datos",
+          "recipients": "Destinatarios",
+          "recipientsHint": "Separados por coma.",
+          "processors": "Encargados de tratamiento",
+          "processorsHint": "Separados por coma.",
+          "intlTransfer": "¿Hay transferencia internacional de datos?",
+          "intlCountries": "Países de destino",
+          "intlCountriesHint": "Separados por coma.",
+          "retention": "Plazo de conservación",
+          "securityMeasures": "Medidas de seguridad",
+          "securityMeasuresHint": "Separadas por coma.",
+          "isSensitive": "¿Incluye datos sensibles?",
+          "notes": "Notas",
+          "notesPlaceholder": "Contexto adicional…"
+        },
+        "legalBases": {
+          "consentimiento": "Consentimiento",
+          "contrato": "Ejecución de un contrato",
+          "obligacion_legal": "Obligación legal",
+          "interes_legitimo": "Interés legítimo",
+          "interes_vital": "Interés vital",
+          "funcion_publica": "Función pública"
+        },
+        "errors": {
+          "validation": "Revisar los campos obligatorios: área, nombre, finalidad y base de licitud."
+        }
+      },
+      "compliance": {
+        "empty": "El catálogo de controles no define criterios de verificación.",
+        "criteria": {
+          "yes": "Cumple",
+          "partial": "Parcial",
+          "no": "No cumple",
+          "unknown": "Sin evaluar"
+        },
+        "statusPreview": {
+          "pending": "Pendiente",
+          "compliant": "Cumple",
+          "partial": "Parcial",
+          "non_compliant": "No cumple"
+        }
+      },
+      "errors": {
+        "validation": "Los datos enviados no son válidos. Revisar y reintentar.",
+        "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",
+        "not_found": "El registro ya no existe. Recargar la vista.",
+        "unavailable": "No fue posible completar la acción. Reintentar en unos minutos."
+      }
+    }
+  }
+}

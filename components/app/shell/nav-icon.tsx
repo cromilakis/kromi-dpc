@@ -10,6 +10,7 @@ export type NavIconName =
   | "companies"
   | "newCompany"
   | "summary"
+  | "diagnosis"
   | "checklist"
   | "risks"
   | "solutions"
@@ -30,6 +31,7 @@ const NAV_ICON_PATHS: Record<NavIconName, string[]> = {
     "M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1z",
     "M8 9h8M8 13h5",
   ],
+  diagnosis: ["M11 4a7 7 0 100 14 7 7 0 000-14z", "M20 20l-4.3-4.3"],
   checklist: ["M9 6h11M9 12h11M9 18h11", "M4 6h.01M4 12h.01M4 18h.01"],
   risks: ["M12 3l9 16H3z", "M12 10v4", "M12 17h.01"],
   solutions: [
