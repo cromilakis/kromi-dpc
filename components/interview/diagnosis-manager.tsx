@@ -38,12 +38,14 @@ export function DiagnosisManager({
   sessionStatus: initialSessionStatus,
   questions,
   initialAnswers,
+  companyFactors,
 }: {
   companyId: string;
   sessionId: string | null;
   sessionStatus: SessionStatus | null;
   questions: ComplianceQuestion[];
   initialAnswers: unknown;
+  companyFactors: string[];
 }) {
   const t = useTranslations("app.diagnosis");
   const tErrors = useTranslations("app.diagnosis.errors");
@@ -105,6 +107,21 @@ export function DiagnosisManager({
   function updateAnswers(updater: (current: DiagnosisAnswers) => DiagnosisAnswers) {
     setAnswers(updater);
     setSaveState("saving");
+  }
+
+  /** Override de aplicabilidad (Tarea 4): `include=true` fuerza incluir un
+   * control en la entrevista, `include=false` lo marca "No aplica" a mano,
+   * `include=undefined` borra el override (vuelve al cálculo por factores). */
+  function handleSetApplicability(controlCode: string, include: boolean | undefined) {
+    updateAnswers((current) => {
+      const applicability = { ...(current.applicability ?? {}) };
+      if (include === undefined) {
+        delete applicability[controlCode];
+      } else {
+        applicability[controlCode] = include;
+      }
+      return { ...current, applicability };
+    });
   }
 
   function handleStart() {
@@ -286,6 +303,9 @@ export function DiagnosisManager({
               return { ...current, compliance: { ...current.compliance, [controlCode]: next } };
             })
           }
+          companyFactors={companyFactors}
+          applicabilityOverrides={answers.applicability ?? {}}
+          onSetApplicability={handleSetApplicability}
         />
       </section>
     </div>

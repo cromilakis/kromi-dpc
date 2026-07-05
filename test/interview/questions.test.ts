@@ -2,8 +2,20 @@ import { describe, it, expect } from "vitest";
 import { buildComplianceQuestions } from "@/lib/interview/questions";
 
 const controls = [
-  { code: "DPC-LIC-001", name: "Bases de licitud", domain_id: "d1", verification_criteria: ["¿Existe registro de bases?", "¿Se recoge consentimiento?"] },
-  { code: "DPC-XXX-000", name: "Sin criterios", domain_id: "d2", verification_criteria: [] },
+  {
+    code: "DPC-LIC-001",
+    name: "Bases de licitud",
+    domain_id: "d1",
+    verification_criteria: ["¿Existe registro de bases?", "¿Se recoge consentimiento?"],
+    appliesWhen: null,
+  },
+  {
+    code: "DPC-XXX-000",
+    name: "Sin criterios",
+    domain_id: "d2",
+    verification_criteria: [],
+    appliesWhen: null,
+  },
 ];
 
 describe("buildComplianceQuestions", () => {

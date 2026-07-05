@@ -41,5 +41,18 @@ export function normalizeAnswers(
       isCriterionAnswer(existing[index]) ? existing[index] : "unknown",
     );
   }
-  return { rat, compliance };
+
+  // Overrides de aplicabilidad (Tarea 4): se preservan tal cual (solo
+  // booleanos, claves = controlCode) para no perder los overrides guardados
+  // al recargar la vista; sin entrada => sin overrides.
+  const applicabilityRaw =
+    obj.applicability && typeof obj.applicability === "object"
+      ? (obj.applicability as Record<string, unknown>)
+      : {};
+  const applicability: Record<string, boolean> = {};
+  for (const [code, val] of Object.entries(applicabilityRaw)) {
+    if (typeof val === "boolean") applicability[code] = val;
+  }
+
+  return { rat, compliance, applicability };
 }

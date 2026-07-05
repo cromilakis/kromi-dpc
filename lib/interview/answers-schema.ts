@@ -25,6 +25,11 @@ export const criterionAnswerSchema = z.enum([
 export const diagnosisAnswersSchema = z.object({
   rat: z.array(ratActivitySchema),
   compliance: z.record(z.string(), z.array(criterionAnswerSchema)),
+  // Overrides del consultor a la aplicabilidad calculada (Tarea 4): clave =
+  // controlCode, true = forzar incluir en la entrevista, false = forzar
+  // "No aplica". Opcional y retrocompatible: sesiones/empresas existentes sin
+  // este campo siguen parseando (el default se recalcula desde los factores).
+  applicability: z.record(z.string(), z.boolean()).optional(),
 });
 
 export type DiagnosisAnswers = z.infer<typeof diagnosisAnswersSchema>;

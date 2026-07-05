@@ -111,6 +111,20 @@
           "non_compliant": "No cumple"
         }
       },
+      "applicability": {
+        "notApplicableGroup": "No aplica ({count})",
+        "includeInInterview": "Incluir en la entrevista",
+        "markNotApplicable": "Marcar No aplica",
+        "reason": "No aplica porque no se declaró: {factors}",
+        "factors": {
+          "sensitive_data": "Datos sensibles",
+          "international_transfers": "Transferencias internacionales",
+          "automated_decisions": "Decisiones automatizadas",
+          "multi_site": "Multi-sede",
+          "critical_providers": "Proveedores/encargados críticos",
+          "low_maturity": "Madurez inicial baja"
+        }
+      },
       "errors": {
         "validation": "Los datos enviados no son válidos. Revisar y reintentar.",
         "unauthorized": "La sesión expiró. Iniciar sesión nuevamente.",

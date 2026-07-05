@@ -5,6 +5,7 @@ import { z } from "zod";
 import { PageHeader } from "@/components/app/shell";
 import { DiagnosisManager } from "@/components/interview/diagnosis-manager";
 import { StatusBadge } from "@/components/ui";
+import type { AppliesWhen } from "@/lib/interview/applicability";
 import { buildComplianceQuestions, type ControlLike } from "@/lib/interview/questions";
 import { createClient } from "@/lib/supabase/server";
 
@@ -40,7 +41,7 @@ export default async function DiagnosisPage({
   const supabase = await createClient();
   const [t, companyRes, assessmentRes, controlsRes, sessionRes] = await Promise.all([
     getTranslations("app.diagnosis"),
-    supabase.from("companies").select("id, name").eq("id", id).maybeSingle(),
+    supabase.from("companies").select("id, name, factors").eq("id", id).maybeSingle(),
     supabase
       .from("assessments")
       .select("id, cycle")
@@ -51,7 +52,7 @@ export default async function DiagnosisPage({
       .maybeSingle(),
     supabase
       .from("controls")
-      .select("code, name, domain_id, verification_criteria, sort, domains ( sort )"),
+      .select("code, name, domain_id, verification_criteria, applies_when, sort, domains ( sort )"),
     supabase
       .from("interview_sessions")
       .select("id, status, answers")
@@ -86,6 +87,9 @@ export default async function DiagnosisPage({
     name: row.name,
     domain_id: row.domain_id,
     verification_criteria: row.verification_criteria,
+    // jsonb crudo de la base: null = siempre aplica; { factors_any: [...] } =
+    // aplica solo si la empresa declaró alguno de esos factores (Tarea 3).
+    appliesWhen: (row.applies_when as AppliesWhen) ?? null,
   }));
   const questions = buildComplianceQuestions(controls);
 
@@ -112,6 +116,7 @@ export default async function DiagnosisPage({
         sessionStatus={session?.status ?? null}
         questions={questions}
         initialAnswers={session?.answers ?? null}
+        companyFactors={companyRes.data.factors ?? []}
       />
     </>
   );

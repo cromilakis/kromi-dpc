@@ -82,10 +82,15 @@ export async function loadPublicDiagnosis(
     const session = (sessionRes.data ?? [])[0];
     if (!session) return { ok: false };
 
+    // El RPC `diagnosis_questions` no expone `applies_when` (el modo self no
+    // recorta por aplicabilidad — Tarea 4 solo cubre el modo asistido): se
+    // completa `null` (siempre aplica), consistente con `ComplianceForm` sin
+    // `companyFactors`/`onSetApplicability`, que renderiza todo como aplicable.
     const questions: ComplianceQuestion[] = (questionsRes.data ?? []).map((row) => ({
       controlCode: row.code,
       controlName: row.name,
       criteria: row.verification_criteria,
+      appliesWhen: null,
     }));
 
     return {
