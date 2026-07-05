@@ -266,7 +266,7 @@ export function RatForm({
           <label className="flex items-center gap-8 text-body-sm text-ink">
             <input
               type="checkbox"
-              className="h-14 w-14 rounded-[4px] border-slate accent-ink"
+              className="h-16 w-16 shrink-0 rounded-[4px] border-slate accent-ink"
               checked={draft.intlTransfer}
               onChange={(event) => setDraft({ ...draft, intlTransfer: event.target.checked })}
             />
@@ -313,7 +313,7 @@ export function RatForm({
           <label className="flex items-center gap-8 text-body-sm text-ink">
             <input
               type="checkbox"
-              className="h-14 w-14 rounded-[4px] border-slate accent-ink"
+              className="h-16 w-16 shrink-0 rounded-[4px] border-slate accent-ink"
               checked={draft.isSensitive}
               onChange={(event) => setDraft({ ...draft, isSensitive: event.target.checked })}
             />
