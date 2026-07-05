@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { cn, Logo } from "@/components/ui";
+import { signOut } from "@/lib/actions/auth";
 import { NavIcon, type NavIconName } from "./nav-icon";
 import { useShellCompany } from "./shell-context";
 
@@ -17,10 +19,9 @@ import { useShellCompany } from "./shell-context";
  * Activo = ítem cuyo href coincidente es el más largo (así las fichas de
  * control bajo /checklist marcan "Checklist DPC", regla del prototipo).
  * A11y establecida: labels ≤13px en Carbon (Metal del prototipo fallaba AA).
- * DECISIÓN (desviación del prototipo §1.4): el footer del sidebar con el
- * botón "Cerrar sesión" se relocalizó al menú de usuario del topbar — el
- * prototipo no tenía menú de usuario y duplicar la salida en dos lugares
- * era redundante; el sidebar queda sin footer a propósito.
+ * Footer: menú de usuario (avatar + nombre + rol + "Cerrar sesión"), abajo del
+ * sidebar. <details> mejorado: se cierra con Escape (foco de vuelta al trigger)
+ * y al interactuar/tabular fuera; el popover se abre hacia arriba.
  */
 
 interface NavItem {
@@ -30,6 +31,12 @@ interface NavItem {
   icon: NavIconName;
 }
 
+export interface AppSidebarProps {
+  userName: string;
+  userInitials: string;
+  userRole: "consultant" | "admin" | null;
+}
+
 /** id de empresa del pathname (/app/companies/[id]/…); "nueva" no es empresa. */
 function companyIdFromPathname(pathname: string): string | null {
   const match = pathname.match(/^\/app\/companies\/([^/]+)/);
@@ -37,7 +44,11 @@ function companyIdFromPathname(pathname: string): string | null {
   return match[1];
 }
 
-export function AppSidebar() {
+export function AppSidebar({
+  userName,
+  userInitials,
+  userRole,
+}: AppSidebarProps) {
   const pathname = usePathname();
   const t = useTranslations("app");
   const tCommon = useTranslations("common");
@@ -45,6 +56,24 @@ export function AppSidebar() {
 
   const companyId = companyIdFromPathname(pathname);
   const inCompany = companyId !== null;
+
+  // Menú de usuario: <details> con cierre por Escape (foco de vuelta al
+  // trigger) y por interacción fuera del menú (click/tap).
+  const menuRef = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    function onPointerDown(event: PointerEvent) {
+      const menu = menuRef.current;
+      if (
+        menu?.open &&
+        event.target instanceof Node &&
+        !menu.contains(event.target)
+      ) {
+        menu.open = false;
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, []);
 
   const items: NavItem[] = inCompany
     ? [
@@ -165,6 +194,73 @@ export function AppSidebar() {
           })}
         </ul>
       </nav>
+
+      <details
+        ref={menuRef}
+        className="group relative shrink-0 border-t border-ash p-[10px]"
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && menuRef.current?.open) {
+            menuRef.current.open = false;
+            menuRef.current.querySelector<HTMLElement>("summary")?.focus();
+          }
+        }}
+        onBlur={(event) => {
+          // Tab fuera del menú abierto → se cierra (focusout burbujea).
+          const menu = menuRef.current;
+          if (
+            menu?.open &&
+            !(
+              event.relatedTarget instanceof Node &&
+              menu.contains(event.relatedTarget)
+            )
+          ) {
+            menu.open = false;
+          }
+        }}
+      >
+        <summary className="flex cursor-pointer list-none items-center gap-[10px] rounded-cards px-[10px] py-8 transition-colors hover:bg-ash [&::-webkit-details-marker]:hidden">
+          <span
+            aria-hidden="true"
+            className="flex h-32 w-32 shrink-0 items-center justify-center rounded-full bg-ink text-[11px] font-semibold text-white"
+          >
+            {userInitials}
+          </span>
+          <div className="min-w-0 flex-1 text-left">
+            <p className="truncate text-[13px] font-semibold leading-[1.2] text-ink">
+              {userName}
+            </p>
+            {userRole ? (
+              <p className="truncate text-[11px] leading-[1.5] text-carbon">
+                {t(`shell.userMenu.roles.${userRole}`)}
+              </p>
+            ) : null}
+          </div>
+          <svg
+            width={12}
+            height={12}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="shrink-0 text-overcast transition-transform group-open:rotate-180"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </summary>
+        <div className="absolute inset-x-[10px] bottom-[calc(100%-4px)] z-30 rounded-cards border border-stone bg-white p-8 shadow-subtle-2">
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="w-full cursor-pointer rounded-buttons border border-stone bg-white px-8 py-8 text-[13px] font-medium text-carbon transition-colors hover:bg-ash hover:text-ink"
+            >
+              {t("shell.userMenu.signOut")}
+            </button>
+          </form>
+        </div>
+      </details>
     </aside>
   );
 }

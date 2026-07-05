@@ -138,7 +138,6 @@
           "namePlaceholder": "p. ej. Clínica Andes Salud SpA",
           "rutLabel": "RUT",
           "rutPlaceholder": "76.421.905-K",
-          "rutHint": "Con o sin puntos y guion; se valida el dígito verificador.",
           "contactLegend": "Contacto en la empresa",
           "contactNameLabel": "Nombre del contacto",
           "contactNamePlaceholder": "p. ej. Carolina Díaz",

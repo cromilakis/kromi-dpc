@@ -6,9 +6,9 @@ export { PageHeader } from "./page-header";
 export type { PageHeaderProps } from "./page-header";
 
 export { AppSidebar } from "./sidebar";
+export type { AppSidebarProps } from "./sidebar";
 
 export { AppTopbar } from "./topbar";
-export type { AppTopbarProps } from "./topbar";
 
 export { ShellProvider, CompanyScope, useShellCompany } from "./shell-context";
 export type {

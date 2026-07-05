@@ -328,7 +328,6 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                   label={t("identification.rutLabel")}
                   htmlFor="company-rut"
                   error={fieldError("rut")}
-                  hint={t("identification.rutHint")}
                 >
                   <Input
                     id="company-rut"
@@ -338,11 +337,7 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                     onBlur={handleRutBlur}
                     placeholder={t("identification.rutPlaceholder")}
                     aria-invalid={fieldErrors.rut ? true : undefined}
-                    aria-describedby={describedBy(
-                      "rut",
-                      "company-rut",
-                      "company-rut-hint",
-                    )}
+                    aria-describedby={describedBy("rut", "company-rut")}
                   />
                 </Field>
               </div>
@@ -401,26 +396,27 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                   error={fieldError("contactPhone")}
                 >
                   <div className="flex gap-8">
-                    <Select
-                      aria-label={t("identification.contactPhonePrefixLabel")}
-                      value={phonePrefix}
-                      onChange={(event) =>
-                        setPhonePrefix(
-                          event.target.value === "other" ? "other" : "cl",
-                        )
-                      }
-                      className="w-[104px] shrink-0"
-                    >
-                      <option value="cl">+56 9</option>
-                      <option value="other">
-                        {t("identification.contactPhonePrefixOther")}
-                      </option>
-                    </Select>
+                    <div className="w-[92px] shrink-0">
+                      <Select
+                        aria-label={t("identification.contactPhonePrefixLabel")}
+                        value={phonePrefix}
+                        onChange={(event) =>
+                          setPhonePrefix(
+                            event.target.value === "other" ? "other" : "cl",
+                          )
+                        }
+                      >
+                        <option value="cl">+56 9</option>
+                        <option value="other">
+                          {t("identification.contactPhonePrefixOther")}
+                        </option>
+                      </Select>
+                    </div>
                     {phonePrefix === "other" ? (
-                      <div className="relative shrink-0">
+                      <div className="relative w-[72px] shrink-0">
                         <span
                           aria-hidden="true"
-                          className="pointer-events-none absolute left-[12px] top-1/2 -translate-y-1/2 text-body-sm text-carbon"
+                          className="pointer-events-none absolute left-[12px] top-1/2 z-[1] -translate-y-1/2 text-body-sm text-carbon"
                         >
                           +
                         </span>
@@ -434,7 +430,7 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                           }
                           inputMode="numeric"
                           placeholder="44"
-                          className="w-[80px] pl-[22px]"
+                          className="pl-[22px]"
                         />
                       </div>
                     ) : null}
@@ -448,7 +444,7 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                       }
                       placeholder={t("identification.contactPhonePlaceholder")}
                       inputMode="tel"
-                      className="flex-1"
+                      className="min-w-0 flex-1"
                       aria-invalid={fieldErrors.contactPhone ? true : undefined}
                       aria-describedby={describedBy(
                         "contactPhone",

@@ -55,13 +55,13 @@ export default async function AppLayout({
     >
       <ShellProvider>
         <div className="flex min-h-screen bg-white">
-          <AppSidebar />
+          <AppSidebar
+            userName={displayName}
+            userInitials={initialsOf(displayName)}
+            userRole={profile?.role ?? null}
+          />
           <div className="flex min-w-0 flex-1 flex-col">
-            <AppTopbar
-              userName={displayName}
-              userInitials={initialsOf(displayName)}
-              userRole={profile?.role ?? null}
-            />
+            <AppTopbar />
             {/* id="main": destino del skip-link del root layout. */}
             <main id="main" className="flex-1">
               <div className="mx-auto w-full max-w-[1160px] px-32 pb-80 pt-32">
