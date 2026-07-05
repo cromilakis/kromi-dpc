@@ -6,6 +6,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { CompanyMemberInviteForm } from "@/components/companies/company-member-invite-form";
 import { PhaseForm } from "@/components/companies/phase-form";
+import { ProposalForm } from "@/components/companies/proposal-form";
 import { PageHeader } from "@/components/app/shell";
 import { Card, ProgressBar, StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { checklistProgress, PHASE_BADGE_VARIANT, progressFillClass } from "@/lib/companies/display";
@@ -588,6 +589,18 @@ export default async function CompanySummaryPage({
             </h2>
             <PhaseForm companyId={company.id} currentPhase={company.phase} />
           </Card>
+
+          {isConsultant ? (
+            <Card>
+              <h2 className="mb-4 text-[13px] font-semibold text-ink">
+                {t("detail.proposal.title")}
+              </h2>
+              <p className="mb-12 text-caption leading-caption tracking-caption text-carbon">
+                {t("detail.proposal.description")}
+              </p>
+              <ProposalForm companyId={company.id} />
+            </Card>
+          ) : null}
 
           {isConsultant ? (
             <Card>

@@ -313,6 +313,23 @@
             "unavailable": "No fue posible guardar el cambio. Reintentar en unos minutos."
           }
         },
+        "proposal": {
+          "title": "Propuesta al cliente",
+          "description": "Publica el plan y el monto para esta empresa; queda visible de inmediato en el portal del cliente.",
+          "planLabel": "Plan",
+          "planPlaceholder": "p. ej. Plan Cumplimiento Anual",
+          "amountLabel": "Monto (CLP)",
+          "amountPlaceholder": "1500000",
+          "amountHint": "Monto final en pesos chilenos, sin decimales.",
+          "submit": "Publicar propuesta",
+          "submitting": "Publicando…",
+          "success": "Propuesta publicada.",
+          "errors": {
+            "validation": "Revisa el plan y el monto ingresados.",
+            "unauthorized": "No tienes permisos para publicar propuestas.",
+            "unavailable": "No fue posible publicar la propuesta. Reintentar en unos minutos."
+          }
+        },
         "clientAccess": {
           "title": "Invitar acceso del cliente",
           "description": "Envía una invitación por correo para que el contacto de la empresa cree su cuenta y acceda solo a sus datos.",
