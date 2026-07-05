@@ -16,6 +16,7 @@ begin;
 -- 1. SECTORS — 7 rubros con multiplicador sectorial (prototipo RUBROS)
 -- ----------------------------------------------------------------------------
 insert into public.sectors (code, name, complexity_multiplier, laws, sort) values
+  ('otro',    'Otro / General',        1.00, array['Ley 21.719'], 0),
   ('retail',  'Retail / e-commerce',   1.20, array['Ley 19.496 (SERNAC)', 'Ley 21.719'], 1),
   ('fintech', 'Fintech / Financiero',  1.80, array['Circulares CMF', 'Ley 21.663', 'Ley 21.719'], 2),
   ('salud',   'Salud',                 1.70, array['Ley 20.584', 'Ley 21.719', 'DPC-SEN reforzado'], 3),

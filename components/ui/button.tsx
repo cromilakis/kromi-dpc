@@ -12,7 +12,7 @@ import { cn } from "./cn";
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-8 rounded-buttons " +
+  "inline-flex cursor-pointer items-center justify-center gap-8 rounded-buttons " +
   "text-body-sm leading-body-sm tracking-body-sm font-medium " +
   "px-12 py-8 transition-colors disabled:pointer-events-none disabled:opacity-60";
 

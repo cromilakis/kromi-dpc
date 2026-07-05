@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { PageHeader } from "@/components/app/shell";
-import { Button, Card, cn, Field, Input } from "@/components/ui";
+import { Button, Card, cn, Field, InfoTooltip, Input } from "@/components/ui";
 import {
   createCompany,
   type CompanyActionError,
@@ -65,6 +65,32 @@ const optionSubClasses =
 const legendClasses = "text-[13px] font-semibold text-ink";
 const hintClasses = "mt-4 text-caption leading-caption text-carbon";
 
+/**
+ * Mapa ley (string de display del catálogo) → slug de i18n (wizard.lawInfo).
+ * Se separa del texto porque las claves i18n no admiten puntos ("21.719").
+ * Las descripciones son orientativas — validar con abogado antes de exponer.
+ */
+const LAW_SLUG: Record<string, string> = {
+  "Ley 21.719": "l21719",
+  "Ley 19.496 (SERNAC)": "l19496",
+  "Circulares CMF": "cmf",
+  "Ley 21.663": "l21663",
+  "Ley 21.663 (ANCI)": "l21663",
+  "Ley 20.584": "l20584",
+  "Ley 21.459": "l21459",
+  "Código del Trabajo": "codigotrabajo",
+  "Normas SUBTEL": "subtel",
+  "DPC-SEN reforzado": "dpcsen",
+};
+
+/** Ley 21.719 primero (base para todos), luego el resto en su orden. */
+function orderedLaws(laws: string[]): string[] {
+  return [
+    ...laws.filter((law) => law === "Ley 21.719"),
+    ...laws.filter((law) => law !== "Ley 21.719"),
+  ];
+}
+
 /** dt/dd del resumen de confirmación. */
 const summaryTermClasses =
   "text-caption leading-caption tracking-caption text-carbon";
@@ -81,7 +107,10 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
-  const [sectorCode, setSectorCode] = useState<string | null>(null);
+  // Por defecto "Otro / General" (caso base: solo Ley 21.719), si está en el catálogo.
+  const [sectorCode, setSectorCode] = useState<string | null>(() =>
+    sectors.some((sector) => sector.code === "otro") ? "otro" : null,
+  );
   const [sizeTier, setSizeTier] = useState<SizeTier | null>(null);
   const [employees, setEmployees] = useState("");
   const [factors, setFactors] = useState<Record<ComplexityFactor, boolean>>(
@@ -377,8 +406,11 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
         {stepIndex === 1 ? (
           <Card className="p-24">
             <fieldset>
-              <legend className={legendClasses}>
+              <legend className={cn(legendClasses, "flex items-center gap-6")}>
                 {t("classification.sectorLegend")}
+                <InfoTooltip label={t("classification.sectorLegend")}>
+                  {t("help.sector")}
+                </InfoTooltip>
               </legend>
               <p className={hintClasses}>{t("classification.sectorHint")}</p>
               {fieldErrors.sectorCode ? (
@@ -409,15 +441,25 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
                   <p className="text-caption font-medium text-carbon">
                     {t("classification.lawsLabel")}
                   </p>
-                  <ul className="mt-8 flex flex-wrap gap-8">
-                    {selectedSector.laws.map((law) => (
-                      <li
-                        key={law}
-                        className="rounded-full border border-[#dbe7fd] bg-[#eaf1fe] px-12 py-4 text-[11px] font-medium text-ink"
-                      >
-                        {law}
-                      </li>
-                    ))}
+                  <ul className="mt-8 flex flex-col gap-8">
+                    {orderedLaws(selectedSector.laws).map((law) => {
+                      const slug = LAW_SLUG[law];
+                      return (
+                        <li
+                          key={law}
+                          className="rounded-cards border border-stone bg-[#fbfbfc] px-12 py-[10px]"
+                        >
+                          <span className="text-[13px] font-semibold text-ink">
+                            {law}
+                          </span>
+                          {slug && t.has(`lawInfo.${slug}`) ? (
+                            <span className="mt-[2px] block text-caption leading-caption text-carbon">
+                              {t(`lawInfo.${slug}`)}
+                            </span>
+                          ) : null}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               ) : null}
@@ -425,8 +467,11 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
 
             <div className="mt-20 border-t border-ash pt-20">
               <fieldset>
-              <legend className={legendClasses}>
+              <legend className={cn(legendClasses, "flex items-center gap-6")}>
                 {t("classification.sizeLegend")}
+                <InfoTooltip label={t("classification.sizeLegend")}>
+                  {t("help.size")}
+                </InfoTooltip>
               </legend>
               <p className={hintClasses}>{t("classification.sizeHint")}</p>
               {fieldErrors.sizeTier ? (
@@ -459,7 +504,14 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
 
             <div className="mt-20 border-t border-ash pt-20">
               <Field
-                label={t("classification.employeesLabel")}
+                label={
+                  <span className="inline-flex items-center gap-6">
+                    {t("classification.employeesLabel")}
+                    <InfoTooltip label={t("classification.employeesLabel")}>
+                      {t("help.employees")}
+                    </InfoTooltip>
+                  </span>
+                }
                 htmlFor="company-employees"
                 error={fieldError("employeesCount")}
                 className="max-w-[220px]"
@@ -489,7 +541,12 @@ export function NewCompanyWizard({ sectors }: { sectors: WizardSector[] }) {
         {stepIndex === 2 ? (
           <Card className="p-24">
             <fieldset>
-              <legend className={legendClasses}>{t("factors.legend")}</legend>
+              <legend className={cn(legendClasses, "flex items-center gap-6")}>
+                {t("factors.legend")}
+                <InfoTooltip label={t("factors.legend")}>
+                  {t("help.factors")}
+                </InfoTooltip>
+              </legend>
               <p className={hintClasses}>{t("factors.hint")}</p>
               <div className="mt-16 grid gap-8 sm:grid-cols-2">
                 {COMPLEXITY_FACTORS.map((factor) => (

@@ -29,6 +29,8 @@ export type { ContainerProps } from "./container";
 export { SectionHeading } from "./section-heading";
 export type { SectionHeadingProps, SectionHeadingSize } from "./section-heading";
 
+export { InfoTooltip } from "./info-tooltip";
+
 export { Tabs } from "./tabs";
 export type { TabsProps, TabItem } from "./tabs";
 

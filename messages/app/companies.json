@@ -105,7 +105,24 @@
       "wizard": {
         "eyebrow": "Alta de empresa · Paso {step} de {total}",
         "title": "Registrar y clasificar empresa",
-        "description": "El rubro activa las leyes complementarias; la clasificación y los factores alimentan el Complexity Score interno.",
+        "description": "El rubro define qué leyes aplican; la clasificación y los factores ajustan el alcance del diagnóstico.",
+        "help": {
+          "sector": "El rubro define qué leyes aplican además de la Ley 21.719. Si el negocio no calza en ninguno regulado (ej.: una tienda de barrio que solo guarda el teléfono de sus clientes), elige «Otro / General».",
+          "size": "Tramo de tamaño según la Ley 20.416. Ej.: una tienda atendida por 2 personas es «Microempresa».",
+          "employees": "Cantidad de personas que trabajan en la empresa. Ej.: si atienden 2 personas, ingresa 2.",
+          "factors": "Marca lo que aplique a la empresa; cada factor amplía el alcance del diagnóstico. Ej.: una tienda que solo guarda teléfonos normalmente no marca ninguno."
+        },
+        "lawInfo": {
+          "l21719": "Ley base de protección de datos personales en Chile: define cómo se pueden tratar los datos, con qué finalidad y qué derechos tienen las personas. Aplica a toda empresa.",
+          "l19496": "Ley del Consumidor (SERNAC): protege a las personas en su relación de consumo, incluido el uso de sus datos.",
+          "cmf": "Normativa de la CMF para el sector financiero: resguardos adicionales sobre los datos de clientes.",
+          "l21663": "Ley Marco de Ciberseguridad (ANCI): obligaciones de seguridad de la información y reporte de incidentes.",
+          "l20584": "Ley de derechos del paciente: reglas especiales para los datos de salud (sensibles).",
+          "l21459": "Ley de delitos informáticos: sanciona accesos indebidos y ataques a sistemas de información.",
+          "codigotrabajo": "Código del Trabajo: reglas sobre los datos de los trabajadores (contratos, remuneraciones, etc.).",
+          "subtel": "Normas de SUBTEL para telecomunicaciones: resguardos sobre datos de tráfico y de abonados.",
+          "dpcsen": "Refuerzo del estándar DPC sobre datos sensibles (criterio interno del equipo, no una ley)."
+        },
         "steps": {
           "identification": "Identificación",
           "classification": "Clasificación",
@@ -132,8 +149,8 @@
         },
         "classification": {
           "sectorLegend": "Rubro corporativo",
-          "sectorHint": "Determina el régimen sectorial: leyes complementarias y multiplicador del score.",
-          "lawsLabel": "Leyes complementarias activadas",
+          "sectorHint": "Define qué leyes aplican además de la Ley 21.719, que rige para todos.",
+          "lawsLabel": "Leyes aplicables",
           "sizeLegend": "Tamaño de la organización",
           "sizeHint": "Tramos según la clasificación chilena (Ley 20.416).",
           "employeesLabel": "N° de colaboradores",
@@ -141,32 +158,32 @@
         },
         "factors": {
           "legend": "Factores de complejidad",
-          "hint": "RFC §14.3 — amplían el alcance del diagnóstico y ajustan el Complexity Score interno.",
-          "note": "El Complexity Score se calcula en el servidor al crear la empresa y es de uso interno del equipo consultor.",
+          "hint": "Amplían el alcance del diagnóstico según la realidad de la empresa. Marca lo que aplique.",
+          "note": "Según lo que marques, el diagnóstico ajusta automáticamente su alcance. No hay respuesta correcta: refleja la realidad de la empresa.",
           "options": {
             "sensitive_data": {
               "label": "Datos sensibles",
-              "sub": "Salud, biométricos, financieros u otras categorías especiales."
+              "sub": "Salud, biométricos, financieros u otras categorías especiales. Ej.: una clínica con fichas médicas."
             },
             "international_transfers": {
               "label": "Transferencias internacionales",
-              "sub": "Datos al extranjero o proveedores cloud fuera de Chile."
+              "sub": "Datos al extranjero o proveedores cloud fuera de Chile. Ej.: un CRM alojado en EE.UU."
             },
             "automated_decisions": {
               "label": "Decisiones automatizadas / IA",
-              "sub": "Scoring, perfilamiento o decisiones sin intervención humana."
+              "sub": "Scoring, perfilamiento o decisiones sin intervención humana. Ej.: aprobar un crédito con un algoritmo."
             },
             "multi_site": {
               "label": "Multi-sede",
-              "sub": "Opera en más de una sede, sucursal u oficina."
+              "sub": "Opera en más de una sede, sucursal u oficina. Ej.: una cadena con 3 locales."
             },
             "critical_providers": {
               "label": "Proveedores críticos",
-              "sub": "Encargados externos tratan datos por cuenta de la organización."
+              "sub": "Encargados externos tratan datos por cuenta de la organización. Ej.: una empresa externa de remuneraciones."
             },
             "low_maturity": {
               "label": "Madurez inicial baja",
-              "sub": "Parte de cero: sin políticas ni protocolos de datos previos."
+              "sub": "Parte de cero: sin políticas ni protocolos de datos previos. Ej.: nunca han tenido un encargado de datos."
             }
           }
         },
@@ -178,7 +195,7 @@
           "factors": "Factores de complejidad",
           "noFactors": "Sin factores adicionales declarados",
           "employeesValue": "{count, plural, one {# colaborador} other {# colaboradores}}",
-          "createNote": "Al crear la empresa se calcula su Complexity Score interno y se abre la evaluación ciclo 1 con todos los controles aplicables al rubro en estado pendiente."
+          "createNote": "Al crear la empresa se abre la evaluación (ciclo 1) con todos los controles aplicables a su rubro en estado pendiente."
         },
         "fieldErrors": {
           "name": "La razón social necesita entre 3 y 160 caracteres.",
