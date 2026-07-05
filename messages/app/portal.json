@@ -1,0 +1,16 @@
+{
+  "portal": {
+    "meta": {
+      "title": "Portal del cliente"
+    },
+    "shell": {
+      "brand": "DPC · Portal del cliente",
+      "signOut": "Cerrar sesión"
+    },
+    "home": {
+      "title": "Bienvenido/a, {company}",
+      "description": "Tu panel de cumplimiento estará disponible aquí.",
+      "eyebrow": "Portal del cliente"
+    }
+  }
+}

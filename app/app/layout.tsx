@@ -11,6 +11,9 @@ import { createClient } from "@/lib/supabase/server";
  * el proxy ya protege /app/*) y carga el profile (nombre/rol) para el
  * menú de usuario. Solo los namespaces `app` y `common` viajan al cliente
  * (sidebar/topbar son client components por usePathname/contexto).
+ * Ruteo por rol (spec company-accounts fase 0, tarea 5): sesión sin fila en
+ * `profiles` (no staff) se rebota a `/portal` si es cliente activo
+ * (`company_members`), o a `/login` si no tiene ningún rol reconocido.
  */
 
 /** Iniciales (máx 2) para el avatar del usuario, estilo prototipo ("CD"). */
@@ -34,15 +37,28 @@ export default async function AppLayout({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Si el profile no llega (p. ej. usuario auth sin fila en el allowlist),
-  // se degrada al email: RLS igual le impide ver datos de negocio.
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name, role")
     .eq("user_id", user.id)
     .maybeSingle();
 
-  const displayName = profile?.full_name ?? user.email ?? "";
+  // Sesión sin fila en el allowlist de staff: puede ser un cliente (fila
+  // activa en company_members) → su lugar es /portal, no /app. Si tampoco es
+  // cliente, no tiene acceso a la plataforma → /login (sin sesión "fantasma"
+  // navegando un shell que RLS le vaciaría igual).
+  if (!profile) {
+    const { data: member } = await supabase
+      .from("company_members")
+      .select("status")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .maybeSingle();
+    if (member) redirect("/portal");
+    redirect("/login");
+  }
+
+  const displayName = profile.full_name ?? user.email ?? "";
   const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
 
   return (
@@ -58,7 +74,7 @@ export default async function AppLayout({
           <AppSidebar
             userName={displayName}
             userInitials={initialsOf(displayName)}
-            userRole={profile?.role ?? null}
+            userRole={profile.role}
           />
           <div className="flex min-w-0 flex-1 flex-col">
             <AppTopbar />
