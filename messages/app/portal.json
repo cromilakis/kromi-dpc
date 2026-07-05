@@ -11,6 +11,28 @@
       "title": "Bienvenido/a, {company}",
       "description": "Tu panel de cumplimiento estará disponible aquí.",
       "eyebrow": "Portal del cliente"
+    },
+    "dashboard": {
+      "certificate": {
+        "title": "Estado de tu certificación",
+        "standing": {
+          "vigente": "Vigente",
+          "por_vencer": "Por vencer",
+          "vencida": "Vencida",
+          "revocada": "Revocada",
+          "sin_certificado": "Sin certificado"
+        },
+        "issuedAt": "Emitido el {date}",
+        "validUntil": "Válido hasta {date}",
+        "code": "Código",
+        "verifyOnline": "Verificar en línea",
+        "empty": "Aún no tienes un certificado emitido."
+      },
+      "progress": {
+        "title": "Avance de cumplimiento",
+        "summary": "{evaluated}/{total} controles evaluados",
+        "note": "El avance se mide sobre los controles aplicables a tu empresa."
+      }
     }
   }
 }
