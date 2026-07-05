@@ -142,6 +142,48 @@ export function ShieldCheckIcon({ size = 22, className }: IconProps) {
   );
 }
 
+/** Billete (multa del caso hipotético en "Lo que está en juego"). */
+export function MoneyIcon({ size = 20, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <rect x="2" y="6" width="20" height="12" rx="2" />
+      <circle cx="12" cy="12" r="2.5" />
+      <path d="M6 10.5v3M18 10.5v3" />
+    </svg>
+  );
+}
+
+/** Chevron hacia abajo (acordeón de la FAQ; rota en <details open>). */
+export function ChevronDownIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
 /** Logotipo de WhatsApp (solo dentro del CTA de WhatsApp). */
 export function WhatsAppIcon({ size = 17, className }: IconProps) {
   return (

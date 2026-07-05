@@ -2,17 +2,21 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/ui";
 import { NAV_LINKS } from "./data";
+import { WhatsAppButton } from "./whatsapp-button";
 
 /**
  * NAV sticky de la landing (prototipo isLanding §NAV): fondo blanco
- * translúcido con blur, borde Stone, 64px de alto. La derecha queda vacía a
- * propósito: el acceso al panel es discreto vía footer (RFC §11).
+ * translúcido con blur, borde Stone, 64px de alto. A la derecha, los anchors
+ * de sección (solo desktop) + un CTA "Cotizar" primario SIEMPRE visible
+ * (también en móvil) que abre WhatsApp con el mensaje de cotización — camino
+ * de conversión persistente durante todo el scroll (cambio 2026-07-04).
  * Excepción de marca del lockup logo+tagline: serif Newsreader 17px medium
  * (registrada en .kromi/design.md); la regla "serif >= 28px" rige el resto.
  */
 export async function LandingNav() {
   const t = await getTranslations("landing.nav");
   const tCommon = await getTranslations("common");
+  const tWhatsApp = await getTranslations("landing.whatsapp");
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone bg-white/85 backdrop-blur-[12px]">
@@ -24,21 +28,30 @@ export async function LandingNav() {
             height={44}
             priority
           />
-          <span className="font-serif text-[17px] font-medium tracking-[-0.2px] text-ink">
+          {/* Tagline oculto en móvil para dejar espacio al CTA de cotizar. */}
+          <span className="font-serif text-[17px] font-medium tracking-[-0.2px] text-ink max-sm:hidden">
             {tCommon("tagline")}
           </span>
         </Link>
-        <nav className="hidden items-center gap-[2px] md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.key}
-              href={link.href}
-              className="rounded-buttons px-[10px] py-[6px] text-body-sm font-medium text-metal transition-colors hover:bg-ash hover:text-ink"
-            >
-              {t(link.key)}
-            </a>
-          ))}
-        </nav>
+        <div className="flex items-center gap-[6px]">
+          <nav className="hidden items-center gap-[2px] md:flex">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.key}
+                href={link.href}
+                className="rounded-buttons px-[10px] py-[6px] text-body-sm font-medium text-metal transition-colors hover:bg-ash hover:text-ink"
+              >
+                {t(link.key)}
+              </a>
+            ))}
+          </nav>
+          <WhatsAppButton
+            message={tWhatsApp("quoteMessage")}
+            className="ml-[6px] px-[14px] py-[8px] max-sm:ml-0"
+          >
+            {t("cta")}
+          </WhatsAppButton>
+        </div>
       </div>
     </header>
   );

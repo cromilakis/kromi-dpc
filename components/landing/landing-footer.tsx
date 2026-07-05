@@ -5,11 +5,15 @@ import { FOOTER_COLUMNS } from "./data";
 
 /**
  * Footer Abyss #000 (prototipo isLanding §FOOTER, Style Reference "Page
- * Footer"): columna de marca + 3 columnas de links. El único link funcional
- * es el acceso DISCRETO "Panel del consultor" → /login (RFC §11); el resto
- * son entradas informativas sin destino todavía (fiel al prototipo).
- * Cierra con la línea legal del RFC (§final): DPC no emite certificaciones
- * gubernamentales oficiales.
+ * Footer"): columna de marca + 3 columnas de links. Enlazan (2026-07-04):
+ * "Los 14 dominios" → #dominios, "Panel del consultor" → /login (RFC §11,
+ * acceso discreto) y las 4 leyes → Ley Chile (BCN, pestaña nueva); el resto
+ * son entradas informativas sin destino todavía.
+ * Cierra con una línea de marca en positivo ("Estándar privado de cumplimiento").
+ * (2026-07-04) Se retiró el disclaimer en negativo del RFC (§final) —"no emite
+ * certificaciones gubernamentales oficiales…"— por autosabotear el servicio en
+ * la landing; el calificador honesto es "privado". El disclaimer completo debe
+ * vivir en el contrato / T&C. PENDIENTE: validar con abogado.
  */
 export async function LandingFooter() {
   const t = await getTranslations("landing.footer");
@@ -41,27 +45,47 @@ export async function LandingFooter() {
               {t(`columns.${column.key}.title`)}
             </div>
             <ul className="flex flex-col gap-[10px]">
-              {column.links.map((link) => (
-                <li key={link.key}>
-                  {link.href && !(isStaticDemo && link.href === "/login") ? (
-                    <Link
-                      href={link.href}
-                      className="text-body-sm text-overcast transition-colors hover:text-white"
-                    >
-                      {t(`columns.${column.key}.links.${link.key}`)}
+              {column.links.map((link) => {
+                const label = t(`columns.${column.key}.links.${link.key}`);
+                const linkClass =
+                  "text-body-sm text-overcast transition-colors hover:text-white";
+                const hidden = isStaticDemo && link.href === "/login";
+                if (!link.href || hidden) {
+                  return (
+                    <li key={link.key}>
+                      <span className="text-body-sm text-overcast">{label}</span>
+                    </li>
+                  );
+                }
+                // Enlaces externos (Ley Chile) → nueva pestaña con rel seguro.
+                if (link.external) {
+                  return (
+                    <li key={link.key}>
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={linkClass}
+                      >
+                        {label}
+                        <span className="sr-only">{tCommon("opensInNewWindow")}</span>
+                      </a>
+                    </li>
+                  );
+                }
+                return (
+                  <li key={link.key}>
+                    <Link href={link.href} className={linkClass}>
+                      {label}
                     </Link>
-                  ) : (
-                    <span className="text-body-sm text-overcast">
-                      {t(`columns.${column.key}.links.${link.key}`)}
-                    </span>
-                  )}
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
       </div>
-      <div className="mx-auto w-full max-w-[1180px] border-t border-ink px-32 pb-40 pt-20 text-caption text-metal max-sm:px-16">
+      <div className="mx-auto w-full max-w-[1180px] border-t border-ink px-32 pb-40 pt-20 text-center text-caption text-metal max-sm:px-16">
         {t("legalLine")}
       </div>
     </footer>

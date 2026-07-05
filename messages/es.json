@@ -11,22 +11,22 @@
       "domains": "Dominios",
       "cycle": "Ciclo de servicio",
       "model": "Modelo",
-      "certification": "Certificación"
+      "certification": "Certificación",
+      "cta": "Cotizar"
     },
     "hero": {
       "lawBadge": "Ley 21.719",
       "lawNotice": "vigente desde el 1 de diciembre de 2026",
       "title": "Protección de datos personales, certificada",
-      "subtitle": "En DPC acompañamos a las empresas en todo el proceso: diagnóstico, propuesta y validación.",
-      "quoteLabel": "Dos formas de cotizar",
-      "ctaSelfAssessment": "Autoevaluación en línea",
+      "subtitle": "Te acompañamos a cumplir la Ley 21.719 y cada normativa de protección de datos que rige tu rubro, de principio a fin y con un certificado verificable ante una fiscalización.",
+      "quoteLabel": "Empieza tu certificación hoy",
+      "ctaSelfAssessment": "Autoevaluación gratis",
       "ctaSeparator": "o",
-      "ctaWhatsApp": "Cotización asistida"
+      "ctaWhatsApp": "Cotiza tu certificación"
     },
     "stakes": {
       "title": "Lo que está en juego",
       "note": "Fiscalización de la Agencia desde el 1 de diciembre de 2026",
-      "clpSuffix": "CLP",
       "items": {
         "minor": {
           "severity": "Infracción leve",
@@ -43,6 +43,21 @@
           "utm": "10.001 – 20.000 UTM",
           "clp": "hasta ≈ $1.360M"
         }
+      },
+      "example": {
+        "label": "Caso hipotético",
+        "quote": "Un almacén guarda los números de WhatsApp de sus clientes y les envía promociones, sin haberles informado para qué usa sus datos ni haber pedido su consentimiento.",
+        "configuresPrefix": "Esto configura una",
+        "severityPill": "falta leve",
+        "amountIntro": "La multa va desde:",
+        "amountFrom": "$7.000.000",
+        "amountConnector": "hasta",
+        "amountTo": "$340.000.000"
+      },
+      "reflect": {
+        "lead": "Ocurre todos los días, y pronto tendrá consecuencias serias. Lo mejor es anticiparse.",
+        "question": "¿Estás seguro de que en tu negocio todo está en orden?",
+        "cta": "Verifícalo con un especialista"
       }
     },
     "domains": {
@@ -56,58 +71,72 @@
       "items": {
         "lic": {
           "name": "Licitud y Lealtad",
+          "simple": "Tratar los datos solo cuando existe una base legal y el consentimiento de la persona.",
           "description": "Toda operación se apoya en una base legal válida (consentimiento, contrato, obligación legal, interés legítimo) y se trata al titular de forma leal. Cruce con Ley 19.496 (SERNAC)."
         },
         "fin": {
           "name": "Finalidad",
+          "simple": "Recolectar los datos para un fin específico y no destinarlos a otros usos.",
           "description": "Los datos se recolectan para fines determinados, explícitos y legítimos, y no se reutilizan para fines incompatibles. Incluye conservación limitada y borrado al cumplirse la finalidad."
         },
         "pro": {
           "name": "Proporcionalidad",
+          "simple": "Solicitar únicamente los datos necesarios para el fin declarado.",
           "description": "Solo se tratan los datos estrictamente necesarios para la finalidad declarada (minimización). Se evita la recolección preventiva o excesiva."
         },
         "cal": {
           "name": "Calidad",
+          "simple": "Mantener los datos exactos y actualizados, con corrección de errores.",
           "description": "Los datos se mantienen exactos, completos y actualizados, con mecanismos de corrección y depuración a lo largo de su ciclo de vida."
         },
         "res": {
           "name": "Responsabilidad",
+          "simple": "Demostrar el cumplimiento con evidencia y gobernanza documentada.",
           "description": "La organización puede demostrar su cumplimiento: gobernanza, DPD, Modelo de Prevención de Infracciones (MPI) y evidencia trazable. Cruce con ISO 27001."
         },
         "seg": {
           "name": "Seguridad",
+          "simple": "Proteger los datos frente a accesos indebidos, pérdidas y filtraciones.",
           "description": "Medidas técnicas y organizativas adecuadas al riesgo: cifrado, control de accesos y bitácoras. Cruce con Ley 21.459 (Delitos Informáticos) y exigencias CMF."
         },
         "tra": {
           "name": "Transparencia e Información",
+          "simple": "Informar a cada persona, de forma clara, cómo se tratan sus datos.",
           "description": "El deber de información del Art. 14 ter: política de tratamiento pública, con fecha y versión, e información clara al titular sobre el uso de sus datos."
         },
         "con": {
           "name": "Confidencialidad",
+          "simple": "Resguardar el secreto de los datos, incluso finalizada la relación.",
           "description": "Deber de secreto de quienes acceden a los datos, que se mantiene incluso terminada la relación. Acuerdos de confidencialidad y capacitación."
         },
         "inv": {
           "name": "Inventario y RAT",
+          "simple": "Identificar qué datos posee la organización, dónde están y con qué finalidad.",
           "description": "Levantamiento del inventario de datos y del Registro de Actividades de Tratamiento (RAT): qué se trata, con qué finalidad y base, con quién se comparte y por cuánto tiempo. Mapeo de flujos."
         },
         "der": {
           "name": "Derechos de los Titulares",
+          "simple": "Habilitar a las personas para acceder, rectificar o eliminar sus datos.",
           "description": "Canal y procedimiento para ejercer los derechos de acceso, rectificación, supresión, oposición y portabilidad, con plazos auditables (30 días)."
         },
         "sen": {
           "name": "Datos Sensibles y Grupos Especiales",
+          "simple": "Aplicar protección reforzada a datos sensibles como salud, menores o biometría.",
           "description": "Protección reforzada para datos sensibles y de NNA. Cruce estricto con Ley 20.584 (Salud), biometría laboral y datos económico-financieros."
         },
         "ter": {
           "name": "Encargados y Transferencias",
+          "simple": "Supervisar a los proveedores externos que tratan datos por la organización.",
           "description": "Evaluación de encargados del tratamiento, contratos de encargo (DPA) y transferencias internacionales con garantías de adecuación."
         },
         "inc": {
           "name": "Incidentes y Brechas",
+          "simple": "Contar con un plan para responder y notificar oportunamente una filtración.",
           "description": "Detección, contención y notificación de brechas a la Agencia dentro de 72 horas y a los titulares cuando corresponda. Alineación con la Ley 21.663 (ANCI)."
         },
         "eia": {
           "name": "Evaluación de Impacto y Decisiones Automatizadas",
+          "simple": "Evaluar los riesgos antes de tratamientos sensibles o decisiones automatizadas.",
           "description": "Evaluación de Impacto (EIPD) para tratamientos de alto riesgo, y salvaguardas para decisiones automatizadas y perfilamiento: supervisión humana y explicabilidad."
         }
       }
@@ -184,6 +213,10 @@
       }
     },
     "trust": {
+      "standard": {
+        "title": "Estándar estructurado y trazable",
+        "text": "14 dominios alineados a los principios de la Ley 21.719 y su ecosistema regulatorio, con un certificado privado verificable por hash."
+      },
       "dogfooding": {
         "title": "Nuestros procesos, bajo la misma rigurosidad",
         "text": "La información de nuestros propios clientes se resguarda bajo los mismos 14 dominios que rigen nuestro estándar, asegurando la calidad del proceso y de los resultados."
@@ -192,6 +225,12 @@
         "title": "Confidencialidad por diseño",
         "text": "Accedemos solo a la evidencia necesaria para evaluar. Los datos de la organización permanecen bajo su control, con acuerdo de confidencialidad y contrato de encargo."
       }
+    },
+    "ctaBand": {
+      "title": "Adelántate a la fiscalización.",
+      "subtitle": "La fiscalización de la Agencia comienza el 1 de diciembre de 2026. Empieza hoy el camino a la certificación.",
+      "ctaWhatsApp": "Cotiza tu certificación",
+      "ctaSelfAssessment": "Autoevaluación gratis"
     },
     "support": {
       "eyebrow": "Acompañamiento",
@@ -255,12 +294,39 @@
         }
       },
       "disclaimer": "Los valores base son referenciales y acordes al tamaño de cada organización. El precio final se confirma tras el diagnóstico, según la complejidad de los tratamientos.",
-      "ctaSelfAssessment": "Autoevaluación en línea",
-      "ctaWhatsApp": "Cotizar certificación"
+      "ctaSelfAssessment": "Autoevaluación gratis",
+      "ctaWhatsApp": "Cotiza tu certificación"
+    },
+    "faq": {
+      "eyebrow": "Preguntas frecuentes",
+      "title": "Resolvemos tus dudas.",
+      "items": {
+        "obligation": {
+          "q": "¿Mi organización debe cumplir la Ley 21.719?",
+          "a": "La ley regula el tratamiento de datos personales y entra en vigencia el 1 de diciembre de 2026. Si tu organización recolecta o procesa datos de clientes, trabajadores o usuarios, queda dentro de su ámbito de aplicación. Con la autoevaluación gratuita puedes estimar tu punto de partida."
+        },
+        "duration": {
+          "q": "¿Cuánto demora el proceso?",
+          "a": "Depende del tamaño de la organización y de la complejidad de sus tratamientos. El alcance y los tiempos se definen tras el diagnóstico inicial."
+        },
+        "cost": {
+          "q": "¿Cuánto cuesta la certificación?",
+          "a": "Cada organización parte de un valor base según su tamaño —desde 5 UF microempresa y 15 UF pequeña empresa— que se ajusta tras el diagnóstico según la complejidad real. Las organizaciones grandes se cotizan a la medida."
+        },
+        "skills": {
+          "q": "¿Necesito conocimientos técnicos o legales?",
+          "a": "No. Un consultor asignado te acompaña en cada fase, interpreta cómo la ley aplica a tu operación y te guía en la implementación de cada control."
+        },
+        "deliverable": {
+          "q": "¿Qué obtengo al finalizar?",
+          "a": "Un expediente de cumplimiento completo —inventario, políticas, procedimientos y evidencias por control— junto con el certificado privado DPC, verificable en línea."
+        }
+      }
     },
     "whatsapp": {
       "infoMessage": "Hola, quiero información sobre la certificación de protección de datos",
-      "quoteMessage": "Hola, quiero cotizar la certificación de protección de datos para mi organización"
+      "quoteMessage": "Hola, quiero cotizar la certificación de protección de datos para mi organización",
+      "verifyMessage": "Hola, quiero verificar si mi negocio cumple con la protección de datos personales"
     },
     "footer": {
       "brandName": "Data Protection Compliance",
@@ -294,7 +360,7 @@
           }
         }
       },
-      "legalLine": "© 2026 DPC · Marco de trabajo. No emite certificaciones gubernamentales oficiales ni suplanta las potestades de la Agencia de Protección de Datos Personales."
+      "legalLine": "© 2026 DPC · Estándar privado de cumplimiento para la Ley 21.719."
     }
   },
   "login": {

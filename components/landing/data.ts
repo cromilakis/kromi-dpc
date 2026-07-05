@@ -34,18 +34,21 @@ export const COMPLEMENTARY_DOMAINS: DomainRef[] = [
 
 /**
  * Sanciones de la Ley 21.719 (banda "Lo que está en juego").
- * Los puntos de color son semánticos y usan tokens del design system:
- * lead (leve) / warning-yellow (grave) / danger-red (gravísima).
+ * El color y el nivel son semánticos y usan tokens del design system:
+ * lead (leve) / warning-yellow (grave) / danger-red (gravísima). `level`
+ * (1→3) alimenta el medidor de barras ascendentes que comunica la escala
+ * de gravedad de la menos a la más grave.
  */
 export interface StakeRef {
   key: string;
-  dotClass: string;
+  colorClass: string;
+  level: number; // 1..3
 }
 
 export const STAKES: StakeRef[] = [
-  { key: "minor", dotClass: "bg-lead" },
-  { key: "serious", dotClass: "bg-warning-yellow" },
-  { key: "severe", dotClass: "bg-danger-red" },
+  { key: "minor", colorClass: "bg-lead", level: 1 },
+  { key: "serious", colorClass: "bg-warning-yellow", level: 2 },
+  { key: "severe", colorClass: "bg-danger-red", level: 3 },
 ];
 
 /** Ciclo de servicio: 4 fases (landing.cycle.phases). */
@@ -100,14 +103,17 @@ export const NAV_LINKS = [
  */
 export interface FooterColumnRef {
   key: string;
-  links: { key: string; href?: string }[];
+  links: { key: string; href?: string; external?: boolean }[];
 }
+
+/** Textos oficiales en Ley Chile (BCN), verificados por idNorma. */
+const LEYCHILE = "https://www.bcn.cl/leychile/navegar?idNorma=";
 
 export const FOOTER_COLUMNS: FooterColumnRef[] = [
   {
     key: "framework",
     links: [
-      { key: "domains" },
+      { key: "domains", href: "#dominios" },
       { key: "taxonomy" },
       { key: "risks" },
       { key: "verticals" },
@@ -125,13 +131,26 @@ export const FOOTER_COLUMNS: FooterColumnRef[] = [
   {
     key: "legal",
     links: [
-      { key: "law21719" },
-      { key: "law21663" },
-      { key: "law19496" },
-      { key: "laborCode" },
+      { key: "law21719", href: `${LEYCHILE}1209272`, external: true },
+      { key: "law21663", href: `${LEYCHILE}1202434`, external: true },
+      { key: "law19496", href: `${LEYCHILE}61438`, external: true },
+      { key: "laborCode", href: `${LEYCHILE}207436`, external: true },
     ],
   },
 ];
+
+/**
+ * Preguntas frecuentes (landing.faq.items). Cierran objeciones del usuario no
+ * técnico antes de la sección de precios. Nota: "obligation" hace una afirmación
+ * legal — su redacción requiere validación con el abogado.
+ */
+export const FAQ_ITEMS = [
+  "obligation",
+  "duration",
+  "cost",
+  "skills",
+  "deliverable",
+] as const;
 
 /** Tiers de precios base (landing.pricing.tiers) — ancla honesta "desde". */
 export const PRICING_TIERS = [

@@ -3,9 +3,11 @@ import { SectionHeading } from "@/components/ui";
 import { COMPLEMENTARY_DOMAINS, PRINCIPLE_DOMAINS, type DomainRef } from "./data";
 
 /**
- * Grid de los 14 dominios (prototipo isLanding §DOMINIOS, anchor #dominios):
- * dos grupos con divisor de sección (label uppercase + línea flexible) y
- * cards con chip de código + nombre + descripción.
+ * Los 14 dominios (prototipo isLanding §DOMINIOS, anchor #dominios): dos grupos
+ * con divisor de sección (label uppercase + línea flexible) y cards compactas
+ * con nombre + una frase simple (clave i18n "simple", 2026-07-04). Reemplaza la
+ * versión original con código + descripción legal por card, que abrumaba al
+ * usuario no técnico; el detalle legal completo vive en la plataforma interna.
  */
 
 interface DomainDividerProps {
@@ -26,34 +28,29 @@ function DomainDivider({ label, note }: DomainDividerProps) {
   );
 }
 
-interface DomainGridProps {
+interface DomainCardsProps {
   domains: DomainRef[];
   /** Traductor del namespace landing.domains (firma mínima, ver page.tsx). */
   t: (key: string) => string;
 }
 
-function DomainGrid({ domains, t }: DomainGridProps) {
+function DomainCards({ domains, t }: DomainCardsProps) {
   return (
-    <div className="grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
       {domains.map((domain) => (
-        <div
+        <li
           key={domain.code}
-          className="rounded-cards border border-stone bg-white p-[18px]"
+          className="rounded-cards border border-stone bg-white p-[16px]"
         >
-          <div className="mb-[10px] flex items-center gap-[10px]">
-            <span className="rounded-tags bg-ash px-[7px] py-[3px] text-[11px] font-semibold tracking-[0.3px] text-carbon">
-              {domain.code}
-            </span>
-            <span className="text-[15px] font-semibold tracking-[-0.2px] text-ink">
-              {t(`items.${domain.key}.name`)}
-            </span>
+          <div className="mb-[6px] text-[15px] font-semibold tracking-[-0.2px] text-ink">
+            {t(`items.${domain.key}.name`)}
           </div>
           <p className="text-[13px] leading-[1.5] text-metal">
-            {t(`items.${domain.key}.description`)}
+            {t(`items.${domain.key}.simple`)}
           </p>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
@@ -75,14 +72,14 @@ export async function DomainsSection() {
 
       <DomainDivider label={t("principlesLabel")} note={t("principlesNote")} />
       <div className="mb-40">
-        <DomainGrid domains={PRINCIPLE_DOMAINS} t={t} />
+        <DomainCards domains={PRINCIPLE_DOMAINS} t={t} />
       </div>
 
       <DomainDivider
         label={t("complementaryLabel")}
         note={t("complementaryNote")}
       />
-      <DomainGrid domains={COMPLEMENTARY_DOMAINS} t={t} />
+      <DomainCards domains={COMPLEMENTARY_DOMAINS} t={t} />
     </section>
   );
 }

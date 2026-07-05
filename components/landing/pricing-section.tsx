@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { SectionHeading, buttonClasses, cn } from "@/components/ui";
 import { PRICING_TIERS } from "./data";
+import { DocumentIcon } from "./icons";
 import { WhatsAppButton } from "./whatsapp-button";
 
 /**
@@ -79,16 +80,18 @@ export async function PricingSection() {
         <p className="max-w-[520px] text-[13px] leading-[1.5] text-carbon">
           {t("disclaimer")}
         </p>
+        {/* Mismo orden que el hero: Cotizar (primario) → Autoevaluación. */}
         <div className="flex shrink-0 flex-wrap items-center gap-[10px]">
-          <Link
-            href="/autoevaluacion"
-            className={buttonClasses("secondary", "px-[18px] py-[11px]")}
-          >
-            {t("ctaSelfAssessment")}
-          </Link>
           <WhatsAppButton message={tWhatsApp("quoteMessage")}>
             {t("ctaWhatsApp")}
           </WhatsAppButton>
+          <Link
+            href="/autoevaluacion"
+            className={buttonClasses("secondary", "gap-[9px] px-[18px] py-[11px]")}
+          >
+            <DocumentIcon className="shrink-0" />
+            {t("ctaSelfAssessment")}
+          </Link>
         </div>
       </div>
     </section>
