@@ -21,7 +21,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Constants } from "@/lib/supabase/types";
 
 /**
- * /app/empresas/[id]/evidencias — Repositorio documental (prototipo §1.4.10,
+ * /app/companies/[id]/evidence — Repositorio documental (prototipo §1.4.10,
  * spec evidencias, data_level sensitive). Server component con cliente
  * AUTENTICADO (RLS autoriza consultores): summary-cards, formulario de subida
  * real a Storage privado, filtros por estado/control vía searchParams y tabla

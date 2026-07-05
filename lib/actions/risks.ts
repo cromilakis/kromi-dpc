@@ -122,7 +122,7 @@ export async function assignRisk(input: unknown): Promise<RiskActionResult> {
     detail: { company_id: companyId, risk_id: riskId, impact, probability },
   });
 
-  revalidatePath(`/app/empresas/${companyId}/riesgos`);
+  revalidatePath(`/app/companies/${companyId}/risks`);
   return { ok: true };
 }
 
@@ -181,7 +181,7 @@ export async function updateRisk(input: unknown): Promise<RiskActionResult> {
     },
   });
 
-  revalidatePath(`/app/empresas/${companyId}/riesgos`);
+  revalidatePath(`/app/companies/${companyId}/risks`);
   return { ok: true };
 }
 
@@ -222,6 +222,6 @@ export async function removeRisk(input: unknown): Promise<RiskActionResult> {
     },
   });
 
-  revalidatePath(`/app/empresas/${companyId}/riesgos`);
+  revalidatePath(`/app/companies/${companyId}/risks`);
   return { ok: true };
 }

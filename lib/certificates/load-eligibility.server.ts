@@ -11,7 +11,7 @@ import {
 /**
  * Carga la elegibilidad de certificación de una empresa desde la BD y la
  * evalúa con la lib pura (eligibility.server.ts). Compartido por la página
- * /app/empresas/[id]/certificacion (display) y por la action issueCertificate
+ * /app/companies/[id]/certification (display) y por la action issueCertificate
  * (re-chequeo autoritativo antes de emitir — nunca se confía en el cliente).
  * Usa SIEMPRE el cliente AUTENTICADO del caller: RLS autoriza consultores.
  *

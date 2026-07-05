@@ -13,7 +13,7 @@ import { buttonClasses, Card, StatusBadge } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * /app/empresas/[id]/controles/[codigo] — Ficha de control (prototipo
+ * /app/companies/[id]/controls/[code] — Ficha de control (prototipo
  * §1.4.6, spec checklist-evaluacion, risk high): objetivo + detalle,
  * criterios de verificación numerados, fundamento legal primario/conectado,
  * riesgo mitigado, evidencias requeridas con estado (regla del spec:
@@ -44,27 +44,27 @@ function parseCode(raw: string): string | null {
 }
 
 interface ControlPageProps {
-  params: Promise<{ id: string; codigo: string }>;
+  params: Promise<{ id: string; code: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: ControlPageProps): Promise<Metadata> {
-  const [{ codigo }, t] = await Promise.all([
+  const [{ code: rawCode }, t] = await Promise.all([
     params,
     getTranslations("app.checklist.meta"),
   ]);
-  const code = parseCode(codigo);
-  return { title: t("controlTitle", { code: code ?? codigo }) };
+  const code = parseCode(rawCode);
+  return { title: t("controlTitle", { code: code ?? rawCode }) };
 }
 
 export default async function ControlPage({ params }: ControlPageProps) {
-  const [{ id, codigo }, t] = await Promise.all([
+  const [{ id, code: rawCode }, t] = await Promise.all([
     params,
     getTranslations("app.checklist.control"),
   ]);
   if (!companyIdSchema.safeParse(id).success) notFound();
-  const code = parseCode(codigo);
+  const code = parseCode(rawCode);
   if (!code) notFound();
 
   const supabase = await createClient();
@@ -174,7 +174,7 @@ export default async function ControlPage({ params }: ControlPageProps) {
       ? siblings[position + 1]
       : null;
 
-  const checklistPath = `/app/empresas/${company.id}/checklist`;
+  const checklistPath = `/app/companies/${company.id}/checklist`;
 
   return (
     <>
@@ -409,7 +409,7 @@ export default async function ControlPage({ params }: ControlPageProps) {
       >
         {prev ? (
           <Link
-            href={`/app/empresas/${company.id}/controles/${prev.code}`}
+            href={`/app/companies/${company.id}/controls/${prev.code}`}
             className={buttonClasses("secondary")}
           >
             {t("nav.prev", { code: prev.code })}
@@ -428,7 +428,7 @@ export default async function ControlPage({ params }: ControlPageProps) {
         ) : null}
         {next ? (
           <Link
-            href={`/app/empresas/${company.id}/controles/${next.code}`}
+            href={`/app/companies/${company.id}/controls/${next.code}`}
             className={buttonClasses("secondary")}
           >
             {t("nav.next", { code: next.code })}

@@ -6,7 +6,7 @@ import { Card } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * /app/empresas/nueva — alta de empresa (prototipo §1.4.3 isRegistro,
+ * /app/companies/new — alta de empresa (prototipo §1.4.3 isRegistro,
  * "Paso 1 de 4"; los pasos 2-4 no estaban diseñados y acá se completan
  * coherentes con el prototipo): 1) Identificación → 2) Clasificación
  * (rubro del catálogo con sus leyes + tramo + dotación) → 3) Factores de

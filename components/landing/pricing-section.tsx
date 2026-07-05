@@ -85,7 +85,7 @@ export async function PricingSection() {
             {t("ctaWhatsApp")}
           </WhatsAppButton>
           <Link
-            href="/autoevaluacion"
+            href="/self-assessment"
             className={buttonClasses("secondary", "gap-[9px] px-[18px] py-[11px]")}
           >
             <DocumentIcon className="shrink-0" />

@@ -51,7 +51,7 @@ export function AppTopbar({ userName, userInitials, userRole }: AppTopbarProps) 
   // las fases: un solo catálogo de textos para el mismo concepto).
   const tTiers = useTranslations("app.companies.scoreTiers");
   const { company } = useShellCompany();
-  const inCompany = /^\/app\/empresas\/(?!nueva(\/|$))[^/]+/.test(pathname);
+  const inCompany = /^\/app\/companies\/(?!new(\/|$))[^/]+/.test(pathname);
 
   // Menú de usuario: <details> con cierre por Escape (foco de vuelta al
   // trigger) y por interacción fuera del menú (click/tap).

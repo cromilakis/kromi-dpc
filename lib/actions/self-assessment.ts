@@ -10,7 +10,7 @@ import { computeInternalScore } from "../self-assessment/scoring.server";
 import { createAdminClient } from "../supabase/admin";
 
 /**
- * Server action del autoevaluador público (/autoevaluacion): valida con Zod
+ * Server action del autoevaluador público (/self-assessment): valida con Zod
  * ESTRICTO, recalcula la estimación EN SERVIDOR (jamás se confía en el tramo
  * calculado por el cliente) e inserta el lead en self_assessments vía service
  * role (la tabla no tiene política de INSERT anon a propósito — migración RLS).

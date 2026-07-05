@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Logo } from "@/components/ui";
 
 /**
- * Topbar de las páginas públicas secundarias (/autoevaluacion y
- * /verificar/[codigo]) — réplica del topbar del cotizador del prototipo
+ * Topbar de las páginas públicas secundarias (/self-assessment y
+ * /verify/[code]) — réplica del topbar del cotizador del prototipo
  * (sticky, logo 36px + tagline, botón "← Volver al sitio").
  * Presentacional: los textos llegan por props desde el server component
  * (cero strings hardcodeados). Excepción de marca del lockup logo+tagline:

@@ -176,7 +176,7 @@ export async function issueCertificate(
         },
       });
 
-      revalidatePath(`/app/empresas/${companyId}/certificacion`);
+      revalidatePath(`/app/companies/${companyId}/certification`);
       return { ok: true };
     }
     // Inalcanzable (el último intento retorna dentro del loop); typing-safe.
@@ -252,7 +252,7 @@ export async function revalidateCertificate(
       },
     });
 
-    revalidatePath(`/app/empresas/${certificate.company_id}/certificacion`);
+    revalidatePath(`/app/companies/${certificate.company_id}/certification`);
     return { ok: true };
   } catch (cause) {
     console.error("[certificates] revalidateCertificate no disponible:", cause);
@@ -314,7 +314,7 @@ export async function revokeCertificate(
       },
     });
 
-    revalidatePath(`/app/empresas/${certificate.company_id}/certificacion`);
+    revalidatePath(`/app/companies/${certificate.company_id}/certification`);
     return { ok: true };
   } catch (cause) {
     console.error("[certificates] revokeCertificate no disponible:", cause);

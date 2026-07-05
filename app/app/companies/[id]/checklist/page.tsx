@@ -14,7 +14,7 @@ import { buttonClasses, Card, ProgressBar, StatusBadge } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * /app/empresas/[id]/checklist — Checklist multiregulatorio (prototipo
+ * /app/companies/[id]/checklist — Checklist multiregulatorio (prototipo
  * §1.4.5, spec checklist-evaluacion, risk high). Vista de datos del
  * assessment ACTIVO de la empresa (status 'open' del ciclo mayor). Estructura
  * canónica del prototipo: grid `284px 1fr` con RAIL persistente de los 14
@@ -134,7 +134,7 @@ export default async function ChecklistPage({
           </p>
           <div className="mt-20">
             <Link
-              href={`/app/empresas/${company.id}`}
+              href={`/app/companies/${company.id}`}
               className={buttonClasses("secondary")}
             >
               {t("empty.noAssessment.back")}
@@ -241,7 +241,7 @@ export default async function ChecklistPage({
     .filter((group) => group.visibleRows.length > 0);
 
   // Enlaces del rail: preservan el filtro de estado al cambiar de dominio.
-  const checklistBase = `/app/empresas/${company.id}/checklist`;
+  const checklistBase = `/app/companies/${company.id}/checklist`;
   function railHref(domainCode?: string): string {
     const query = new URLSearchParams();
     if (statusFilter) query.set("estado", statusFilter);
@@ -430,7 +430,7 @@ export default async function ChecklistPage({
                             className="flex items-center gap-16 border-t border-ash px-20 py-12 first:border-t-0"
                           >
                             <Link
-                              href={`/app/empresas/${company.id}/controles/${row.code}`}
+                              href={`/app/companies/${company.id}/controls/${row.code}`}
                               aria-label={t("row.open", {
                                 code: row.code,
                                 name: row.name,

@@ -27,13 +27,13 @@ import { todayISODate } from "@/lib/certificates/issue.server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * /app/empresas/[id]/certificacion — Certificación DPC (prototipo §1.4.11,
+ * /app/companies/[id]/certification — Certificación DPC (prototipo §1.4.11,
  * spec certificados, risk high). Server component: la elegibilidad se calcula
  * SERVER-SIDE (lib/certificates: umbral 80% + regla dura DPC-SEG/DPC-INC) y
  * solo alimenta la UI — las actions la re-verifican antes de mutar. Grid
  * 2 columnas: elegibilidad (resumen de controles + gaps "qué falta") y card
  * oscura del certificado vigente (código, emisión, vigencia, hash, link a
- * /verificar/[codigo]) + historial de emisiones.
+ * /verify/[code]) + historial de emisiones.
  */
 
 const companyIdSchema = z.uuid();
@@ -345,7 +345,7 @@ export default async function CertificationPage({
                 </p>
 
                 <Link
-                  href={`/verificar/${encodeURIComponent(activeCertificate.code)}`}
+                  href={`/verify/${encodeURIComponent(activeCertificate.code)}`}
                   target="_blank"
                   className={buttonClasses("secondary", "mt-20 w-full")}
                 >
@@ -425,7 +425,7 @@ export default async function CertificationPage({
                         {/* #2f66c9: action-blue oscurecido para AA en texto
                             pequeño (mismo criterio que StatusBadge). */}
                         <Link
-                          href={`/verificar/${encodeURIComponent(certificate.code)}`}
+                          href={`/verify/${encodeURIComponent(certificate.code)}`}
                           target="_blank"
                           aria-label={t("history.verifyAria", {
                             code: certificate.code,

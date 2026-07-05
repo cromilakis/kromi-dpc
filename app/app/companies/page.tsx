@@ -30,7 +30,7 @@ import { scoreTierOf, type ScoreTier } from "@/lib/companies/scoring.server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * /app/empresas — listado de empresas (prototipo §1.4.2 isEmpresas):
+ * /app/companies — listado de empresas (prototipo §1.4.2 isEmpresas):
  * búsqueda por nombre + filtros de fase y rubro resueltos EN SERVIDOR vía
  * searchParams (form GET, sin JS), tabla con link al detalle y CTA "Nueva
  * empresa". Columnas del prototipo: Empresa · Rubro · Fase · Cumplimiento
@@ -171,7 +171,7 @@ export default async function CompaniesPage({
         title={t("list.title")}
         description={t("list.description")}
         actions={
-          <Link href="/app/empresas/nueva" className={buttonClasses("primary")}>
+          <Link href="/app/companies/new" className={buttonClasses("primary")}>
             {t("list.newCompany")}
           </Link>
         }
@@ -186,7 +186,7 @@ export default async function CompaniesPage({
           <p className="max-w-[460px] text-body-sm leading-body-sm tracking-body-sm text-metal">
             {t("list.empty.text")}
           </p>
-          <Link href="/app/empresas/nueva" className={buttonClasses("primary")}>
+          <Link href="/app/companies/new" className={buttonClasses("primary")}>
             {t("list.empty.cta")}
           </Link>
         </Card>
@@ -247,7 +247,7 @@ export default async function CompaniesPage({
               </Button>
               {hasFilters ? (
                 <Link
-                  href="/app/empresas"
+                  href="/app/companies"
                   className={buttonClasses("ghost")}
                 >
                   {t("list.filters.clear")}
@@ -265,7 +265,7 @@ export default async function CompaniesPage({
               <p className="max-w-[420px] text-body-sm leading-body-sm tracking-body-sm text-metal">
                 {t("list.noResults.text")}
               </p>
-              <Link href="/app/empresas" className={buttonClasses("secondary")}>
+              <Link href="/app/companies" className={buttonClasses("secondary")}>
                 {t("list.noResults.clear")}
               </Link>
             </Card>
@@ -304,7 +304,7 @@ export default async function CompaniesPage({
                             {companyInitials(company.name)}
                           </span>
                           <Link
-                            href={`/app/empresas/${company.id}`}
+                            href={`/app/companies/${company.id}`}
                             aria-label={t("list.open", { name: company.name })}
                             className="truncate text-[13px] font-medium text-ink hover:underline"
                           >

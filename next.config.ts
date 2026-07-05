@@ -9,7 +9,7 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 // Build estático para GitHub Pages (demo pública de la cara pública):
 // GITHUB_PAGES=1 activa output:export con basePath /kromi-dpc. El workflow
 // .github/workflows/pages.yml excluye antes las rutas con servidor
-// (middleware, /app, /login, /verificar) y stubea la server action del lead.
+// (middleware, /app, /login, /verify) y stubea la server action del lead.
 const isGitHubPages = process.env.GITHUB_PAGES === "1";
 
 const nextConfig: NextConfig = {
@@ -26,7 +26,34 @@ const nextConfig: NextConfig = {
         images: { unoptimized: true },
         trailingSlash: true,
       }
-    : {}),
+    : {
+        // Rutas públicas/internas renombradas ES→EN: 301 permanentes para
+        // preservar enlaces existentes (no aplican en output:export).
+        async redirects() {
+          return [
+            {
+              source: "/autoevaluacion",
+              destination: "/self-assessment",
+              permanent: true,
+            },
+            {
+              source: "/verificar/:code",
+              destination: "/verify/:code",
+              permanent: true,
+            },
+            {
+              source: "/app/empresas",
+              destination: "/app/companies",
+              permanent: true,
+            },
+            {
+              source: "/app/empresas/:path*",
+              destination: "/app/companies/:path*",
+              permanent: true,
+            },
+          ];
+        },
+      }),
 };
 
 const config = withNextIntl(nextConfig);

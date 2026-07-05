@@ -149,8 +149,8 @@ export async function addToPlan(input: unknown): Promise<RemediationActionResult
     },
   });
 
-  revalidatePath(`/app/empresas/${companyId}/plan`);
-  revalidatePath(`/app/empresas/${companyId}/soluciones`);
+  revalidatePath(`/app/companies/${companyId}/plan`);
+  revalidatePath(`/app/companies/${companyId}/solutions`);
   return { ok: true };
 }
 
@@ -196,7 +196,7 @@ export async function createRemediationItem(
     },
   });
 
-  revalidatePath(`/app/empresas/${companyId}/plan`);
+  revalidatePath(`/app/companies/${companyId}/plan`);
   return { ok: true };
 }
 
@@ -259,6 +259,6 @@ export async function updateRemediationStatus(
     },
   });
 
-  revalidatePath(`/app/empresas/${companyId}/plan`);
+  revalidatePath(`/app/companies/${companyId}/plan`);
   return { ok: true };
 }

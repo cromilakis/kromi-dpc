@@ -17,7 +17,7 @@ import { ResultPanel } from "./result-panel";
 import { Stepper, STEP_KEYS } from "./stepper";
 
 /**
- * Wizard multi-paso del autoevaluador público (/autoevaluacion):
+ * Wizard multi-paso del autoevaluador público (/self-assessment):
  * tamaño (Ley 20.416) → rubro (7 opciones del prototipo) → factores de
  * riesgo (Sí/No, RFC §14.3) → resultado (tramo + orientación de valor +
  * CTA WhatsApp + lead opcional). La estimación es la función pura de

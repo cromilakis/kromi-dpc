@@ -220,7 +220,7 @@ export async function uploadEvidence(
       },
     });
 
-    revalidatePath(`/app/empresas/${companyId}/evidencias`);
+    revalidatePath(`/app/companies/${companyId}/evidence`);
     return { ok: true };
   } catch (cause) {
     console.error("[evidences] uploadEvidence no disponible:", cause);
@@ -356,7 +356,7 @@ export async function setEvidenceStatus(
       },
     });
 
-    revalidatePath(`/app/empresas/${evidence.company_id}/evidencias`);
+    revalidatePath(`/app/companies/${evidence.company_id}/evidence`);
     return { ok: true };
   } catch (cause) {
     console.error("[evidences] setEvidenceStatus no disponible:", cause);

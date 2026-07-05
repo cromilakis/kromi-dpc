@@ -1,5 +1,5 @@
 /**
- * Lógica PURA y PÚBLICA de estimación del autoevaluador (/autoevaluacion).
+ * Lógica PURA y PÚBLICA de estimación del autoevaluador (/self-assessment).
  *
  * Réplica del cotizador público del prototipo (design/prototype.dc.html,
  * estado isCotizador): tamaño → tramo/orientación de valor ("Desde X UF +

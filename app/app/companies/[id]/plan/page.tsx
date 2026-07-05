@@ -9,7 +9,7 @@ import { Card, ProgressBar } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Plan de adecuación (/app/empresas/[id]/plan) — spec plan-adecuacion,
+ * Plan de adecuación (/app/companies/[id]/plan) — spec plan-adecuacion,
  * prototipo §1.4.9: summary-cards (total/completadas/en curso/pendientes) +
  * progreso del plan (ProgressBar) + tabla de tareas ordenada por vencimiento
  * (estado ciclable con audit_log) + crear tarea manual. Server component:

@@ -35,7 +35,7 @@ export async function CtaBand() {
             {t("ctaWhatsApp")}
           </WhatsAppButton>
           <Link
-            href="/autoevaluacion"
+            href="/self-assessment"
             className="inline-flex items-center gap-[9px] rounded-buttons border border-white/25 px-[18px] py-[11px] text-body-sm font-medium text-white transition-colors hover:bg-white/10"
           >
             <DocumentIcon className="shrink-0" />

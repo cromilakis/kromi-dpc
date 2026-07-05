@@ -56,10 +56,10 @@ function revalidateControlPaths(
   controlCode: string | null | undefined,
 ): void {
   if (!companyId) return;
-  revalidatePath(`/app/empresas/${companyId}/checklist`);
-  revalidatePath(`/app/empresas/${companyId}`);
+  revalidatePath(`/app/companies/${companyId}/checklist`);
+  revalidatePath(`/app/companies/${companyId}`);
   if (controlCode) {
-    revalidatePath(`/app/empresas/${companyId}/controles/${controlCode}`);
+    revalidatePath(`/app/companies/${companyId}/controls/${controlCode}`);
   }
 }
 

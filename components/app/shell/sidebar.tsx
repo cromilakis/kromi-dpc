@@ -12,7 +12,7 @@ import { useShellCompany } from "./shell-context";
  * #fbfbfc, borde derecho Stone, sticky full-height. Dos modos derivados del
  * pathname (estable en SSR, sin flash):
  * - "Consultoría": Panel general / Empresas / Nueva empresa.
- * - "Empresa" (rutas /app/empresas/[id]…): back-link + bloque de contexto de
+ * - "Empresa" (rutas /app/companies/[id]…): back-link + bloque de contexto de
  *   la empresa (vía ShellContext, con skeleton mientras llega) + los 7 ítems.
  * Activo = ítem cuyo href coincidente es el más largo (así las fichas de
  * control bajo /checklist marcan "Checklist DPC", regla del prototipo).
@@ -30,9 +30,9 @@ interface NavItem {
   icon: NavIconName;
 }
 
-/** id de empresa del pathname (/app/empresas/[id]/…); "nueva" no es empresa. */
+/** id de empresa del pathname (/app/companies/[id]/…); "nueva" no es empresa. */
 function companyIdFromPathname(pathname: string): string | null {
-  const match = pathname.match(/^\/app\/empresas\/([^/]+)/);
+  const match = pathname.match(/^\/app\/companies\/([^/]+)/);
   if (!match || match[1] === "nueva") return null;
   return match[1];
 }
@@ -48,18 +48,18 @@ export function AppSidebar() {
 
   const items: NavItem[] = inCompany
     ? [
-        { key: "summary", href: `/app/empresas/${companyId}`, label: t("nav.summary"), icon: "summary" },
-        { key: "checklist", href: `/app/empresas/${companyId}/checklist`, label: t("nav.checklist"), icon: "checklist" },
-        { key: "risks", href: `/app/empresas/${companyId}/riesgos`, label: t("nav.risks"), icon: "risks" },
-        { key: "solutions", href: `/app/empresas/${companyId}/soluciones`, label: t("nav.solutions"), icon: "solutions" },
-        { key: "plan", href: `/app/empresas/${companyId}/plan`, label: t("nav.plan"), icon: "plan" },
-        { key: "evidence", href: `/app/empresas/${companyId}/evidencias`, label: t("nav.evidence"), icon: "evidence" },
-        { key: "certification", href: `/app/empresas/${companyId}/certificacion`, label: t("nav.certification"), icon: "certification" },
+        { key: "summary", href: `/app/companies/${companyId}`, label: t("nav.summary"), icon: "summary" },
+        { key: "checklist", href: `/app/companies/${companyId}/checklist`, label: t("nav.checklist"), icon: "checklist" },
+        { key: "risks", href: `/app/companies/${companyId}/risks`, label: t("nav.risks"), icon: "risks" },
+        { key: "solutions", href: `/app/companies/${companyId}/solutions`, label: t("nav.solutions"), icon: "solutions" },
+        { key: "plan", href: `/app/companies/${companyId}/plan`, label: t("nav.plan"), icon: "plan" },
+        { key: "evidence", href: `/app/companies/${companyId}/evidence`, label: t("nav.evidence"), icon: "evidence" },
+        { key: "certification", href: `/app/companies/${companyId}/certification`, label: t("nav.certification"), icon: "certification" },
       ]
     : [
         { key: "panel", href: "/app", label: t("nav.panel"), icon: "panel" },
-        { key: "companies", href: "/app/empresas", label: t("nav.companies"), icon: "companies" },
-        { key: "newCompany", href: "/app/empresas/nueva", label: t("nav.newCompany"), icon: "newCompany" },
+        { key: "companies", href: "/app/companies", label: t("nav.companies"), icon: "companies" },
+        { key: "newCompany", href: "/app/companies/new", label: t("nav.newCompany"), icon: "newCompany" },
       ];
 
   const activeHref = items
@@ -86,7 +86,7 @@ export function AppSidebar() {
       {inCompany ? (
         <div className="border-b border-ash px-[14px] pb-[10px] pt-[14px]">
           <Link
-            href="/app/empresas"
+            href="/app/companies"
             className="mb-12 inline-flex items-center gap-[6px] rounded-tags text-caption font-medium text-carbon transition-colors hover:text-ink"
           >
             {t("shell.backToCompanies")}

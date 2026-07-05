@@ -12,7 +12,7 @@ import type { Database } from "@/lib/supabase/types";
 
 /**
  * Contexto del shell interno: puente entre el layout de empresa
- * (app/app/empresas/[id]/layout.tsx, que carga la empresa en servidor) y el
+ * (app/app/companies/[id]/layout.tsx, que carga la empresa en servidor) y el
  * sidebar/topbar que viven en el layout PADRE (app/app/layout.tsx) y por eso
  * no pueden recibir la empresa por props. El modo del sidebar NO depende de
  * este contexto (se deriva del pathname, estable en SSR); solo el bloque de
@@ -67,7 +67,7 @@ export function useShellCompany(): ShellContextValue {
 
 /**
  * Publica en el shell la empresa ya cargada en servidor y la limpia al salir
- * del segmento /app/empresas/[id]. La renderiza SOLO el layout de empresa.
+ * del segmento /app/companies/[id]. La renderiza SOLO el layout de empresa.
  */
 export function CompanyScope({
   company,

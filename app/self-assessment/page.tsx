@@ -6,7 +6,7 @@ import { RiskValueCards } from "@/components/self-assessment/risk-value-cards";
 import { SelfAssessmentWizard } from "@/components/self-assessment/wizard";
 
 /**
- * /autoevaluacion — autoevaluador público gratuito (RFC §13, prototipo
+ * /self-assessment — autoevaluador público gratuito (RFC §13, prototipo
  * isCotizador): cuestionario multi-paso que estima el tramo y la orientación
  * de valor ("desde X UF + IVA" / "bajo cotización"), pone en perspectiva el
  * riesgo de no certificarse y captura un lead opcional.

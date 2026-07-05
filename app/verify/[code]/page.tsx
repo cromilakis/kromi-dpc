@@ -5,7 +5,7 @@ import { StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * /verificar/[codigo] — verificación pública de certificados DPC
+ * /verify/[code] — verificación pública de certificados DPC
  * (RFC §11/§17: "Certificado privado DPC, verificable en línea").
  * Consulta el RPC verify_certificate(cert_code) con el cliente anon — único
  * acceso público permitido por la migración RLS (nunca acceso directo a
@@ -80,14 +80,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface VerifyPageProps {
-  params: Promise<{ codigo: string }>;
+  params: Promise<{ code: string }>;
 }
 
 export default async function VerifyCertificatePage({ params }: VerifyPageProps) {
-  const { codigo } = await params;
-  let code = codigo;
+  const { code: rawCode } = await params;
+  let code = rawCode;
   try {
-    code = decodeURIComponent(codigo);
+    code = decodeURIComponent(rawCode);
   } catch {
     // Código con escapes malformados: se consulta tal cual llegó.
   }

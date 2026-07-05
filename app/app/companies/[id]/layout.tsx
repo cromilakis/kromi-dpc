@@ -5,7 +5,7 @@ import { scoreTierOf } from "@/lib/companies/scoring.server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Layout del modo "Empresa" del shell (/app/empresas/[id]/…): carga la
+ * Layout del modo "Empresa" del shell (/app/companies/[id]/…): carga la
  * empresa en servidor (cliente AUTENTICADO — RLS autoriza consultores) y la
  * publica al sidebar/topbar vía CompanyScope (bloque de contexto: nombre,
  * rubro, fase con StatusBadge). Los 7 ítems del nav (Resumen, Checklist,

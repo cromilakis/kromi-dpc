@@ -35,7 +35,7 @@ export type CompanyActionError =
 export type CreateCompanyResult = { ok: false; error: CompanyActionError };
 
 /**
- * Alta de empresa (wizard /app/empresas/nueva): inserta la empresa con su
+ * Alta de empresa (wizard /app/companies/new): inserta la empresa con su
  * Complexity Score calculado SOLO EN SERVIDOR, crea la evaluación ciclo 1 con
  * assessment_controls 'pending' para todos los controles aplicables al rubro
  * (sector_scope null = transversal, o que incluya el sector) y deja rastro en
@@ -173,8 +173,8 @@ export async function createCompany(
   }
 
   revalidatePath("/app");
-  revalidatePath("/app/empresas");
-  redirect(`/app/empresas/${company.id}`);
+  revalidatePath("/app/companies");
+  redirect(`/app/companies/${company.id}`);
 }
 
 export type UpdatePhaseState =
@@ -239,8 +239,8 @@ export async function updateCompanyPhase(
   }
 
   revalidatePath("/app");
-  revalidatePath("/app/empresas");
-  revalidatePath(`/app/empresas/${company.id}`, "layout");
+  revalidatePath("/app/companies");
+  revalidatePath(`/app/companies/${company.id}`, "layout");
   return { ok: true };
 }
 

@@ -9,7 +9,7 @@ import { RisksTable, type AssignedRiskRow } from "@/components/risks/risks-table
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Riesgos & Gap (/app/empresas/[id]/riesgos) — spec riesgos-gap, prototipo
+ * Riesgos & Gap (/app/companies/[id]/risks) — spec riesgos-gap, prototipo
  * §1.4.7 extendido: matriz impacto × probabilidad 5×5 con conteos y tinte por
  * severidad + tabla de riesgos asignados (editar/quitar inline) + asignar
  * riesgo del catálogo con precarga de defaults. Server component: cliente

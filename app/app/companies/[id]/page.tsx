@@ -14,7 +14,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/types";
 
 /**
- * /app/empresas/[id] — Resumen de empresa (prototipo §1.4.4 isResumen):
+ * /app/companies/[id] — Resumen de empresa (prototipo §1.4.4 isResumen):
  * ficha (datos, rubro, tramo, contacto), Complexity Score interno (SOLO acá
  * y en la plataforma — herramienta del equipo, RFC §11/§14.3), métricas del
  * checklist del ciclo vigente (dona + porcentajes por estado), riesgos
@@ -407,7 +407,7 @@ export default async function CompanySummaryPage({
               </h2>
               {assessment ? (
                 <Link
-                  href={`/app/empresas/${company.id}/checklist`}
+                  href={`/app/companies/${company.id}/checklist`}
                   className="text-caption font-medium text-carbon transition-colors hover:text-ink"
                 >
                   {t("detail.checklist.open")}
@@ -482,7 +482,7 @@ export default async function CompanySummaryPage({
                 {t("detail.risks.title")}
               </h2>
               <Link
-                href={`/app/empresas/${company.id}/riesgos`}
+                href={`/app/companies/${company.id}/risks`}
                 className="text-caption font-medium text-carbon transition-colors hover:text-ink"
               >
                 {t("detail.risks.viewAll")}

@@ -67,7 +67,7 @@ export async function Hero() {
               {t("hero.ctaSeparator")}
             </span>
             <Link
-              href="/autoevaluacion"
+              href="/self-assessment"
               className={buttonClasses("secondary", "gap-[9px] px-[18px] py-[11px]")}
             >
               <DocumentIcon className="shrink-0" />

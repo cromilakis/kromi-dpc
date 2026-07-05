@@ -16,8 +16,8 @@ describe("deepMergeMessages (i18n del shell)", () => {
 
   it("mergea en profundidad ramas compartidas (varios módulos bajo `app`)", () => {
     const shell: MessageTree = { app: { shell: { brand: "DPC" } } };
-    const empresas: MessageTree = { app: { companies: { title: "Empresas" } } };
-    expect(deepMergeMessages(shell, empresas)).toEqual({
+    const companies: MessageTree = { app: { companies: { title: "Empresas" } } };
+    expect(deepMergeMessages(shell, companies)).toEqual({
       app: {
         shell: { brand: "DPC" },
         companies: { title: "Empresas" },

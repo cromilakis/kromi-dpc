@@ -119,7 +119,7 @@ export default async function DashboardPage() {
           <p className="max-w-[440px] text-body-sm leading-body-sm tracking-body-sm text-metal">
             {t("empty.text")}
           </p>
-          <Link href="/app/empresas/nueva" className={buttonClasses("primary")}>
+          <Link href="/app/companies/new" className={buttonClasses("primary")}>
             {t("empty.cta")}
           </Link>
         </Card>
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
                 {t("portfolio.title")}
               </h2>
               <Link
-                href="/app/empresas"
+                href="/app/companies"
                 className="text-caption font-medium text-carbon transition-colors hover:text-ink"
               >
                 {t("portfolio.viewAll")}
@@ -180,7 +180,7 @@ export default async function DashboardPage() {
                           {companyInitials(company.name)}
                         </span>
                         <Link
-                          href={`/app/empresas/${company.id}`}
+                          href={`/app/companies/${company.id}`}
                           aria-label={t("portfolio.open", { name: company.name })}
                           className="truncate text-[13px] font-medium text-ink hover:underline"
                         >

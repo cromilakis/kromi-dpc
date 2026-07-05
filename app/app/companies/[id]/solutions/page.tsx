@@ -10,7 +10,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Catálogo de soluciones (/app/empresas/[id]/soluciones) — spec
+ * Catálogo de soluciones (/app/companies/[id]/solutions) — spec
  * plan-adecuacion, prototipo §1.4.8: cards por solución (título, descripción,
  * control relacionado si tiene) con filtro y acción "Agregar al plan"
  * (addToPlan crea el remediation_item vinculado). Server component: lee
