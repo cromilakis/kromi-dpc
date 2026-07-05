@@ -44,15 +44,29 @@
         },
         "accept": "Aceptar propuesta",
         "accepting": "Aceptando…",
-        "paymentComingSoon": "El pago se habilitará próximamente.",
+        "pay": "Pagar {amount}",
+        "paying": "Redirigiendo a Stripe…",
+        "paidConfirmation": "Ya recibimos la confirmación de tu pago.",
         "errors": {
           "validation": "No se pudo procesar la solicitud. Intenta nuevamente.",
           "unauthorized": "Tu sesión no tiene acceso a esta propuesta.",
           "not_found": "No encontramos la propuesta.",
           "conflict": "La propuesta ya no está disponible para aceptar.",
           "unavailable": "No se pudo aceptar la propuesta. Intenta nuevamente."
+        },
+        "payErrors": {
+          "validation": "No se pudo procesar la solicitud. Intenta nuevamente.",
+          "unauthorized": "Tu sesión no tiene acceso a esta propuesta.",
+          "not_found": "No encontramos la propuesta.",
+          "conflict": "La propuesta debe estar aceptada para pagar, o ya fue pagada.",
+          "disabled": "El pago no está configurado todavía. Contacta a tu consultor.",
+          "unavailable": "No se pudo iniciar el pago. Intenta nuevamente."
         }
       }
+    },
+    "paidNotice": {
+      "title": "Estamos confirmando tu pago…",
+      "description": "Recibimos tu pago en Stripe; puede tardar unos segundos en reflejarse aquí. Actualiza la página en un momento."
     }
   }
 }

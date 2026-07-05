@@ -2,8 +2,10 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { getStripe, StripeError } from "@/lib/stripe/client";
 
 /**
  * Server actions del módulo "propuesta al cliente" (spec Fase 2, tarea 2):
@@ -232,6 +234,223 @@ export async function acceptProposal(proposalId: string): Promise<AcceptProposal
     return { ok: true };
   } catch (cause) {
     console.error("[proposals] acceptProposal no disponible:", cause);
+    return { ok: false, error: "unavailable" };
+  }
+}
+
+export type CreateCheckoutSessionError =
+  | "validation"
+  | "unauthorized"
+  | "not_found"
+  | "conflict"
+  | "disabled"
+  | "unavailable";
+
+export type CreateCheckoutSessionResult =
+  | { ok: true; url: string }
+  | { ok: false; error: CreateCheckoutSessionError };
+
+const createCheckoutSessionSchema = z.object({ proposalId: z.uuid() });
+
+/**
+ * Determina el origin para las URLs de retorno de Checkout. Prioridad:
+ * 1. `NEXT_PUBLIC_SITE_URL` si está configurada (recomendado en producción,
+ *    donde el header `origin` de un fetch server-side puede no reflejar el
+ *    dominio público detrás de un proxy/CDN).
+ * 2. El header `origin` de la request (presente en navegación normal).
+ * 3. El header `host` (con https), como último recurso.
+ */
+async function resolveOrigin(): Promise<string> {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL;
+  if (configured) return configured.replace(/\/$/, "");
+
+  const h = await headers();
+  const origin = h.get("origin");
+  if (origin) return origin;
+
+  const host = h.get("host");
+  if (host) return `https://${host}`;
+
+  return "http://localhost:3000";
+}
+
+/**
+ * Crea una Stripe Checkout Session (hosted, modo test) para que el cliente
+ * pague SU propuesta ya aceptada (spec company-portal-phase2, tarea 4). El
+ * estado real de pago NO se fija acá ni en el redirect de retorno: esta
+ * action solo abre el cobro y deja un `payments` en 'pending'; el webhook
+ * (tarea 5), verificado por firma, es la única fuente de verdad que marca
+ * 'paid' (ver Global Constraints del plan).
+ *
+ * OJO CLP zero-decimal: a diferencia de monedas como USD, Stripe trata CLP
+ * como moneda "zero-decimal" (https://stripe.com/docs/currencies#zero-decimal):
+ * el monto en `unit_amount` se manda TAL CUAL en pesos, SIN multiplicar por
+ * 100 (multiplicar por 100 cobraría 100x de más).
+ *
+ * Misma doctrina de pertenencia que `acceptProposal`: se lee la propuesta con
+ * el cliente autenticado (RLS la acota a la empresa propia); el upsert de
+ * `payments` y el UPDATE de `stripe_session_id` se hacen con service-role
+ * porque el cliente no tiene INSERT/UPDATE directo en `payments` (RLS).
+ */
+export async function createCheckoutSession(
+  proposalId: string,
+): Promise<CreateCheckoutSessionResult> {
+  const parsed = createCheckoutSessionSchema.safeParse({ proposalId });
+  if (!parsed.success) return { ok: false, error: "validation" };
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { ok: false, error: "unauthorized" };
+
+    // Lectura con el cliente autenticado: RLS acota el resultado a la
+    // propuesta de SU propia empresa (mismo patrón que acceptProposal).
+    const { data: proposal, error: readError } = await supabase
+      .from("proposals")
+      .select("id,company_id,plan,amount_clp,status")
+      .eq("id", parsed.data.proposalId)
+      .maybeSingle();
+    if (readError) {
+      console.error("[proposals] lectura de proposal falló:", readError.message);
+      return { ok: false, error: "unavailable" };
+    }
+    if (!proposal) return { ok: false, error: "not_found" };
+
+    if (proposal.status === "paid") return { ok: false, error: "conflict" };
+    if (proposal.status !== "accepted") return { ok: false, error: "conflict" };
+
+    let stripe;
+    try {
+      stripe = getStripe();
+    } catch (cause) {
+      if (cause instanceof StripeError) return { ok: false, error: "disabled" };
+      throw cause;
+    }
+
+    const admin = createAdminClient();
+
+    // Upsert del payment 'pending': si el cliente reintenta el pago (p. ej.
+    // canceló el Checkout anterior), se reutiliza el registro existente en
+    // vez de acumular filas huérfanas por proposal.
+    const { data: existingPayment, error: existingPaymentError } = await admin
+      .from("payments")
+      .select("id")
+      .eq("proposal_id", parsed.data.proposalId)
+      .eq("status", "pending")
+      .maybeSingle();
+    if (existingPaymentError) {
+      console.error(
+        "[proposals] lectura de payment pendiente falló:",
+        existingPaymentError.message,
+      );
+      return { ok: false, error: "unavailable" };
+    }
+
+    let paymentId: string;
+    if (existingPayment) {
+      paymentId = existingPayment.id;
+      const { error: updateAmountError } = await admin
+        .from("payments")
+        .update({ amount_clp: proposal.amount_clp })
+        .eq("id", paymentId);
+      if (updateAmountError) {
+        console.error(
+          "[proposals] actualización de payment pendiente falló:",
+          updateAmountError.message,
+        );
+        return { ok: false, error: "unavailable" };
+      }
+    } else {
+      const { data: inserted, error: insertPaymentError } = await admin
+        .from("payments")
+        .insert({
+          proposal_id: parsed.data.proposalId,
+          company_id: proposal.company_id,
+          amount_clp: proposal.amount_clp,
+          status: "pending",
+        })
+        .select("id")
+        .single();
+      if (insertPaymentError || !inserted) {
+        console.error(
+          "[proposals] insert de payment falló:",
+          insertPaymentError?.message,
+        );
+        return { ok: false, error: "unavailable" };
+      }
+      paymentId = inserted.id;
+    }
+
+    const origin = await resolveOrigin();
+
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        line_items: [
+          {
+            price_data: {
+              currency: "clp",
+              product_data: { name: proposal.plan },
+              // CLP es zero-decimal en Stripe: se manda el monto en pesos
+              // TAL CUAL, sin *100 (ver comentario del docblock).
+              unit_amount: proposal.amount_clp,
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          proposal_id: parsed.data.proposalId,
+          company_id: proposal.company_id,
+          payment_id: paymentId,
+        },
+        success_url: `${origin}/portal?paid=1`,
+        cancel_url: `${origin}/portal`,
+      });
+    } catch (cause) {
+      console.error("[proposals] Stripe checkout.sessions.create falló:", cause);
+      return { ok: false, error: "unavailable" };
+    }
+    if (!session.url) {
+      console.error("[proposals] Stripe no devolvió session.url");
+      return { ok: false, error: "unavailable" };
+    }
+
+    const { error: sessionIdError } = await admin
+      .from("payments")
+      .update({ stripe_session_id: session.id })
+      .eq("id", paymentId);
+    if (sessionIdError) {
+      console.error(
+        "[proposals] persistir stripe_session_id falló:",
+        sessionIdError.message,
+      );
+      return { ok: false, error: "unavailable" };
+    }
+
+    const { error: auditError } = await admin.from("audit_log").insert({
+      actor_id: user.id,
+      action: "payment.checkout_created",
+      entity: "payments",
+      entity_id: paymentId,
+      detail: {
+        proposal_id: parsed.data.proposalId,
+        company_id: proposal.company_id,
+        stripe_session_id: session.id,
+      },
+    });
+    if (auditError) {
+      console.error(
+        `[proposals] audit_log (payment.checkout_created, id=${paymentId}) falló:`,
+        auditError.message,
+      );
+    }
+
+    return { ok: true, url: session.url };
+  } catch (cause) {
+    console.error("[proposals] createCheckoutSession no disponible:", cause);
     return { ok: false, error: "unavailable" };
   }
 }

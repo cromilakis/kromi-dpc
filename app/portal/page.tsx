@@ -30,12 +30,22 @@ function formatDate(value: string): string {
   );
 }
 
-export default async function PortalPage() {
-  const [{ company, cert, progress, proposal }, t, tHome] = await Promise.all([
+export default async function PortalPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ paid?: string | string[] }>;
+}) {
+  const [{ company, cert, progress, proposal }, t, tHome, tPaid, params] = await Promise.all([
     loadClientDashboard(),
     getTranslations("portal.dashboard"),
     getTranslations("portal.home"),
+    getTranslations("portal.paidNotice"),
+    searchParams,
   ]);
+  // El estado real de pago lo fija el webhook (fuente de verdad, tarea 5),
+  // NUNCA este query param del redirect de retorno (manipulable por el
+  // cliente): acá solo se usa para mostrar un aviso transitorio.
+  const showPaidNotice = params.paid === "1";
 
   const today = new Date().toISOString().slice(0, 10);
   const standing = certificateStanding(cert, today);
@@ -48,6 +58,15 @@ export default async function PortalPage() {
       <h1 className="mb-24 font-serif text-heading-sm font-medium leading-heading-sm tracking-heading-sm text-ink">
         {tHome("title", { company: company?.name ?? "" })}
       </h1>
+
+      {showPaidNotice ? (
+        <div className="mb-16 rounded-lg border border-stone bg-ash p-16">
+          <p className="text-body-sm font-medium text-ink">{tPaid("title")}</p>
+          <p className="mt-4 text-caption leading-caption tracking-caption text-carbon">
+            {tPaid("description")}
+          </p>
+        </div>
+      ) : null}
 
       <div className="grid gap-16 sm:grid-cols-2">
         <Card className="flex flex-col gap-12">

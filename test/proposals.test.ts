@@ -12,10 +12,29 @@ vi.mock("@/lib/supabase/admin", () => ({
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
 }));
+vi.mock("next/headers", () => ({
+  headers: vi.fn().mockResolvedValue(new Map()),
+}));
+
+vi.mock("@/lib/stripe/client", () => {
+  class FakeStripeError extends Error {
+    code: "disabled" | "failed";
+    constructor(code: "disabled" | "failed", message?: string) {
+      super(message ?? code);
+      this.name = "StripeError";
+      this.code = code;
+    }
+  }
+  return {
+    getStripe: vi.fn(),
+    StripeError: FakeStripeError,
+  };
+});
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { acceptProposal, createProposal } from "@/lib/actions/proposals";
+import { getStripe, StripeError } from "@/lib/stripe/client";
+import { acceptProposal, createCheckoutSession, createProposal } from "@/lib/actions/proposals";
 
 // z.uuid() valida el nibble de variante RFC4122 (8/9/a/b en el 3er grupo).
 const CONSULTANT_ID = "11111111-1111-4111-a111-111111111111";
@@ -334,5 +353,220 @@ describe("acceptProposal", () => {
 
     const result = await acceptProposal(PROPOSAL_ID);
     expect(result).toEqual({ ok: false, error: "conflict" });
+  });
+});
+
+describe("createCheckoutSession", () => {
+  const PAYMENT_ID = "66666666-6666-4666-a666-666666666666";
+  const SESSION_ID = "cs_test_123";
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  /** Cliente de sesión del cliente final: lee `proposals` (RLS lo acota a SU
+   * empresa) y expone `auth.getUser()` — mismo patrón que en acceptProposal. */
+  function fakeSessionClient(opts: {
+    user?: { id: string } | null;
+    proposal?: QueryResult;
+  } = {}) {
+    const { user = { id: CLIENT_USER_ID }, proposal = null } = opts;
+    return {
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user } }) },
+      from: vi.fn((table: string) => {
+        if (table === "proposals") return chain(proposal ?? { data: null, error: null });
+        throw new Error(`tabla no mockeada en el test (session): ${table}`);
+      }),
+    };
+  }
+
+  /** Cliente service-role: gestiona `payments` (select del pendiente
+   * existente, insert si no hay, update de amount/session id) y el insert de
+   * `audit_log`. `insertFieldsSeen` captura los `insert()` de `payments` para
+   * poder verificar el `unit_amount`/`amount_clp` sin *100 desde el lado del
+   * upsert. */
+  function fakeAdminClient(opts: {
+    existingPayment?: QueryResult;
+    insertResult?: QueryResult;
+    insertFieldsSeen?: unknown[];
+    updateFieldsSeen?: unknown[];
+  } = {}) {
+    const {
+      existingPayment = { data: null, error: null },
+      insertResult = { data: { id: PAYMENT_ID }, error: null },
+      insertFieldsSeen = [],
+      updateFieldsSeen = [],
+    } = opts;
+
+    const paymentsTable = {
+      select: () => ({
+        eq: () => ({
+          eq: () => ({ maybeSingle: () => Promise.resolve(existingPayment) }),
+        }),
+      }),
+      insert: (fields: unknown) => {
+        insertFieldsSeen.push(fields);
+        return {
+          select: () => ({ single: () => Promise.resolve(insertResult) }),
+        };
+      },
+      update: (fields: unknown) => {
+        updateFieldsSeen.push(fields);
+        return { eq: () => Promise.resolve({ data: null, error: null }) };
+      },
+    };
+
+    return {
+      from: vi.fn((table: string) => {
+        if (table === "payments") return paymentsTable;
+        if (table === "audit_log") return { insert: () => Promise.resolve({ data: null, error: null }) };
+        throw new Error(`tabla no mockeada en el test (admin): ${table}`);
+      }),
+      _insertFieldsSeen: insertFieldsSeen,
+      _updateFieldsSeen: updateFieldsSeen,
+    };
+  }
+
+  it("Zod inválido (proposalId no-uuid) devuelve validation sin tocar supabase", async () => {
+    const result = await createCheckoutSession("no-es-uuid");
+    expect(result).toEqual({ ok: false, error: "validation" });
+    expect(createClient).not.toHaveBeenCalled();
+  });
+
+  it("sin sesión devuelve unauthorized", async () => {
+    const session = fakeSessionClient({ user: null });
+    vi.mocked(createClient).mockResolvedValue(session as never);
+
+    const result = await createCheckoutSession(PROPOSAL_ID);
+    expect(result).toEqual({ ok: false, error: "unauthorized" });
+  });
+
+  it("propuesta inexistente o de otra empresa (RLS) devuelve not_found", async () => {
+    const session = fakeSessionClient({ proposal: { data: null, error: null } });
+    vi.mocked(createClient).mockResolvedValue(session as never);
+
+    const result = await createCheckoutSession(PROPOSAL_ID);
+    expect(result).toEqual({ ok: false, error: "not_found" });
+  });
+
+  it("status 'sent' (sin aceptar aún) devuelve conflict", async () => {
+    const session = fakeSessionClient({
+      proposal: {
+        data: {
+          id: PROPOSAL_ID,
+          company_id: COMPANY_ID,
+          plan: "Plan Pro",
+          amount_clp: 1500000,
+          status: "sent",
+        },
+        error: null,
+      },
+    });
+    vi.mocked(createClient).mockResolvedValue(session as never);
+
+    const result = await createCheckoutSession(PROPOSAL_ID);
+    expect(result).toEqual({ ok: false, error: "conflict" });
+    expect(getStripe).not.toHaveBeenCalled();
+  });
+
+  it("status 'paid' (ya pagada) devuelve conflict", async () => {
+    const session = fakeSessionClient({
+      proposal: {
+        data: {
+          id: PROPOSAL_ID,
+          company_id: COMPANY_ID,
+          plan: "Plan Pro",
+          amount_clp: 1500000,
+          status: "paid",
+        },
+        error: null,
+      },
+    });
+    vi.mocked(createClient).mockResolvedValue(session as never);
+
+    const result = await createCheckoutSession(PROPOSAL_ID);
+    expect(result).toEqual({ ok: false, error: "conflict" });
+    expect(getStripe).not.toHaveBeenCalled();
+  });
+
+  it("sin STRIPE_SECRET_KEY (getStripe lanza StripeError('disabled')) devuelve disabled", async () => {
+    const session = fakeSessionClient({
+      proposal: {
+        data: {
+          id: PROPOSAL_ID,
+          company_id: COMPANY_ID,
+          plan: "Plan Pro",
+          amount_clp: 1500000,
+          status: "accepted",
+        },
+        error: null,
+      },
+    });
+    vi.mocked(createClient).mockResolvedValue(session as never);
+    vi.mocked(getStripe).mockImplementation(() => {
+      throw new StripeError("disabled");
+    });
+
+    const result = await createCheckoutSession(PROPOSAL_ID);
+    expect(result).toEqual({ ok: false, error: "disabled" });
+    expect(createAdminClient).not.toHaveBeenCalled();
+  });
+
+  it("status 'accepted' + Stripe OK: crea payment pending + session, devuelve url (CLP SIN *100)", async () => {
+    const session = fakeSessionClient({
+      proposal: {
+        data: {
+          id: PROPOSAL_ID,
+          company_id: COMPANY_ID,
+          plan: "Plan Pro",
+          amount_clp: 1500000,
+          status: "accepted",
+        },
+        error: null,
+      },
+    });
+    vi.mocked(createClient).mockResolvedValue(session as never);
+
+    const admin = fakeAdminClient();
+    vi.mocked(createAdminClient).mockReturnValue(admin as never);
+
+    const createSession = vi.fn().mockResolvedValue({
+      id: SESSION_ID,
+      url: "https://checkout.stripe.com/c/pay/cs_test_123",
+    });
+    vi.mocked(getStripe).mockReturnValue({
+      checkout: { sessions: { create: createSession } },
+    } as never);
+
+    const result = await createCheckoutSession(PROPOSAL_ID);
+
+    expect(result).toEqual({
+      ok: true,
+      url: "https://checkout.stripe.com/c/pay/cs_test_123",
+    });
+
+    // payments insertado en 'pending' con el monto de la propuesta.
+    expect(admin._insertFieldsSeen).toEqual([
+      {
+        proposal_id: PROPOSAL_ID,
+        company_id: COMPANY_ID,
+        amount_clp: 1500000,
+        status: "pending",
+      },
+    ]);
+
+    // stripe_session_id persistido tras crear la Checkout Session.
+    expect(admin._updateFieldsSeen).toContainEqual({ stripe_session_id: SESSION_ID });
+
+    // CLP es zero-decimal en Stripe: unit_amount === amount_clp, SIN *100.
+    expect(createSession).toHaveBeenCalledTimes(1);
+    const callArgs = createSession.mock.calls[0][0];
+    expect(callArgs.line_items[0].price_data.unit_amount).toBe(1500000);
+    expect(callArgs.mode).toBe("payment");
+    expect(callArgs.metadata).toEqual({
+      proposal_id: PROPOSAL_ID,
+      company_id: COMPANY_ID,
+      payment_id: PAYMENT_ID,
+    });
   });
 });
