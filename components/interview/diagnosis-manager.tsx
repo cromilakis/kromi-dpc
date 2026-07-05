@@ -13,8 +13,12 @@ import {
 import type { DiagnosisAnswers } from "@/lib/interview/answers-schema";
 import { normalizeAnswers } from "@/lib/interview/normalize-answers";
 import type { ComplianceQuestion } from "@/lib/interview/questions";
+import type { RatActivity } from "@/lib/interview/rat-schema";
+import type { ExtractionResult } from "@/lib/llm/extract-diagnosis";
 import { ComplianceForm } from "./compliance-form";
+import { ExtractionReview } from "./extraction-review";
 import { RatForm } from "./rat-form";
+import { TranscriptImport } from "./transcript-import";
 
 /**
  * Orquestador cliente del diagnóstico (/app/companies/[id]/diagnosis):
@@ -69,6 +73,27 @@ export function DiagnosisManager({
 
   const [materializeState, setMaterializeState] = useState<MaterializeState>("idle");
   const [materializeError, setMaterializeError] = useState<InterviewActionError | null>(null);
+
+  // Sugerencias del LLM pendientes de revisión (Tarea 6): el LLM nunca
+  // escribe directo sobre `answers` — solo al aceptar una sugerencia en
+  // `ExtractionReview` esta pasa a `updateAnswers` y entra al borrador.
+  const [extraction, setExtraction] = useState<ExtractionResult | null>(null);
+
+  function handleAcceptRat(activity: RatActivity) {
+    updateAnswers((current) => ({ ...current, rat: [...current.rat, activity] }));
+  }
+
+  function handleAcceptCompliance(
+    controlCode: string,
+    index: number,
+    answer: "yes" | "partial" | "no",
+  ) {
+    updateAnswers((current) => {
+      const next = [...(current.compliance[controlCode] ?? [])];
+      next[index] = answer;
+      return { ...current, compliance: { ...current.compliance, [controlCode]: next } };
+    });
+  }
 
   // Autosave con debounce: se omite en el primer render (esos `answers` ya
   // son los que trajo el server) y cuando todavía no existe sesión. El
@@ -222,6 +247,9 @@ export function DiagnosisManager({
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-8">
+          {sessionId ? (
+            <TranscriptImport sessionId={sessionId} onExtracted={setExtraction} />
+          ) : null}
           <Button variant="secondary" onClick={handleShareLink} disabled={shareState === "loading"}>
             {shareState === "loading" ? t("actions.generatingLink") : t("actions.shareLink")}
           </Button>
@@ -233,6 +261,15 @@ export function DiagnosisManager({
           </Button>
         </div>
       </Card>
+
+      {extraction ? (
+        <ExtractionReview
+          extraction={extraction}
+          onAcceptRat={handleAcceptRat}
+          onAcceptCompliance={handleAcceptCompliance}
+          onClose={() => setExtraction(null)}
+        />
+      ) : null}
 
       {shareError ? (
         <p role="alert" className="text-caption leading-caption text-danger-red">
