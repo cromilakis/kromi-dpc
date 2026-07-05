@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -474,6 +474,7 @@ export type Database = {
       }
       interview_sessions: {
         Row: {
+          ai_extraction: Json | null
           answers: Json
           assessment_id: string | null
           company_id: string
@@ -485,9 +486,11 @@ export type Database = {
           started_at: string
           status: Database["public"]["Enums"]["interview_status"]
           submitted_at: string | null
+          transcript: string | null
           updated_at: string
         }
         Insert: {
+          ai_extraction?: Json | null
           answers?: Json
           assessment_id?: string | null
           company_id: string
@@ -499,9 +502,11 @@ export type Database = {
           started_at?: string
           status?: Database["public"]["Enums"]["interview_status"]
           submitted_at?: string | null
+          transcript?: string | null
           updated_at?: string
         }
         Update: {
+          ai_extraction?: Json | null
           answers?: Json
           assessment_id?: string | null
           company_id?: string
@@ -513,6 +518,7 @@ export type Database = {
           started_at?: string
           status?: Database["public"]["Enums"]["interview_status"]
           submitted_at?: string | null
+          transcript?: string | null
           updated_at?: string
         }
         Relationships: [
