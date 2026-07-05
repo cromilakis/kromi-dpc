@@ -19,7 +19,8 @@
         "pending": "Pendiente",
         "compliant": "Cumple",
         "partial": "Parcial",
-        "non_compliant": "No cumple"
+        "non_compliant": "No cumple",
+        "not_applicable": "No aplica"
       },
       "statusButton": {
         "action": "Estado del control {code}: {status}. Activar para cambiar al siguiente estado.",

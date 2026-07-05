@@ -212,11 +212,30 @@ export default async function ChecklistPage({
     group.rows.sort((a, b) => a.sort - b.sort || a.code.localeCompare(b.code));
   }
 
-  // Progreso global (compliant sobre total, sin filtros).
+  // Progreso global: se mide sobre lo APLICABLE (spec dynamic-interview
+  // §checklist) — los controles `not_applicable` salen del denominador, no
+  // solo se filtran del numerador. `total` (catálogo crudo) se conserva para
+  // el caso borde "assessment sin controles" más abajo; `applicableTotal` es
+  // el denominador real del avance %.
+  //
+  // Nota de diseño: `checklistProgress` (lib/companies/display.ts) es un
+  // helper compartido por el panel general y el listado de empresas, que NO
+  // filtran `not_applicable` antes de llamarlo (fuera del alcance de esta
+  // tarea — solo el checklist de detalle está en el plan Task 7). Esta
+  // página no usa ese helper (calcula su propio pct inline), así que el
+  // filtro se aplica aquí, en el punto de consumo del checklist, sin tocar
+  // `checklistProgress` ni sus otros llamadores.
   const allRows = groups.flatMap((group) => group.rows);
   const total = allRows.length;
-  const compliant = allRows.filter((row) => row.status === "compliant").length;
-  const pct = total > 0 ? Math.round((compliant / total) * 100) : 0;
+  const applicableRows = allRows.filter(
+    (row) => row.status !== "not_applicable",
+  );
+  const applicableTotal = applicableRows.length;
+  const compliant = applicableRows.filter(
+    (row) => row.status === "compliant",
+  ).length;
+  const pct =
+    applicableTotal > 0 ? Math.round((compliant / applicableTotal) * 100) : 0;
 
   // Filtros validados contra el enum y los dominios presentes (searchParams
   // manipulados se ignoran en vez de romper la vista).
@@ -277,7 +296,11 @@ export default async function ChecklistPage({
                   {t("summary.title")}
                 </h2>
                 <p className="mt-4 text-caption leading-caption text-carbon">
-                  {t("summary.progressText", { pct, compliant, total })}
+                  {t("summary.progressText", {
+                    pct,
+                    compliant,
+                    total: applicableTotal,
+                  })}
                 </p>
               </div>
               <p className="text-[26px] font-semibold tracking-[-0.8px] text-ink">
@@ -312,7 +335,12 @@ export default async function ChecklistPage({
                     </Link>
                   </li>
                   {groups.map((group) => {
-                    const done = group.rows.filter(
+                    // Contador del rail también sobre lo aplicable: los
+                    // `not_applicable` no cuentan en el "total" del dominio.
+                    const groupApplicable = group.rows.filter(
+                      (row) => row.status !== "not_applicable",
+                    );
+                    const done = groupApplicable.filter(
                       (row) => row.status === "compliant",
                     ).length;
                     const selected = domainFilter === group.code;
@@ -330,7 +358,7 @@ export default async function ChecklistPage({
                             <span className="text-[11px] leading-[1.5] text-carbon">
                               {t("domain.counter", {
                                 done,
-                                total: group.rows.length,
+                                total: groupApplicable.length,
                               })}
                             </span>
                           </span>
@@ -342,7 +370,7 @@ export default async function ChecklistPage({
                             <ProgressBar
                               className="h-[5px]"
                               value={done}
-                              max={group.rows.length}
+                              max={groupApplicable.length}
                             />
                           </span>
                         </Link>
@@ -382,7 +410,12 @@ export default async function ChecklistPage({
                 </Card>
               ) : (
                 visibleGroups.map((group) => {
-                  const domainDone = group.rows.filter(
+                  // Igual criterio que el rail: avance del dominio sobre lo
+                  // aplicable (excluye `not_applicable` del denominador).
+                  const domainApplicable = group.rows.filter(
+                    (row) => row.status !== "not_applicable",
+                  );
+                  const domainDone = domainApplicable.filter(
                     (row) => row.status === "compliant",
                   ).length;
                   return (
@@ -410,13 +443,13 @@ export default async function ChecklistPage({
                           <span className="text-caption font-semibold leading-caption text-carbon">
                             {t("domain.counter", {
                               done: domainDone,
-                              total: group.rows.length,
+                              total: domainApplicable.length,
                             })}
                           </span>
                           <ProgressBar
                             className="h-[5px] w-[90px]"
                             value={domainDone}
-                            max={group.rows.length}
+                            max={domainApplicable.length}
                             aria-label={t("domain.progressLabel", {
                               code: group.code,
                             })}
