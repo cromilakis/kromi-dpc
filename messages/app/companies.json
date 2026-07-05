@@ -230,6 +230,7 @@
       },
       "detail": {
         "eyebrow": "Resumen de la evaluación",
+        "clientRecertRequested": "Re-certificación solicitada por el cliente",
         "subtitle": "{sector} · {size} · en cartera desde {date}",
         "stats": {
           "phase": "Fase actual",

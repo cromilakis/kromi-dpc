@@ -183,7 +183,7 @@ export default async function CompanySummaryPage({
         .maybeSingle(),
       supabase
         .from("assessments")
-        .select("id, cycle, assessment_controls ( status )")
+        .select("id, cycle, status, origin, assessment_controls ( status )")
         .eq("company_id", id)
         .order("cycle", { ascending: false })
         .limit(1)
@@ -262,6 +262,11 @@ export default async function CompanySummaryPage({
 
   const auditEntries = auditResult.data ?? [];
 
+  // Aviso para el consultor: el ciclo abierto más reciente lo abrió el
+  // cliente desde el portal (Fase 4, `assessments.origin`), no el equipo.
+  const isClientRecertRequested =
+    assessment?.status === "open" && assessment?.origin === "client_recert";
+
   const scoreTier =
     company.complexity_score !== null
       ? scoreTierOf(company.complexity_score)
@@ -329,6 +334,13 @@ export default async function CompanySummaryPage({
             : t("none"),
           date: createdAt,
         })}
+        actions={
+          isClientRecertRequested ? (
+            <StatusBadge pill variant="warning">
+              {t("detail.clientRecertRequested")}
+            </StatusBadge>
+          ) : undefined
+        }
       />
 
       {/* 4 stat-cards: fase, score interno, avance del checklist, riesgos. */}
