@@ -60,11 +60,18 @@ export async function loadCompanyEligibility(
     );
   }
 
-  const controls: EligibilityControl[] = (rows ?? []).map((row) => ({
-    controlCode: row.controls?.code ?? "",
-    domainCode: row.controls?.domains?.code ?? "",
-    status: row.status,
-  }));
+  // Los controles "No aplica" (fuera de alcance por aplicabilidad) no entran al
+  // denominador de elegibilidad: el umbral se mide sobre lo aplicable. El
+  // `continue` estrecha `row.status` al tipo de 4 valores de EligibilityControl.
+  const controls: EligibilityControl[] = [];
+  for (const row of rows ?? []) {
+    if (row.status === "not_applicable") continue;
+    controls.push({
+      controlCode: row.controls?.code ?? "",
+      domainCode: row.controls?.domains?.code ?? "",
+      status: row.status,
+    });
+  }
 
   return { assessment, result: computeEligibility(controls) };
 }

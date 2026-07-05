@@ -24,6 +24,8 @@ export const CONTROL_STATUS_VARIANT: Record<ControlStatus, StatusBadgeVariant> =
   compliant: "positive",
   partial: "warning",
   non_compliant: "negative",
+  // Fuera de alcance por aplicabilidad; se muestra en tono neutral apagado.
+  not_applicable: "neutral",
 };
 
 /** Evidencia requerida: validada verde / parcial ámbar / faltante y rechazada rojo. */

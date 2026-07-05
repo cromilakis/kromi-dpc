@@ -28,6 +28,7 @@ const STATUS_TINTS: Record<ControlStatus, string> = {
   compliant: "bg-[#e9f2ec] text-success-green border-success-green/15",
   partial: "bg-[#f6f0df] text-warning-yellow border-warning-yellow/15",
   non_compliant: "bg-[#f6e9e8] text-danger-red border-danger-red/15",
+  not_applicable: "bg-ash text-carbon border-carbon/15",
 };
 
 export interface ControlStatusButtonProps {

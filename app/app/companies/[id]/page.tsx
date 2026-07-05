@@ -40,6 +40,7 @@ const STATUS_CARD_CLASSES: Record<ControlStatus, string> = {
   partial: "border-[#f6f0df] bg-[#fbf8ef] text-warning-yellow",
   non_compliant: "border-[#f6e9e8] bg-[#fbf3f2] text-danger-red",
   pending: "border-stone bg-[#fbfbfc] text-carbon",
+  not_applicable: "border-stone bg-[#fbfbfc] text-carbon",
 };
 
 /** Tramo del score → variante semántica (tierColor del prototipo §3.5). */
@@ -220,15 +221,18 @@ export default async function CompanySummaryPage({
   }
 
   const assessment = assessmentResult.data;
-  const statuses = (assessment?.assessment_controls ?? []).map(
-    (control) => control.status,
-  );
+  // Los controles "No aplica" (fuera de alcance por aplicabilidad) se excluyen
+  // del avance y del conteo: el progreso se mide sobre lo aplicable.
+  const statuses = (assessment?.assessment_controls ?? [])
+    .map((control) => control.status)
+    .filter((status) => status !== "not_applicable");
   const progress = checklistProgress(statuses);
   const counts: Record<ControlStatus, number> = {
     pending: 0,
     compliant: 0,
     partial: 0,
     non_compliant: 0,
+    not_applicable: 0,
   };
   for (const status of statuses) counts[status] += 1;
   const compliantPct =
