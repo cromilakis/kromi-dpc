@@ -7,6 +7,7 @@ import { DiagnosisManager } from "@/components/interview/diagnosis-manager";
 import { StatusBadge } from "@/components/ui";
 import type { AppliesWhen } from "@/lib/interview/applicability";
 import { buildComplianceQuestions, type ControlLike } from "@/lib/interview/questions";
+import { loadInterviewGuide } from "@/lib/interview/load-guide.server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -39,7 +40,7 @@ export default async function DiagnosisPage({
   if (!companyIdSchema.safeParse(id).success) notFound();
 
   const supabase = await createClient();
-  const [t, companyRes, assessmentRes, controlsRes, sessionRes] = await Promise.all([
+  const [t, companyRes, assessmentRes, controlsRes, sessionRes, guide] = await Promise.all([
     getTranslations("app.diagnosis"),
     supabase.from("companies").select("id, name, factors").eq("id", id).maybeSingle(),
     supabase
@@ -60,6 +61,7 @@ export default async function DiagnosisPage({
       .order("started_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
+    loadInterviewGuide(id),
   ]);
 
   if (companyRes.error) {
@@ -117,6 +119,7 @@ export default async function DiagnosisPage({
         questions={questions}
         initialAnswers={session?.answers ?? null}
         companyFactors={companyRes.data.factors ?? []}
+        guide={guide}
       />
     </>
   );

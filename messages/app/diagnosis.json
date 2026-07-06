@@ -54,6 +54,16 @@
           "generic": "Ocurrió un error inesperado. Reintentar."
         }
       },
+      "guide": {
+        "title": "Guion de entrevista",
+        "subtitle": "Temas a cubrir en la reunión con la empresa para que el diagnóstico quede completo.",
+        "counter": "{domains} dominios · {questions} preguntas",
+        "uncovered": "Sin cubrir",
+        "covered": "Cubierto",
+        "criteriaLabel": "Debe quedar claro",
+        "print": "Imprimir guion",
+        "empty": "No hay temas aplicables."
+      },
       "sections": {
         "rat": {
           "title": "A · Registro de Actividades de Tratamiento (RAT)",

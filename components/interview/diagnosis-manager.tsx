@@ -11,12 +11,14 @@ import {
   type InterviewActionError,
 } from "@/lib/actions/interview";
 import type { DiagnosisAnswers } from "@/lib/interview/answers-schema";
+import type { GuideDomain } from "@/lib/interview/guide";
 import { normalizeAnswers } from "@/lib/interview/normalize-answers";
 import type { ComplianceQuestion } from "@/lib/interview/questions";
 import type { RatActivity } from "@/lib/interview/rat-schema";
 import type { ExtractionResult } from "@/lib/llm/extract-diagnosis";
 import { ComplianceForm } from "./compliance-form";
 import { ExtractionReview } from "./extraction-review";
+import { InterviewGuidePanel } from "./interview-guide-panel";
 import { RatForm } from "./rat-form";
 import { TranscriptImport } from "./transcript-import";
 
@@ -55,6 +57,7 @@ export function DiagnosisManager({
   questions,
   initialAnswers,
   companyFactors,
+  guide,
 }: {
   companyId: string;
   sessionId: string | null;
@@ -62,6 +65,7 @@ export function DiagnosisManager({
   questions: ComplianceQuestion[];
   initialAnswers: unknown;
   companyFactors: string[];
+  guide: GuideDomain[];
 }) {
   const t = useTranslations("app.diagnosis");
   const tErrors = useTranslations("app.diagnosis.errors");
@@ -306,6 +310,12 @@ export function DiagnosisManager({
           ) : null}
         </p>
       </Card>
+
+      <InterviewGuidePanel
+        guide={guide}
+        compliance={answers.compliance}
+        printHref={`/app/companies/${companyId}/diagnosis/guide`}
+      />
 
       {sessionId && transcriptOpen ? (
         <TranscriptImport

@@ -384,6 +384,7 @@ export type Database = {
           detail: string | null
           domain_id: string
           id: string
+          interview_questions: string[]
           laws: string[]
           legal_connected: string | null
           legal_primary: string | null
@@ -403,6 +404,7 @@ export type Database = {
           detail?: string | null
           domain_id: string
           id?: string
+          interview_questions?: string[]
           laws?: string[]
           legal_connected?: string | null
           legal_primary?: string | null
@@ -422,6 +424,7 @@ export type Database = {
           detail?: string | null
           domain_id?: string
           id?: string
+          interview_questions?: string[]
           laws?: string[]
           legal_connected?: string | null
           legal_primary?: string | null
