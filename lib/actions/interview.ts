@@ -15,6 +15,7 @@ import {
   type ProposalItem,
 } from "@/lib/llm/propose-remediation";
 import { LlmError } from "@/lib/llm/deepseek";
+import { DeepgramClient } from "@deepgram/sdk";
 import { createClient } from "@/lib/supabase/server";
 import type { TablesInsert } from "@/lib/supabase/types";
 
@@ -73,6 +74,10 @@ export type EnrichedProposalItem = ProposalItem & {
 export type ProposeRemediationResult =
   | { ok: true; proposal: EnrichedProposalItem[] }
   | { ok: false; error: InterviewActionError | "llm_disabled" | "llm_failed" };
+
+export type GrantDeepgramTokenResult =
+  | { ok: true; token: string; expiresIn: number }
+  | { ok: false; error: "unauthorized" | "stt_disabled" };
 
 const companyIdSchema = z.object({ companyId: z.uuid() });
 const sessionIdSchema = z.object({ sessionId: z.uuid() });
@@ -945,6 +950,82 @@ export async function proposeRemediationForSession(
       "[interview] proposeRemediationForSession no disponible:",
       cause,
     );
+    return { ok: false, error: "unavailable" };
+  }
+}
+
+/**
+ * Escucha activa por voz (Fase 3): emite un token efímero de Deepgram (TTL 60s)
+ * para que el navegador abra el WebSocket directo al STT. El secreto
+ * (DEEPGRAM_API_KEY) nunca sale al cliente. Sin clave o con permisos
+ * insuficientes (la key necesita scope `usage:write`) ⇒ stt_disabled: el panel
+ * cae a manual/pegar sin romperse.
+ */
+export async function grantDeepgramToken(): Promise<GrantDeepgramTokenResult> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { ok: false, error: "unauthorized" };
+
+    const apiKey = process.env.DEEPGRAM_API_KEY;
+    if (!apiKey) return { ok: false, error: "stt_disabled" };
+
+    const dg = new DeepgramClient({ apiKey });
+    const { access_token, expires_in } = await dg.auth.v1.tokens.grant({
+      ttl_seconds: 60,
+    });
+    if (!access_token) return { ok: false, error: "stt_disabled" };
+    return { ok: true, token: access_token, expiresIn: expires_in ?? 60 };
+  } catch (cause) {
+    // 403 por permisos, red, etc.: degradación elegante (manual sigue).
+    console.error("[interview] grantDeepgramToken falló:", cause);
+    return { ok: false, error: "stt_disabled" };
+  }
+}
+
+/**
+ * Registra el consentimiento de escucha activa en la sesión (auditable) antes
+ * de iniciar la transcripción por voz.
+ */
+export async function recordListeningConsent(
+  sessionId: string,
+): Promise<SaveDiagnosisDraftResult> {
+  const parsed = sessionIdSchema.safeParse({ sessionId });
+  if (!parsed.success) return { ok: false, error: "validation" };
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { ok: false, error: "unauthorized" };
+
+    const { data, error } = await supabase
+      .from("interview_sessions")
+      .update({ listening_consent_at: new Date().toISOString() })
+      .eq("id", parsed.data.sessionId)
+      .select("id, company_id")
+      .maybeSingle();
+    if (error) {
+      if (error.code === "42501") return { ok: false, error: "unauthorized" };
+      console.error("[interview] recordListeningConsent falló:", error.message);
+      return { ok: false, error: "unavailable" };
+    }
+    if (!data) return { ok: false, error: "not_found" };
+
+    await insertAuditLog(supabase, {
+      actorId: user.id,
+      action: "interview.listening_consent",
+      entity: "interview_sessions",
+      entityId: data.id,
+      detail: { company_id: data.company_id },
+    });
+
+    return { ok: true };
+  } catch (cause) {
+    console.error("[interview] recordListeningConsent no disponible:", cause);
     return { ok: false, error: "unavailable" };
   }
 }
