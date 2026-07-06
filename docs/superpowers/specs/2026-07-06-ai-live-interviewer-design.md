@@ -55,16 +55,29 @@ humano revisa antes de aplicar/emitir. La conversación completa queda **auditad
 - El consultor conduce la charla; la IA sugiere qué preguntar y tacha lo cubierto.
 - Iniciar / pausar / finalizar la entrevista.
 
-### C. Voz → texto (STT real) — capa enchufable
+### C. Voz → texto (STT real) — capa enchufable, modo "escucha activa"
+- **Modo "escucha activa" (co-piloto):** la IA escucha la conversación en segundo
+  plano y ASISTE al consultor —le avisa si ya tiene lo que necesita o qué detalle
+  falta preguntar— sin conducir la entrevista. El consultor lidera; la cola de
+  preguntas (de A/B) es "lo que falta". Aplica a reunión **online (Meet u otra)**
+  y **presencial**.
+- **Fuentes de audio** (todas alimentan el mismo cerebro A vía STT):
+  - **Presencial**: micrófono del dispositivo (`getUserMedia`).
+  - **Online (Meet/Zoom/etc.)**: audio de la llamada capturado en el navegador
+    (`getDisplayMedia` con audio de pestaña/pantalla), o el micrófono de la sala.
+  - Consideración: capturar audio del otro interlocutor requiere su consentimiento
+    (grabación) — mostrar aviso y registrar consentimiento (legal, revisar).
 - Servicio STT real (recomendado **Deepgram** por streaming en español; Whisper
   como alternativa por lotes/near-real-time). Requiere **cuenta/clave del
   proveedor** (como DeepSeek/Stripe) → se provisiona por el flujo de integraciones
   cuando esté disponible. `<PROVIDER>_API_KEY` server-only.
-- Audio del micrófono → STT → chunks de texto al "cerebro" (A). El texto
+- Cualquier fuente de audio → STT → chunks de texto al "cerebro" (A). El texto
   transcrito es la **transcripción auditada**.
 - **Build order:** el cerebro (A) + UI (B) funcionan primero sobre **texto**
-  (el consultor/o dictado near-real-time escribe/pega por tramos) y el streaming de
-  audio se enchufa cuando llegue la clave STT. Así no se bloquea el desarrollo.
+  (el consultor escribe/pega por tramos, o dictado near-real-time) y el streaming
+  de audio (mic presencial / captura de Meet) se enchufa cuando llegue la clave
+  STT. Así no se bloquea el desarrollo, y el mismo cerebro sirve para online y
+  presencial.
 
 ### D. Propuesta de resolución (al cerrar)
 - Con el diagnóstico completo (gaps: "No cumple"/parcial/flagged), un paso LLM
