@@ -92,29 +92,61 @@ export function sanitizeProposal(
   return out;
 }
 
+// La salida es UN item por gap, así que el tamaño de la respuesta crece con el
+// número de gaps. Un diagnóstico con muchos incumplimientos llega a ~90 gaps
+// (23 controles × 4 criterios) → una sola llamada genera ~11k tokens y tarda
+// ~57s, superando el timeout del cliente. Se parte en lotes acotados que corren
+// en paralelo (cada lote ~10-15s) y se fusionan. Los gaps son independientes
+// (una acción por criterio, sin contexto cruzado), así que batchear es seguro.
+const BATCH_SIZE = 15;
+
 /**
- * Genera la propuesta. Sin gaps -> [] sin llamar al LLM. Un reintento ante
- * fallo transitorio; `llm_disabled` se propaga tal cual (clave ausente).
+ * Genera la propuesta. Sin gaps -> [] sin llamar al LLM. Batchea los gaps y
+ * corre los lotes en paralelo; cada lote reintenta una vez ante fallo
+ * transitorio. `llm_disabled` (clave ausente) se propaga tal cual. Devuelve los
+ * lotes que sí resolvieron (parcial > nada); solo lanza `llm_failed` si TODOS
+ * los lotes fallan.
  */
 export async function proposeRemediation(
   gaps: RemediationGap[],
 ): Promise<ProposalItem[]> {
   if (gaps.length === 0) return [];
-  const messages = buildProposalPrompt(gaps);
 
-  async function attempt(): Promise<ProposalItem[]> {
-    const { content } = await chatJSON(messages);
-    return sanitizeProposal(JSON.parse(content) as unknown, gaps);
+  const batches: RemediationGap[][] = [];
+  for (let i = 0; i < gaps.length; i += BATCH_SIZE) {
+    batches.push(gaps.slice(i, i + BATCH_SIZE));
   }
 
-  try {
-    return await attempt();
-  } catch (cause) {
-    if (cause instanceof LlmError && cause.code === "llm_disabled") throw cause;
+  async function attempt(batch: RemediationGap[]): Promise<ProposalItem[]> {
+    const { content } = await chatJSON(buildProposalPrompt(batch));
+    return sanitizeProposal(JSON.parse(content) as unknown, batch);
+  }
+
+  async function runBatch(batch: RemediationGap[]): Promise<ProposalItem[]> {
     try {
-      return await attempt();
-    } catch {
-      throw new LlmError("llm_failed");
+      return await attempt(batch);
+    } catch (cause) {
+      if (cause instanceof LlmError && cause.code === "llm_disabled") throw cause;
+      return attempt(batch); // un reintento; si vuelve a fallar, propaga
     }
   }
+
+  const settled = await Promise.allSettled(batches.map(runBatch));
+
+  // Clave ausente: propagar tal cual (no es un fallo transitorio).
+  for (const r of settled) {
+    if (
+      r.status === "rejected" &&
+      r.reason instanceof LlmError &&
+      r.reason.code === "llm_disabled"
+    ) {
+      throw r.reason;
+    }
+  }
+
+  const ok = settled.filter(
+    (r): r is PromiseFulfilledResult<ProposalItem[]> => r.status === "fulfilled",
+  );
+  if (ok.length === 0) throw new LlmError("llm_failed");
+  return ok.flatMap((r) => r.value);
 }

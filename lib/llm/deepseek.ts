@@ -12,7 +12,11 @@ const ENDPOINT = "https://api.deepseek.com/chat/completions";
 // Por defecto el tier rápido `deepseek-v4-flash`; `deepseek-v4-pro` es más
 // capaz pero más lento. (El antiguo alias `deepseek-chat` sigue funcionando.)
 const MODEL = process.env.DEEPSEEK_MODEL ?? "deepseek-v4-flash";
-const TIMEOUT_MS = 30_000;
+// 60s: `deepseek-v4-flash` es un modelo de razonamiento; una respuesta grande
+// (muchos items) puede tardar ~15-20s por lote. Los llamadores que generan
+// salida proporcional a la entrada (p. ej. propose-remediation) deben además
+// batchear para no depender de una sola respuesta gigante.
+const TIMEOUT_MS = 60_000;
 
 async function once(messages: ChatMessage[], signal?: AbortSignal) {
   const key = process.env.DEEPSEEK_API_KEY;
