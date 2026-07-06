@@ -558,6 +558,7 @@ export type Database = {
           assessment_id: string | null
           company_id: string
           id: string
+          listening_consent_at: string | null
           mode: Database["public"]["Enums"]["interview_mode"]
           progress: number
           respondent: Json
@@ -574,6 +575,7 @@ export type Database = {
           assessment_id?: string | null
           company_id: string
           id?: string
+          listening_consent_at?: string | null
           mode?: Database["public"]["Enums"]["interview_mode"]
           progress?: number
           respondent?: Json
@@ -590,6 +592,7 @@ export type Database = {
           assessment_id?: string | null
           company_id?: string
           id?: string
+          listening_consent_at?: string | null
           mode?: Database["public"]["Enums"]["interview_mode"]
           progress?: number
           respondent?: Json
