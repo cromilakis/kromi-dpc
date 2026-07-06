@@ -134,52 +134,40 @@ export function ResolutionProposal({
       ) : null}
 
       {items && items.length > 0 ? (
-        <ul className="flex flex-col gap-12">
+        <ul className="flex flex-col gap-8">
           {items.map((item) => {
             const key = keyOf(item);
             const accepting = acceptingKey === key;
             return (
               <li key={key}>
-                <Card className="flex flex-col gap-12 border-ink/10">
-                  <div className="flex flex-wrap items-baseline justify-between gap-8">
-                    <p className="text-caption font-medium leading-caption text-ink">
-                      {item.controlName}
-                    </p>
+                <Card padded={false} className="flex flex-col gap-8 border-ink/10 p-12">
+                  {/* Encabezado compacto: veredicto + control + criterio en una línea. */}
+                  <div className="flex items-center gap-8">
                     <StatusBadge
                       variant={item.gapType === "no" ? "negative" : "warning"}
                     >
                       {t(`verdict.${item.gapType}`)}
                     </StatusBadge>
+                    <p className="min-w-0 flex-1 truncate text-caption leading-caption text-carbon">
+                      <span className="font-medium text-ink">{item.controlName}</span>
+                      {item.criterion ? ` · ${item.criterion}` : ""}
+                    </p>
                   </div>
 
-                  {item.criterion ? (
-                    <p className="text-caption leading-caption text-carbon">
-                      {item.criterion}
-                    </p>
+                  <Textarea
+                    value={item.action}
+                    onChange={(event) => patch(key, { action: event.target.value })}
+                    disabled={accepting}
+                    aria-label={t("actionLabel")}
+                    className="min-h-[40px] py-[6px]"
+                  />
+                  {item.example ? (
+                    <p className="text-caption leading-caption text-metal">{item.example}</p>
                   ) : null}
 
-                  <div className="flex flex-col gap-4">
-                    <span className="text-caption font-medium leading-caption text-ink">
-                      {t("actionLabel")}
-                    </span>
-                    <Textarea
-                      value={item.action}
-                      onChange={(event) => patch(key, { action: event.target.value })}
-                      disabled={accepting}
-                      className="min-h-[64px]"
-                    />
-                    {item.example ? (
-                      <p className="rounded-tags bg-ash px-12 py-8 text-caption leading-caption text-carbon">
-                        {item.example}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="grid gap-8 md:grid-cols-3">
-                    <label className="flex flex-col gap-4">
-                      <span className="text-caption font-medium leading-caption text-ink">
-                        {t("priorityLabel")}
-                      </span>
+                  {/* Controles + acciones en una sola fila. */}
+                  <div className="flex flex-wrap items-center gap-8">
+                    <div className="w-[104px]">
                       <Select
                         value={item.priority}
                         onChange={(event) =>
@@ -188,7 +176,9 @@ export function ResolutionProposal({
                           })
                         }
                         disabled={accepting}
-                        className="cursor-pointer"
+                        aria-label={t("priorityLabel")}
+                        title={t("priorityLabel")}
+                        className="h-32 cursor-pointer py-0"
                       >
                         {PRIORITIES.map((p) => (
                           <option key={p} value={p}>
@@ -196,11 +186,8 @@ export function ResolutionProposal({
                           </option>
                         ))}
                       </Select>
-                    </label>
-                    <label className="flex flex-col gap-4">
-                      <span className="text-caption font-medium leading-caption text-ink">
-                        {t("effortLabel")}
-                      </span>
+                    </div>
+                    <div className="w-[104px]">
                       <Select
                         value={item.effort}
                         onChange={(event) =>
@@ -209,7 +196,9 @@ export function ResolutionProposal({
                           })
                         }
                         disabled={accepting}
-                        className="cursor-pointer"
+                        aria-label={t("effortLabel")}
+                        title={t("effortLabel")}
+                        className="h-32 cursor-pointer py-0"
                       >
                         {EFFORTS.map((e) => (
                           <option key={e} value={e}>
@@ -217,34 +206,35 @@ export function ResolutionProposal({
                           </option>
                         ))}
                       </Select>
-                    </label>
-                    <label className="flex flex-col gap-4">
-                      <span className="text-caption font-medium leading-caption text-ink">
-                        {t("dueLabel")}
-                      </span>
+                    </div>
+                    <div className="w-[150px]">
                       <Input
                         type="date"
                         value={item.dueDate}
                         onChange={(event) => patch(key, { dueDate: event.target.value })}
                         disabled={accepting}
+                        aria-label={t("dueLabel")}
+                        title={t("dueLabel")}
+                        className="h-32 py-0"
                       />
-                    </label>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-8">
-                    <Button
-                      onClick={() => handleAccept(item)}
-                      disabled={accepting || !item.action.trim()}
-                    >
-                      {accepting ? t("accepted") : t("accept")}
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      onClick={() => handleDismiss(item)}
-                      disabled={accepting}
-                    >
-                      {t("dismiss")}
-                    </Button>
+                    </div>
+                    <div className="ml-auto flex items-center gap-8">
+                      <Button
+                        variant="secondary"
+                        onClick={() => handleDismiss(item)}
+                        disabled={accepting}
+                        className="h-32 py-0"
+                      >
+                        {t("dismiss")}
+                      </Button>
+                      <Button
+                        onClick={() => handleAccept(item)}
+                        disabled={accepting || !item.action.trim()}
+                        className="h-32 py-0"
+                      >
+                        {accepting ? t("accepted") : t("accept")}
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               </li>
