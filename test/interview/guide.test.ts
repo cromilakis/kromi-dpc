@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   buildInterviewGuide,
+  buildQuestionQueue,
   computeGuideCoverage,
   type GuideControlInput,
 } from "@/lib/interview/guide";
@@ -130,5 +131,47 @@ describe("computeGuideCoverage", () => {
     expect(covered).toBe(1);
     expect(uncovered.map((u) => u.controlCode)).not.toContain("DPC-DEC-001");
     expect(uncovered).toHaveLength(2);
+  });
+});
+
+describe("buildQuestionQueue", () => {
+  const guide = buildInterviewGuide(controls, ["automated_decisions"]);
+  // guide = [DEC (1 control, 1 pregunta), LIC (2 controles, 1 pregunta c/u)]
+
+  it("marca answered=false las preguntas de un control sin respuestas y las ubica primero", () => {
+    const queue = buildQuestionQueue(guide, {});
+    expect(queue.every((q) => q.answered === false)).toBe(true);
+    const decQuestion = queue.find((q) => q.controlCode === "DPC-DEC-001");
+    expect(decQuestion).toMatchObject({
+      domainCode: "DEC",
+      domainName: "Decisiones automatizadas",
+      controlCode: "DPC-DEC-001",
+      controlName: "Decisiones automatizadas",
+      question: "¿Usan decisiones automatizadas sobre personas?",
+      answered: false,
+    });
+  });
+
+  it("marca answered=true las preguntas de un control con al menos una respuesta 'yes'", () => {
+    const queue = buildQuestionQueue(guide, { "DPC-DEC-001": ["yes"] });
+    const decQuestion = queue.find((q) => q.controlCode === "DPC-DEC-001");
+    expect(decQuestion?.answered).toBe(true);
+  });
+
+  it("marca answered=true un control con una respuesta 'flagged' (alerta cuenta como respuesta)", () => {
+    const queue = buildQuestionQueue(guide, { "DPC-DEC-001": ["flagged"] });
+    const decQuestion = queue.find((q) => q.controlCode === "DPC-DEC-001");
+    expect(decQuestion?.answered).toBe(true);
+  });
+
+  it("ordena las preguntas no respondidas antes que las respondidas", () => {
+    const queue = buildQuestionQueue(guide, { "DPC-DEC-001": ["yes"] });
+    expect(queue).toHaveLength(3);
+    expect(queue[0]?.answered).toBe(false);
+    expect(queue[1]?.answered).toBe(false);
+    expect(queue[2]?.controlCode).toBe("DPC-DEC-001");
+    expect(queue[2]?.answered).toBe(true);
+    const unansweredCodes = queue.slice(0, 2).map((q) => q.controlCode);
+    expect(unansweredCodes.sort()).toEqual(["DPC-LIC-000", "DPC-LIC-001"]);
   });
 });

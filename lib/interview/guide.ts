@@ -92,9 +92,6 @@ export interface GuideCoverage {
 }
 
 /**
- * Calcula la cobertura del guion contra las respuestas de cumplimiento en
- * vivo (`answers.compliance`, `Record<controlCode, CriterionAnswer[]>`).
- *
  * Criterio v1 (deliberadamente laxo, documentado): un control está
  * "cubierto" si tiene AL MENOS UN criterio respondido con algo distinto de
  * 'unknown' — no exige que todos los criterios del control estén resueltos.
@@ -102,6 +99,20 @@ export interface GuideCoverage {
  * absoluto, que es lo que le importa al consultor al cerrar la reunión
  * ("¿de qué no hablamos?"). Endurecer el criterio (exigir todos los
  * criterios respondidos) queda para una iteración futura si se necesita.
+ * 'flagged' cuenta como respuesta (!= 'unknown'): un control con criterios
+ * en alerta también se considera cubierto.
+ *
+ * Reusada tanto por `computeGuideCoverage` como por `buildQuestionQueue`
+ * para no duplicar la regla.
+ */
+function isControlCovered(controlCode: string, compliance: Record<string, string[]>): boolean {
+  const answers = compliance[controlCode] ?? [];
+  return answers.some((answer) => answer !== "unknown");
+}
+
+/**
+ * Calcula la cobertura del guion contra las respuestas de cumplimiento en
+ * vivo (`answers.compliance`, `Record<controlCode, CriterionAnswer[]>`).
  */
 export function computeGuideCoverage(
   guide: GuideDomain[],
@@ -114,9 +125,7 @@ export function computeGuideCoverage(
   for (const domain of guide) {
     for (const control of domain.controls) {
       total += 1;
-      const answers = compliance[control.code] ?? [];
-      const hasAnswer = answers.some((answer) => answer !== "unknown");
-      if (hasAnswer) {
+      if (isControlCovered(control.code, compliance)) {
         covered += 1;
       } else {
         uncovered.push({
@@ -129,4 +138,47 @@ export function computeGuideCoverage(
   }
 
   return { total, covered, uncovered };
+}
+
+export interface QueuedQuestion {
+  domainCode: string;
+  domainName: string;
+  controlCode: string;
+  controlName: string;
+  question: string;
+  answered: boolean;
+}
+
+/**
+ * Aplana el guion a una cola de preguntas por control (dominio → control →
+ * cada `question` del control), marcando `answered` según el mismo criterio
+ * de cobertura que `computeGuideCoverage` (`isControlCovered`). Ordena las
+ * no respondidas primero (en orden de dominio→control→índice de pregunta),
+ * luego las respondidas: la primera del arreglo es "la siguiente pregunta".
+ */
+export function buildQuestionQueue(
+  guide: GuideDomain[],
+  compliance: Record<string, string[]>,
+): QueuedQuestion[] {
+  const unanswered: QueuedQuestion[] = [];
+  const answered: QueuedQuestion[] = [];
+
+  for (const domain of guide) {
+    for (const control of domain.controls) {
+      const covered = isControlCovered(control.code, compliance);
+      for (const question of control.questions) {
+        const queued: QueuedQuestion = {
+          domainCode: domain.domainCode,
+          domainName: domain.domainName,
+          controlCode: control.code,
+          controlName: control.name,
+          question,
+          answered: covered,
+        };
+        (covered ? answered : unanswered).push(queued);
+      }
+    }
+  }
+
+  return [...unanswered, ...answered];
 }
