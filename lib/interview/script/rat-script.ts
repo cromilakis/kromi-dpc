@@ -58,7 +58,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "finalidad",
       example:
-        "Ej.: usan el correo del cliente para enviarle la boleta (finalidad: facturación) y se lo dicen al momento de pedirlo.",
+        "Ej.: en una tienda el correo se pide para enviar la boleta (finalidad: facturación) y el teléfono para coordinar el despacho (logística), y al pedirlos se explica ese uso. Usar después ese correo para promociones sería una finalidad nueva que hay que informar aparte.",
       control: "DPC-FIN-001",
       question:
         "¿Para qué usan los datos de las personas y se lo explican al titular al momento de pedirlos?",
@@ -69,7 +69,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "retencion",
       example:
-        "Ej.: las fichas de clientes se guardan 6 años por obligación tributaria y luego se eliminan (también de los respaldos).",
+        "Ej.: las fichas de clientes se guardan 6 años por obligación tributaria y luego se eliminan (también de los respaldos); los CV no seleccionados se borran a los 6 meses. Lo clave es que haya un plazo definido por categoría y un borrado real, no 'guardar todo para siempre'.",
       control: "DPC-FIN-002",
       question:
         "¿Por cuánto tiempo guardan los datos y cómo los eliminan cuando ya no se necesitan?",
@@ -80,7 +80,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "rat",
       example:
-        "Ej.: una planilla o sistema que lista 'Nómina', 'Clientes', 'Postulantes'… con qué datos usa cada proceso.",
+        "Ej.: una planilla o sistema con una fila por proceso — 'Nómina', 'Clientes', 'Postulantes', 'Cámaras' — indicando qué datos usa cada uno, para qué y dónde se guardan. Es el inventario base de todo el cumplimiento.",
       control: "DPC-INV-001",
       question:
         "¿Tienen un registro de todos los procesos donde manejan datos personales (RAT)?",
@@ -91,7 +91,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "flujos",
       example:
-        "Ej.: el dato entra por la web → se guarda en el CRM → se respalda en un servidor en EE.UU.",
+        "Ej.: saber que el dato entra por la web → se guarda en el CRM (alojado en Brasil) → se comparte con la empresa de despacho → se elimina a los 2 años. Incluye especialmente si los datos salen al extranjero (nube, casa matriz).",
       control: "DPC-INV-002",
       question:
         "¿Saben el recorrido de los datos de punta a punta, incluyendo si salen al extranjero?",
@@ -104,7 +104,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "licitud",
       example:
-        "Ej.: tratan datos de trabajadores por el contrato laboral; los de marketing, con consentimiento que se puede retirar.",
+        "Ej.: los datos de trabajadores se tratan por el contrato laboral, los tributarios por obligación legal, y los de marketing con consentimiento que la persona puede retirar. No todo requiere consentimiento, pero cada uso debe tener su fundamento.",
       control: "DPC-LIC-001",
       question:
         "¿Con qué autorización tratan los datos (consentimiento, contrato, ley) y cómo lo obtienen?",
@@ -115,7 +115,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "minimizacion",
       example:
-        "Ej.: para un sorteo piden solo nombre y correo, no el RUT ni la dirección.",
+        "Ej.: para suscribirse al newsletter piden solo el correo; para un sorteo, nombre y correo. Pedir RUT, dirección o fecha de nacimiento 'por si acaso' sería recolectar de más.",
       control: "DPC-PRO-001",
       question: "¿Piden solo los datos que realmente necesitan para cada finalidad?",
       yes: "Sí, cada dato se justifica y no piden de más",
@@ -125,7 +125,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "calidad",
       example:
-        "Ej.: si un cliente cambia de teléfono hay forma de actualizarlo, y se detectan/corrigen duplicados.",
+        "Ej.: si un cliente cambia de teléfono hay una forma de actualizarlo; si pide corregir un dato, se hace en un plazo definido; y se detectan duplicados (el mismo RUT cargado dos veces).",
       control: "DPC-CAL-001",
       question:
         "¿Cómo mantienen los datos actualizados y atienden correcciones de los titulares?",
@@ -138,7 +138,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "transparencia",
       example:
-        "Ej.: en la web hay una 'Política de privacidad' con fecha, versión y quién es el responsable.",
+        "Ej.: en la web hay una 'Política de privacidad' accesible desde el pie, con fecha, versión, quién es el responsable y cómo contactarlo, escrita en lenguaje simple.",
       control: "DPC-TRA-001",
       question:
         "¿Tienen publicada una política de tratamiento de datos clara y con fecha/responsable?",
@@ -149,7 +149,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "derechos",
       example:
-        "Ej.: un formulario o correo donde la persona pide ver, corregir o borrar sus datos, y se le responde en plazo.",
+        "Ej.: un formulario 'Ejerce tus derechos' o un correo donde la persona puede pedir ver, corregir, borrar u oponerse al uso de sus datos, verificando su identidad y respondiendo dentro del plazo legal.",
       control: "DPC-DER-001",
       question:
         "¿Tienen un canal para que las personas ejerzan sus derechos (acceso, rectificación, etc.)?",
@@ -162,7 +162,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "accesos",
       example:
-        "Ej.: cada empleado entra con su usuario, solo ve lo que necesita, y queda registro de quién consultó qué.",
+        "Ej.: cada empleado entra con su propio usuario y ve solo lo que su rol necesita (el cajero no accede a RRHH), y queda registro de quién consultó o modificó qué.",
       control: "DPC-SEG-001",
       question:
         "¿Cómo controlan quién accede a los datos y queda registro de lo que se consulta/modifica?",
@@ -173,7 +173,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "cifrado",
       example:
-        "Ej.: la base va cifrada, el acceso pide segundo factor (código al celular) y hay respaldos que se prueban.",
+        "Ej.: la base y los notebooks van cifrados, entrar a los sistemas pide un segundo factor (código al celular), y hay respaldos que periódicamente se prueban restaurando uno.",
       control: "DPC-SEG-002",
       question: "¿Cifran los datos y usan doble factor y respaldos probados?",
       yes: "Cifrado en tránsito y reposo, MFA y respaldos probados",
@@ -183,7 +183,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "confidencialidad",
       example:
-        "Ej.: al ingresar, el personal firma una cláusula de confidencialidad que sigue vigente tras renunciar.",
+        "Ej.: al ingresar, el personal firma una cláusula de confidencialidad que sigue vigente tras renunciar, se le capacita sobre el deber de secreto, y los proveedores también la firman.",
       control: "DPC-CON-001",
       question:
         "¿El personal firma compromisos de confidencialidad y se capacita sobre el deber de secreto?",
@@ -198,7 +198,7 @@ export const RAT_SCRIPT: Script = {
       question:
         "¿Trabajan con proveedores externos que acceden o tratan datos personales (nube, contador, software de RRHH, etc.)?",
       example:
-        "Ej.: usan Google Workspace, un contador externo o un software de remuneraciones en la nube.",
+        "Ej.: proveedores que ven o procesan datos por ustedes: Google Workspace, un contador externo, un software de remuneraciones, una agencia de marketing o un hosting en la nube.",
       allowOther: true,
       covers: [{ control: "DPC-TER-001", criterion: 0 }],
       options: [
@@ -224,7 +224,7 @@ export const RAT_SCRIPT: Script = {
       question:
         "Con esos proveedores, ¿firmaron un contrato o anexo por escrito que regule el tratamiento de datos (confidencialidad, brechas, devolución/eliminación)?",
       example:
-        "Ej.: el contrato con el proveedor de nube incluye un anexo de tratamiento de datos y aviso de brechas.",
+        "Ej.: con el proveedor de nube hay un contrato/anexo de tratamiento de datos que exige confidencialidad, aviso de brechas y devolver o borrar los datos al terminar — no solo un contrato comercial que no menciona datos.",
       condition: { anyOption: { node: "encargados", options: ["si"] } },
       allowOther: true,
       covers: [
@@ -273,7 +273,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "dpd",
       example:
-        "Ej.: un acta o resolución que nombra a 'Juan Pérez' como Delegado de Protección de Datos, con sus funciones.",
+        "Ej.: un acta o resolución que nombra a una persona (p. ej. 'Juan Pérez') como Delegado de Protección de Datos, con sus funciones y a quién reporta — no solo alguien que 've el tema' informalmente.",
       control: "DPC-RES-001",
       question:
         "¿Designaron formalmente a un responsable/Delegado de Protección de Datos (por escrito)?",
@@ -284,7 +284,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "gobierno",
       example:
-        "Ej.: una 'Política de Protección de Datos' aprobada por gerencia, versionada y comunicada a todo el personal.",
+        "Ej.: una 'Política de Protección de Datos' aprobada por gerencia, versionada y comunicada a todo el personal, que fija principios, roles y reglas — el documento marco del que dependen los demás.",
       control: "DPC-RES-002",
       question:
         "¿Tienen una política de gobierno de datos aprobada por la dirección y comunicada al personal?",
@@ -295,7 +295,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "evidencias",
       example:
-        "Ej.: una carpeta única con contratos, políticas y registros, ordenada por control y lista para una fiscalización.",
+        "Ej.: una carpeta única (Drive/SharePoint) ordenada por control, con contratos, políticas y registros, lista para exportar ante una fiscalización — en vez de evidencia dispersa en correos y equipos.",
       control: "DPC-RES-003",
       question:
         "¿Guardan la evidencia de cumplimiento centralizada y disponible ante una fiscalización?",
@@ -306,7 +306,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "mpi",
       example:
-        "Ej.: un Modelo de Prevención de Infracciones con responsable, matriz de riesgos y seguimiento periódico.",
+        "Ej.: un Modelo de Prevención de Infracciones con responsable, matriz de riesgos y plan de mitigación con seguimiento; su certificación puede operar como atenuante ante la Agencia.",
       control: "DPC-RES-004",
       question:
         "¿Tienen un Modelo de Prevención de Infracciones aprobado, con responsable y seguimiento?",
@@ -319,7 +319,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "brechas",
       example:
-        "Ej.: si se filtra la base de clientes, hay un plan que dice quién actúa, cómo se contiene y a quién se avisa.",
+        "Ej.: si se filtra o pierde la base de clientes, hay un plan que dice quién actúa, cómo se contiene, y con qué criterios y plazos se avisa a la Agencia y a los afectados.",
       control: "DPC-INC-001",
       question:
         "Si hoy se filtraran o perdieran datos, ¿tienen un plan de respuesta (roles, plazos, a quién avisar)?",
@@ -330,7 +330,7 @@ export const RAT_SCRIPT: Script = {
     verdictNode({
       id: "incidentes",
       example:
-        "Ej.: un registro de incidentes y un instructivo que el personal conoce para reportar lo que vea.",
+        "Ej.: una bitácora central de incidentes y un instructivo que el personal conoce ('¿viste algo raro? avisa a seguridad@…'), idealmente con un simulacro anual.",
       control: "DPC-INC-002",
       question:
         "¿Llevan un registro de incidentes de seguridad y el personal sabe cómo reportarlos?",
