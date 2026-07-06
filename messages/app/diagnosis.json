@@ -66,6 +66,7 @@
         "queueEmpty": "No hay preguntas aplicables.",
         "nextLabel": "Siguiente",
         "answered": "Respondida",
+        "clarify": "Falta aclarar",
         "coverage": "Faltan {n} de {total} criterios",
         "ready": "Cobertura completa: listo para aplicar",
         "ratSuggested": "Actividades detectadas",

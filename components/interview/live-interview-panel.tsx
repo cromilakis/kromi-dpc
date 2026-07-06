@@ -58,7 +58,9 @@ export function LiveInterviewPanel({
 
   const queue = useMemo(() => buildQuestionQueue(guide, compliance), [guide, compliance]);
   const coverage = useMemo(() => computeGuideCoverage(guide, compliance), [guide, compliance]);
-  const nextIndex = queue.findIndex((question) => !question.answered);
+  // "Siguiente" = primera pregunta no resuelta (las 'clarify' van arriba, así
+  // que apunta a lo que hay que insistir antes de cerrar la reunión).
+  const nextIndex = queue.findIndex((question) => question.status !== "resolved");
 
   function integrateExtraction(extraction: ExtractionResult) {
     for (const suggestion of extraction.compliance) {
@@ -181,15 +183,18 @@ export function LiveInterviewPanel({
                 <span
                   className={cn(
                     "text-body-sm text-ink",
-                    question.answered && "text-metal line-through",
+                    question.status === "resolved" && "text-metal line-through",
+                    question.status === "clarify" && "text-warning-yellow",
                   )}
                 >
                   {question.question}
                 </span>
-                {question.answered ? (
+                {question.status === "resolved" ? (
                   <span className="shrink-0 text-caption leading-caption text-metal">
                     {t("answered")}
                   </span>
+                ) : question.status === "clarify" ? (
+                  <StatusBadge variant="warning">{t("clarify")}</StatusBadge>
                 ) : null}
               </li>
             ))}

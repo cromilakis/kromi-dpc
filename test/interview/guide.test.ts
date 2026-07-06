@@ -101,12 +101,13 @@ describe("buildInterviewGuide", () => {
 
 describe("computeGuideCoverage", () => {
   const guide = buildInterviewGuide(controls, ["automated_decisions"]);
-  // guide = [DEC (1 control), LIC (2 controles)]
+  // guide = [DEC (1 control, 1 criterio), LIC (2 controles, 1 criterio c/u)]
 
   it("marca como sin cubrir un control sin respuestas registradas", () => {
-    const { total, covered, uncovered } = computeGuideCoverage(guide, {});
+    const { total, covered, clarify, uncovered } = computeGuideCoverage(guide, {});
     expect(total).toBe(3);
     expect(covered).toBe(0);
+    expect(clarify).toBe(0);
     expect(uncovered).toHaveLength(3);
     expect(uncovered).toContainEqual({
       domainCode: "DEC",
@@ -115,22 +116,24 @@ describe("computeGuideCoverage", () => {
     });
   });
 
-  it("marca como sin cubrir un control cuyos criterios están todos 'unknown'", () => {
-    const { covered, uncovered } = computeGuideCoverage(guide, {
-      "DPC-DEC-001": ["unknown", "unknown"],
-    });
-    expect(covered).toBe(0);
-    expect(uncovered.map((u) => u.controlCode)).toContain("DPC-DEC-001");
-  });
-
-  it("marca como cubierto un control con al menos una respuesta distinta de 'unknown'", () => {
-    const { total, covered, uncovered } = computeGuideCoverage(guide, {
+  it("cubierto solo cuando TODOS los criterios tienen veredicto", () => {
+    const { total, covered, clarify, uncovered } = computeGuideCoverage(guide, {
       "DPC-DEC-001": ["yes"],
     });
     expect(total).toBe(3);
     expect(covered).toBe(1);
+    expect(clarify).toBe(0);
     expect(uncovered.map((u) => u.controlCode)).not.toContain("DPC-DEC-001");
     expect(uncovered).toHaveLength(2);
+  });
+
+  it("un 'flagged' NO cuenta como cubierto: queda para aclarar (uncovered + clarify)", () => {
+    const { covered, clarify, uncovered } = computeGuideCoverage(guide, {
+      "DPC-DEC-001": ["flagged"],
+    });
+    expect(covered).toBe(0);
+    expect(clarify).toBe(1);
+    expect(uncovered.map((u) => u.controlCode)).toContain("DPC-DEC-001");
   });
 });
 
@@ -138,40 +141,40 @@ describe("buildQuestionQueue", () => {
   const guide = buildInterviewGuide(controls, ["automated_decisions"]);
   // guide = [DEC (1 control, 1 pregunta), LIC (2 controles, 1 pregunta c/u)]
 
-  it("marca answered=false las preguntas de un control sin respuestas y las ubica primero", () => {
+  it("un control sin respuestas queda 'pending'", () => {
     const queue = buildQuestionQueue(guide, {});
-    expect(queue.every((q) => q.answered === false)).toBe(true);
+    expect(queue.every((q) => q.status === "pending")).toBe(true);
     const decQuestion = queue.find((q) => q.controlCode === "DPC-DEC-001");
     expect(decQuestion).toMatchObject({
       domainCode: "DEC",
-      domainName: "Decisiones automatizadas",
       controlCode: "DPC-DEC-001",
-      controlName: "Decisiones automatizadas",
       question: "¿Usan decisiones automatizadas sobre personas?",
-      answered: false,
+      status: "pending",
     });
   });
 
-  it("marca answered=true las preguntas de un control con al menos una respuesta 'yes'", () => {
+  it("un control con todos sus criterios en veredicto queda 'resolved'", () => {
     const queue = buildQuestionQueue(guide, { "DPC-DEC-001": ["yes"] });
-    const decQuestion = queue.find((q) => q.controlCode === "DPC-DEC-001");
-    expect(decQuestion?.answered).toBe(true);
+    const dec = queue.find((q) => q.controlCode === "DPC-DEC-001");
+    expect(dec?.status).toBe("resolved");
   });
 
-  it("marca answered=true un control con una respuesta 'flagged' (alerta cuenta como respuesta)", () => {
+  it("un control con 'flagged' queda 'clarify' (hay que insistir) y va PRIMERO", () => {
     const queue = buildQuestionQueue(guide, { "DPC-DEC-001": ["flagged"] });
-    const decQuestion = queue.find((q) => q.controlCode === "DPC-DEC-001");
-    expect(decQuestion?.answered).toBe(true);
+    const dec = queue.find((q) => q.controlCode === "DPC-DEC-001");
+    expect(dec?.status).toBe("clarify");
+    expect(queue[0]?.controlCode).toBe("DPC-DEC-001"); // clarify va arriba
   });
 
-  it("ordena las preguntas no respondidas antes que las respondidas", () => {
-    const queue = buildQuestionQueue(guide, { "DPC-DEC-001": ["yes"] });
-    expect(queue).toHaveLength(3);
-    expect(queue[0]?.answered).toBe(false);
-    expect(queue[1]?.answered).toBe(false);
-    expect(queue[2]?.controlCode).toBe("DPC-DEC-001");
-    expect(queue[2]?.answered).toBe(true);
-    const unansweredCodes = queue.slice(0, 2).map((q) => q.controlCode);
-    expect(unansweredCodes.sort()).toEqual(["DPC-LIC-000", "DPC-LIC-001"]);
+  it("orden: clarify → pending → resolved", () => {
+    const queue = buildQuestionQueue(guide, {
+      "DPC-DEC-001": ["flagged"], // clarify
+      "DPC-LIC-000": ["yes"], // resolved
+      // DPC-LIC-001 sin respuesta → pending
+    });
+    expect(queue.map((q) => q.status)).toEqual(["clarify", "pending", "resolved"]);
+    expect(queue[0]?.controlCode).toBe("DPC-DEC-001");
+    expect(queue[1]?.controlCode).toBe("DPC-LIC-001");
+    expect(queue[2]?.controlCode).toBe("DPC-LIC-000");
   });
 });

@@ -88,31 +88,49 @@ export function buildInterviewGuide(
 export interface GuideCoverage {
   total: number;
   covered: number;
+  /** Controles tocados pero aún NO resueltos (algún 'flagged'/sin evaluar). */
+  clarify: number;
   uncovered: Array<{ domainCode: string; controlCode: string; controlName: string }>;
 }
 
-/**
- * Criterio v1 (deliberadamente laxo, documentado): un control está
- * "cubierto" si tiene AL MENOS UN criterio respondido con algo distinto de
- * 'unknown' — no exige que todos los criterios del control estén resueltos.
- * Esto marca "sin cubrir" solo los controles que la entrevista no tocó en
- * absoluto, que es lo que le importa al consultor al cerrar la reunión
- * ("¿de qué no hablamos?"). Endurecer el criterio (exigir todos los
- * criterios respondidos) queda para una iteración futura si se necesita.
- * 'flagged' cuenta como respuesta (!= 'unknown'): un control con criterios
- * en alerta también se considera cubierto.
- *
- * Reusada tanto por `computeGuideCoverage` como por `buildQuestionQueue`
- * para no duplicar la regla.
- */
-function isControlCovered(controlCode: string, compliance: Record<string, string[]>): boolean {
-  const answers = compliance[controlCode] ?? [];
-  return answers.some((answer) => answer !== "unknown");
+/** Estado de un control frente a las respuestas de cumplimiento en vivo:
+ * - "resolved": TODOS sus criterios tienen veredicto (yes/partial/no).
+ * - "clarify": se tocó (algún veredicto o alerta 'flagged') pero NO está
+ *   resuelto del todo. La reunión es la ÚNICA instancia de aclaración, así que
+ *   estos deben INSISTIRSE hasta resolverlos — no debe quedar ningún 'flagged'.
+ * - "pending": no se tocó ningún criterio (todos 'unknown').
+ * Reusado por computeGuideCoverage y buildQuestionQueue. */
+export type ControlStatus = "pending" | "clarify" | "resolved";
+
+const VERDICTS = new Set(["yes", "partial", "no"]);
+
+function controlStatus(
+  control: GuideControl,
+  compliance: Record<string, string[]>,
+): ControlStatus {
+  const answers = compliance[control.code] ?? [];
+  const n = control.criteria.length;
+  if (n === 0) return "resolved"; // sin criterios que evaluar
+  let verdicts = 0;
+  let touched = 0;
+  for (let i = 0; i < n; i++) {
+    const a = answers[i];
+    if (VERDICTS.has(a)) {
+      verdicts += 1;
+      touched += 1;
+    } else if (a === "flagged") {
+      touched += 1;
+    }
+  }
+  if (verdicts === n) return "resolved";
+  return touched > 0 ? "clarify" : "pending";
 }
 
 /**
  * Calcula la cobertura del guion contra las respuestas de cumplimiento en
- * vivo (`answers.compliance`, `Record<controlCode, CriterionAnswer[]>`).
+ * vivo. "Cubierto" = RESUELTO (todos los criterios con veredicto). Un control
+ * en "clarify" (con algún 'flagged'/sin evaluar) cuenta como NO cubierto: la
+ * cobertura solo llega a completa cuando no queda nada por aclarar.
  */
 export function computeGuideCoverage(
   guide: GuideDomain[],
@@ -120,14 +138,17 @@ export function computeGuideCoverage(
 ): GuideCoverage {
   let total = 0;
   let covered = 0;
+  let clarify = 0;
   const uncovered: GuideCoverage["uncovered"] = [];
 
   for (const domain of guide) {
     for (const control of domain.controls) {
       total += 1;
-      if (isControlCovered(control.code, compliance)) {
+      const status = controlStatus(control, compliance);
+      if (status === "resolved") {
         covered += 1;
       } else {
+        if (status === "clarify") clarify += 1;
         uncovered.push({
           domainCode: domain.domainCode,
           controlCode: control.code,
@@ -137,7 +158,7 @@ export function computeGuideCoverage(
     }
   }
 
-  return { total, covered, uncovered };
+  return { total, covered, clarify, uncovered };
 }
 
 export interface QueuedQuestion {
@@ -146,39 +167,42 @@ export interface QueuedQuestion {
   controlCode: string;
   controlName: string;
   question: string;
-  answered: boolean;
+  status: ControlStatus;
 }
 
 /**
- * Aplana el guion a una cola de preguntas por control (dominio → control →
- * cada `question` del control), marcando `answered` según el mismo criterio
- * de cobertura que `computeGuideCoverage` (`isControlCovered`). Ordena las
- * no respondidas primero (en orden de dominio→control→índice de pregunta),
- * luego las respondidas: la primera del arreglo es "la siguiente pregunta".
+ * Aplana el guion a una cola de preguntas por control, marcando el `status`
+ * del control (pending/clarify/resolved). Orden: primero las que hay que
+ * INSISTIR ("clarify"), luego las no tocadas ("pending"), y al final las
+ * resueltas ("resolved"). Así lo que quedó ambiguo en la reunión queda arriba
+ * y a la vista hasta resolverlo; la primera del arreglo es "la siguiente".
  */
 export function buildQuestionQueue(
   guide: GuideDomain[],
   compliance: Record<string, string[]>,
 ): QueuedQuestion[] {
-  const unanswered: QueuedQuestion[] = [];
-  const answered: QueuedQuestion[] = [];
+  const order: Record<ControlStatus, number> = { clarify: 0, pending: 1, resolved: 2 };
+  const queue: QueuedQuestion[] = [];
 
   for (const domain of guide) {
     for (const control of domain.controls) {
-      const covered = isControlCovered(control.code, compliance);
+      const status = controlStatus(control, compliance);
       for (const question of control.questions) {
-        const queued: QueuedQuestion = {
+        queue.push({
           domainCode: domain.domainCode,
           domainName: domain.domainName,
           controlCode: control.code,
           controlName: control.name,
           question,
-          answered: covered,
-        };
-        (covered ? answered : unanswered).push(queued);
+          status,
+        });
       }
     }
   }
 
-  return [...unanswered, ...answered];
+  // Orden estable por prioridad de estado (clarify → pending → resolved).
+  return queue
+    .map((q, i) => ({ q, i }))
+    .sort((a, b) => order[a.q.status] - order[b.q.status] || a.i - b.i)
+    .map(({ q }) => q);
 }
