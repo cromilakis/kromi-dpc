@@ -60,5 +60,24 @@ export function normalizeAnswers(
     if (typeof val === "boolean") applicability[code] = val;
   }
 
-  return { rat, compliance, applicability };
+  // Estado del guion guiado: se preserva por nodo { options[], other? }.
+  const scriptRaw =
+    obj.script && typeof obj.script === "object"
+      ? (obj.script as Record<string, unknown>)
+      : {};
+  const script: NonNullable<DiagnosisAnswers["script"]> = {};
+  for (const [nodeId, val] of Object.entries(scriptRaw)) {
+    if (val && typeof val === "object") {
+      const v = val as Record<string, unknown>;
+      const options = Array.isArray(v.options)
+        ? v.options.filter((o): o is string => typeof o === "string")
+        : [];
+      script[nodeId] = {
+        options,
+        ...(typeof v.other === "string" ? { other: v.other } : {}),
+      };
+    }
+  }
+
+  return { rat, compliance, applicability, script };
 }

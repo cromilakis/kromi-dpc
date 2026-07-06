@@ -31,6 +31,14 @@ export const diagnosisAnswersSchema = z.object({
   // "No aplica". Opcional y retrocompatible: sesiones/empresas existentes sin
   // este campo siguen parseando (el default se recalcula desde los factores).
   applicability: z.record(z.string(), z.boolean()).optional(),
+  // Estado del guion guiado (Guion guiado): por nodo, opciones elegidas +
+  // texto libre de "Otros". Opcional y retrocompatible.
+  script: z
+    .record(
+      z.string(),
+      z.object({ options: z.array(z.string()), other: z.string().optional() }),
+    )
+    .optional(),
 });
 
 export type DiagnosisAnswers = z.infer<typeof diagnosisAnswersSchema>;
