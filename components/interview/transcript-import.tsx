@@ -7,11 +7,11 @@ import { extractDiagnosisFromTranscript } from "@/lib/actions/interview";
 import type { ExtractionResult } from "@/lib/llm/extract-diagnosis";
 
 /**
- * Botón + panel para importar una transcripción de reunión y disparar la
- * extracción del LLM (Tarea 5 del plan de autocompletado). Este componente
- * SOLO obtiene la extracción validada y la entrega vía `onExtracted` — la
- * revisión/fusión al borrador (aceptar/editar/descartar cada sugerencia) es
- * responsabilidad de `ExtractionReview` (Tarea 6), no de esta pieza.
+ * Panel CONTROLADO para importar una transcripción y disparar la extracción del
+ * LLM. El disparador es un icono en la barra de acciones del DiagnosisManager;
+ * este componente se monta SOLO cuando está abierto y se cierra vía `onClose`
+ * (al cancelar o tras una extracción exitosa). Entrega la extracción validada
+ * por `onExtracted`; la revisión/fusión la hace `ExtractionReview`.
  */
 
 type TranscriptImportError = "llm_disabled" | "llm_failed" | "generic";
@@ -19,29 +19,17 @@ type TranscriptImportError = "llm_disabled" | "llm_failed" | "generic";
 export function TranscriptImport({
   sessionId,
   onExtracted,
-  disabled,
+  onClose,
 }: {
   sessionId: string;
   onExtracted: (result: ExtractionResult) => void;
-  disabled?: boolean;
+  onClose: () => void;
 }) {
   const t = useTranslations("app.diagnosis.transcript");
 
-  const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<TranscriptImportError | null>(null);
-
-  function openPanel() {
-    setOpen(true);
-    setError(null);
-  }
-
-  function closeAndReset() {
-    setOpen(false);
-    setText("");
-    setError(null);
-  }
 
   function handleAnalyze() {
     if (!text.trim() || pending) return;
@@ -50,7 +38,7 @@ export function TranscriptImport({
       const result = await extractDiagnosisFromTranscript(sessionId, text);
       if (result.ok) {
         onExtracted(result.extraction);
-        closeAndReset();
+        onClose();
       } else {
         setError(
           result.error === "llm_disabled" || result.error === "llm_failed"
@@ -59,21 +47,6 @@ export function TranscriptImport({
         );
       }
     });
-  }
-
-  if (!open) {
-    return (
-      <div>
-        <Button variant="secondary" onClick={openPanel} disabled={disabled}>
-          {t("button")}
-        </Button>
-        {disabled ? (
-          <p className="mt-4 text-caption leading-caption text-carbon">
-            {t("buttonUnavailable")}
-          </p>
-        ) : null}
-      </div>
-    );
   }
 
   return (
@@ -96,7 +69,7 @@ export function TranscriptImport({
         <Button onClick={handleAnalyze} disabled={pending || !text.trim()}>
           {pending ? t("analyzing") : t("analyze")}
         </Button>
-        <Button variant="ghost" onClick={closeAndReset} disabled={pending}>
+        <Button variant="ghost" onClick={onClose} disabled={pending}>
           {t("cancel")}
         </Button>
       </div>
