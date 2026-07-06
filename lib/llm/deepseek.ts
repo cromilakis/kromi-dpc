@@ -8,7 +8,10 @@ export class LlmError extends Error {
 }
 
 const ENDPOINT = "https://api.deepseek.com/chat/completions";
-const MODEL = "deepseek-chat";
+// Modelo configurable por env (DEEPSEEK_MODEL) para poder A/B sin tocar código.
+// Por defecto el tier rápido `deepseek-v4-flash`; `deepseek-v4-pro` es más
+// capaz pero más lento. (El antiguo alias `deepseek-chat` sigue funcionando.)
+const MODEL = process.env.DEEPSEEK_MODEL ?? "deepseek-v4-flash";
 const TIMEOUT_MS = 30_000;
 
 async function once(messages: ChatMessage[], signal?: AbortSignal) {
