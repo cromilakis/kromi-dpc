@@ -163,6 +163,11 @@ export function ResolutionProposal({
                       disabled={accepting}
                       className="min-h-[64px]"
                     />
+                    {item.example ? (
+                      <p className="rounded-tags bg-ash px-12 py-8 text-caption leading-caption text-carbon">
+                        {item.example}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="grid gap-8 md:grid-cols-3">

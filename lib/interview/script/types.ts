@@ -35,6 +35,8 @@ export interface ScriptNode {
   question: string; // texto para el consultor
   clientQuestion?: string; // texto no técnico (portal, fase siguiente)
   help?: string;
+  /** Ejemplo concreto que ilustra la pregunta (se muestra al consultor). */
+  example?: string;
   multi?: boolean; // permite elegir varias opciones
   allowOther?: boolean; // muestra "Otros" (texto libre)
   /** Criterios que este nodo cubre: si se elige "Otros" o quedan sin veredicto,

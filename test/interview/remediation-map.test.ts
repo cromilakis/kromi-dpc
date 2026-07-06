@@ -24,6 +24,12 @@ describe("buildRemediationProposal", () => {
     expect(item.rationale).toContain("Existe una matriz");
   });
 
+  it("cada acción trae un ejemplo concreto", () => {
+    const [item] = buildRemediationProposal([gap()]);
+    expect(item.example).toMatch(/^Ej\.:/);
+    expect(item.example.length).toBeGreaterThan(0);
+  });
+
   it("prioridad por regla: 'no' -> alta; 'partial'/'flagged' -> media", () => {
     expect(buildRemediationProposal([gap({ gapType: "no" })])[0].priority).toBe("alta");
     expect(buildRemediationProposal([gap({ gapType: "partial" })])[0].priority).toBe("media");
@@ -57,6 +63,7 @@ describe("buildRemediationProposal", () => {
         ]);
         expect(item, `${code}#${i}`).toBeDefined();
         expect(item.action.length).toBeGreaterThan(0);
+        expect(item.example.length).toBeGreaterThan(0);
       }
     }
   });

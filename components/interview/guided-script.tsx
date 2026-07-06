@@ -98,6 +98,11 @@ export function GuidedScript({
           {current.help ? (
             <p className="text-caption leading-caption text-carbon">{current.help}</p>
           ) : null}
+          {current.example ? (
+            <p className="rounded-tags bg-ash px-12 py-8 text-caption leading-caption text-carbon">
+              {current.example}
+            </p>
+          ) : null}
 
           {current.multi ? (
             // Multi-selección: checkboxes + "Continuar".
