@@ -71,18 +71,21 @@ export function LiveInterviewPanel({
   const [sttError, setSttError] = useState<SttError | null>(null);
   // Siguiente mejor pregunta sugerida por la IA (guía; el consultor decide).
   const [suggested, setSuggested] = useState<ExtractionResult["nextQuestion"]>(null);
+  // El análisis corre en paralelo al micrófono (no lo detiene).
+  const [analyzing, setAnalyzing] = useState(false);
   // Ref con el transcript vigente para el análisis periódico (closure estable).
   const transcriptRef = useRef("");
   transcriptRef.current = transcript;
-  const dirtyRef = useRef(false); // hay tramos finales nuevos sin analizar
   const analyzingRef = useRef(false); // evita análisis solapados
+  // Cola FIFO de análisis: cada clic "Analizar lo escuchado" encola el
+  // transcrito hasta ese punto; se procesan en serie (uno a la vez) mientras el
+  // micrófono sigue abierto. Si la conversación va más rápido que el análisis,
+  // los pendientes se acumulan y se resuelven en orden.
+  const analysisQueueRef = useRef<string[]>([]);
+  const [queuedCount, setQueuedCount] = useState(0);
 
   const queue = useMemo(() => buildQuestionQueue(guide, compliance), [guide, compliance]);
   const coverage = useMemo(() => computeGuideCoverage(guide, compliance), [guide, compliance]);
-  // "Siguiente" = primera pregunta no resuelta (las 'clarify' van arriba, así
-  // que apunta a lo que hay que insistir antes de cerrar la reunión).
-  const nextIndex = queue.findIndex((question) => question.status !== "resolved");
-
   // Nombre de control por código, para mostrar la sugerencia de la IA con su tema.
   const controlNameByCode = useMemo(() => {
     const map = new Map<string, string>();
@@ -91,6 +94,25 @@ export function LiveInterviewPanel({
     }
     return map;
   }, [guide]);
+
+  // Temas resueltos (controles cubiertos): sección visible que crece a medida
+  // que los análisis cierran temas.
+  const resolvedControls = useMemo(() => {
+    const uncovered = new Set(coverage.uncovered.map((u) => u.controlCode));
+    const names: string[] = [];
+    for (const domain of guide) {
+      for (const control of domain.controls) {
+        if (!uncovered.has(control.code)) names.push(control.name);
+      }
+    }
+    return names;
+  }, [guide, coverage]);
+
+  // Cola de preguntas: solo lo pendiente (los resueltos van a "Temas resueltos").
+  const pendingQueue = useMemo(
+    () => queue.filter((q) => q.status !== "resolved"),
+    [queue],
+  );
 
   function integrateExtraction(extraction: ExtractionResult) {
     // Guía en vivo: la IA sugiere la siguiente mejor pregunta (o null si todo
@@ -151,44 +173,51 @@ export function LiveInterviewPanel({
   // Analiza el transcript acumulado vigente (usado por la escucha por voz). La
   // extracción es exhaustiva e idempotente, así que re-analizar el acumulado no
   // duplica nada; los fills entran al borrador vía integrateExtraction.
-  function analyzeAccumulated() {
-    const full = transcriptRef.current.trim();
-    if (!full || analyzingRef.current) return;
+  // Procesa la cola de análisis uno por uno (serial). El micrófono sigue abierto
+  // en paralelo; al terminar un análisis toma el siguiente de la cola.
+  function drainAnalysisQueue() {
+    if (analyzingRef.current) return;
+    const next = analysisQueueRef.current.shift();
+    setQueuedCount(analysisQueueRef.current.length);
+    if (!next) return;
     analyzingRef.current = true;
-    dirtyRef.current = false;
+    setAnalyzing(true);
     startTransition(async () => {
-      const result = await extractDiagnosisFromTranscript(sessionId, full);
+      const result = await extractDiagnosisFromTranscript(sessionId, next);
       if (result.ok) integrateExtraction(result.extraction);
       analyzingRef.current = false;
+      setAnalyzing(false);
+      drainAnalysisQueue(); // siguiente en cola
     });
   }
 
-  // Ref siempre apuntando a la última versión de analyzeAccumulated, para que el
-  // interval periódico invoque la closure vigente (props/estado actuales).
-  const analyzeRef = useRef(analyzeAccumulated);
-  analyzeRef.current = analyzeAccumulated;
+  // "Analizar lo escuchado": encola el transcrito acumulado hasta este punto.
+  // La IA suma este contexto para determinar qué criterios resolver y qué falta
+  // preguntar. No detiene el micrófono.
+  function enqueueAnalysis() {
+    const full = transcriptRef.current.trim();
+    if (!full) return;
+    analysisQueueRef.current.push(full);
+    setQueuedCount(analysisQueueRef.current.length);
+    drainAnalysisQueue();
+  }
 
   const stt = useDeepgramLive({
     onInterim: (text) => setInterim(text),
     onFinal: (text) => {
       setInterim("");
       setTranscript((prev) => (prev ? `${prev}\n${text}` : text));
-      dirtyRef.current = true; // marca que hay texto nuevo para el próximo tick
     },
     onError: (err) => setSttError(err),
   });
 
-  // Mientras se escucha, cada 8 s: (1) analiza el acumulado si hay texto nuevo;
-  // (2) fuerza un Finalize para que el audio en buffer salga como tramo final
-  // (así el habla continua se trocea y el próximo tick tiene texto nuevo, aunque
-  // no haya pausas). Antes se usaba un debounce que se reiniciaba con cada frase
-  // → con habla continua nunca disparaba.
+  // Mientras se escucha, un Finalize periódico (cada 4 s) fuerza que el audio en
+  // buffer salga como tramo final, para que el transcrito en pantalla se
+  // mantenga al día aunque el habla sea continua. El ANÁLISIS ya no es
+  // automático: lo dispara el consultor con "Analizar lo escuchado".
   useEffect(() => {
     if (stt.status !== "listening") return;
-    const id = setInterval(() => {
-      if (dirtyRef.current) analyzeRef.current();
-      stt.finalize();
-    }, 8000);
+    const id = setInterval(() => stt.finalize(), 4000);
     return () => clearInterval(id);
   }, [stt.status, stt.finalize]);
 
@@ -203,7 +232,7 @@ export function LiveInterviewPanel({
   function handleStopListening() {
     stt.stop();
     setInterim("");
-    analyzeAccumulated(); // flush: analiza lo acumulado al detener
+    enqueueAnalysis(); // flush: encola un análisis del acumulado al detener
   }
 
   const listening = stt.status === "listening";
@@ -256,13 +285,28 @@ export function LiveInterviewPanel({
             </div>
           </>
         ) : (
-          <div className="flex flex-wrap items-center gap-8">
-            <StatusBadge variant={listening ? "positive" : "neutral"}>
-              {connecting ? t("listening.connecting") : t("listening.listening")}
-            </StatusBadge>
-            <Button variant="secondary" onClick={handleStopListening}>
-              {t("listening.stop")}
-            </Button>
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-wrap items-center gap-8">
+              <StatusBadge variant={listening ? "positive" : "neutral"}>
+                {connecting ? t("listening.connecting") : t("listening.listening")}
+              </StatusBadge>
+              {listening ? (
+                <Button onClick={enqueueAnalysis} disabled={!transcript.trim()}>
+                  {t("listening.analyzeHeard")}
+                </Button>
+              ) : null}
+              <Button variant="secondary" onClick={handleStopListening}>
+                {t("listening.stop")}
+              </Button>
+            </div>
+            {analyzing || queuedCount > 0 ? (
+              <p className="text-caption leading-caption text-carbon">
+                {t("listening.analyzingHeard")}
+                {queuedCount > 0
+                  ? ` · ${t("listening.queued", { n: queuedCount })}`
+                  : ""}
+              </p>
+            ) : null}
           </div>
         )}
 
@@ -311,6 +355,26 @@ export function LiveInterviewPanel({
         </div>
       ) : null}
 
+      {/* Temas resueltos: crece a medida que los análisis cierran controles. */}
+      {resolvedControls.length > 0 ? (
+        <div>
+          <h3 className="mb-8 text-body-sm font-semibold text-ink">
+            {t("resolvedTitle")} ({resolvedControls.length})
+          </h3>
+          <ul className="flex flex-col gap-4">
+            {resolvedControls.map((name) => (
+              <li
+                key={name}
+                className="flex items-baseline gap-8 rounded-tags bg-ash px-8 py-4"
+              >
+                <StatusBadge variant="positive">{t("answered")}</StatusBadge>
+                <span className="text-body-sm text-metal line-through">{name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <div>
         <div className="mb-8 flex flex-wrap items-center justify-between gap-8">
           <h3 className="text-body-sm font-semibold text-ink">{t("queueTitle")}</h3>
@@ -348,35 +412,30 @@ export function LiveInterviewPanel({
           <StatusBadge variant="neutral">{t("openerLabel")}</StatusBadge>
           <span className="text-body-sm font-medium text-ink">{t("opener")}</span>
         </div>
-        {queue.length === 0 ? (
+        {pendingQueue.length === 0 ? (
           <p className="text-caption leading-caption text-carbon">{t("queueEmpty")}</p>
         ) : (
           <ul className="flex flex-col gap-4">
-            {queue.map((question, index) => (
+            {pendingQueue.map((question, index) => (
               <li
                 key={`${question.controlCode}-${index}`}
                 className={cn(
                   "flex items-baseline gap-8 rounded-tags px-8 py-4",
-                  index === nextIndex && "bg-ash",
+                  index === 0 && "bg-ash",
                 )}
               >
-                {index === nextIndex ? (
+                {index === 0 ? (
                   <StatusBadge variant="neutral">{t("nextLabel")}</StatusBadge>
                 ) : null}
                 <span
                   className={cn(
                     "text-body-sm text-ink",
-                    question.status === "resolved" && "text-metal line-through",
                     question.status === "clarify" && "text-warning-yellow",
                   )}
                 >
                   {question.question}
                 </span>
-                {question.status === "resolved" ? (
-                  <span className="shrink-0 text-caption leading-caption text-metal">
-                    {t("answered")}
-                  </span>
-                ) : question.status === "clarify" ? (
+                {question.status === "clarify" ? (
                   <StatusBadge variant="warning">{t("clarify")}</StatusBadge>
                 ) : null}
               </li>
