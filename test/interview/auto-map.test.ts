@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mapAnswersToControlStatus } from "@/lib/interview/auto-map";
+import { criterionAnswerSchema } from "@/lib/interview/answers-schema";
 
 describe("mapAnswersToControlStatus", () => {
   it("all yes -> compliant", () => {
@@ -20,5 +21,18 @@ describe("mapAnswersToControlStatus", () => {
   });
   it("unknown is ignored alongside real answers", () => {
     expect(mapAnswersToControlStatus(["yes", "unknown"])).toBe("compliant");
+  });
+
+  it("flagged (requiere aclaración) is ignored like unknown", () => {
+    expect(mapAnswersToControlStatus(["yes", "flagged"])).toBe("compliant");
+    expect(mapAnswersToControlStatus(["flagged"])).toBe("pending");
+    expect(mapAnswersToControlStatus(["no", "flagged"])).toBe("non_compliant");
+    expect(mapAnswersToControlStatus(["unknown", "flagged"])).toBe("pending");
+  });
+});
+
+describe("criterionAnswerSchema", () => {
+  it("accepts 'flagged'", () => {
+    expect(criterionAnswerSchema.parse("flagged")).toBe("flagged");
   });
 });

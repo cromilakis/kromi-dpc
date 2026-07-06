@@ -26,6 +26,7 @@ const ANSWER_VARIANT: Record<"yes" | "partial" | "no", StatusBadgeVariant> = {
 
 type RatSuggestion = ExtractionResult["rat"][number];
 type ComplianceSuggestion = ExtractionResult["compliance"][number];
+type AlertSuggestion = ExtractionResult["alerts"][number];
 
 const RAT_FIELD_DEFAULTS: RatActivity = {
   area: "",
@@ -84,7 +85,7 @@ export function ExtractionReview({
   onAcceptCompliance: (
     controlCode: string,
     index: number,
-    answer: "yes" | "partial" | "no",
+    answer: "yes" | "partial" | "no" | "flagged",
   ) => void;
   onClose: () => void;
 }) {
@@ -101,6 +102,7 @@ export function ExtractionReview({
     extraction.compliance,
   );
   const [invalidRatIndexes, setInvalidRatIndexes] = useState<Set<number>>(new Set());
+  const [alertSuggestions, setAlertSuggestions] = useState<AlertSuggestion[]>(extraction.alerts);
 
   function discardRat(index: number) {
     setRatSuggestions((current) => current.filter((_, i) => i !== index));
@@ -139,9 +141,23 @@ export function ExtractionReview({
     complianceSuggestions.forEach((suggestion, index) => acceptCompliance(index, suggestion));
   }
 
+  function discardAlert(index: number) {
+    setAlertSuggestions((current) => current.filter((_, i) => i !== index));
+  }
+
+  function acceptAlert(index: number, alert: AlertSuggestion) {
+    onAcceptCompliance(alert.controlCode, alert.criterionIndex, "flagged");
+    discardAlert(index);
+  }
+
+  function acceptAllAlerts() {
+    alertSuggestions.forEach((alert, index) => acceptAlert(index, alert));
+  }
+
   const nothingLeft =
     ratSuggestions.length === 0 &&
     complianceSuggestions.length === 0 &&
+    alertSuggestions.length === 0 &&
     extraction.unassigned.length === 0;
 
   return (
@@ -248,6 +264,58 @@ export function ExtractionReview({
                         {t("accept")}
                       </Button>
                       <Button variant="ghost" onClick={() => discardCompliance(index)}>
+                        {t("discard")}
+                      </Button>
+                    </div>
+                  </Card>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+
+      <section aria-labelledby="review-alerts-title">
+        <div className="mb-12 flex flex-wrap items-center justify-between gap-8">
+          <h3 id="review-alerts-title" className="text-body-sm font-semibold text-ink">
+            {t("alertsGroup")}
+          </h3>
+          {alertSuggestions.length > 0 ? (
+            <Button variant="secondary" onClick={acceptAllAlerts}>
+              {t("acceptAll")}
+            </Button>
+          ) : null}
+        </div>
+        {alertSuggestions.length === 0 ? (
+          <p className="text-caption leading-caption text-carbon">{t("alertsEmpty")}</p>
+        ) : (
+          <ul className="flex flex-col gap-12">
+            {alertSuggestions.map((alert, index) => {
+              const control = controlByCode.get(alert.controlCode);
+              const controlName = control?.controlName ?? alert.controlCode;
+              const criterionText =
+                control?.criteria[alert.criterionIndex] ??
+                `${alert.controlCode} · criterio ${alert.criterionIndex + 1}`;
+              return (
+                <li key={index}>
+                  <Card className="flex flex-col gap-8 border-ink/10">
+                    <div className="flex flex-wrap items-center justify-between gap-8">
+                      <p className="text-caption font-medium leading-caption text-ink">
+                        {controlName}
+                      </p>
+                      <StatusBadge variant="warning">{tCriteria("flagged")}</StatusBadge>
+                    </div>
+                    <p className="text-caption leading-caption text-carbon">
+                      <span className="font-medium text-ink">{t("criterionLabel")}:</span>{" "}
+                      {criterionText}
+                    </p>
+                    <p className="text-caption leading-caption text-carbon">
+                      <span className="font-medium text-ink">{t("alertReasonLabel")}:</span>{" "}
+                      {alert.reason}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-8">
+                      <Button onClick={() => acceptAlert(index, alert)}>{t("accept")}</Button>
+                      <Button variant="ghost" onClick={() => discardAlert(index)}>
                         {t("discard")}
                       </Button>
                     </div>

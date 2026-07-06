@@ -95,6 +95,54 @@ describe("sanitizeExtraction", () => {
     expect(out.compliance).toHaveLength(0);
     expect(out.unassigned).toHaveLength(1);
   });
+
+  it("acepta alerts válidas", () => {
+    const out = sanitizeExtraction(
+      {
+        rat: [],
+        compliance: [],
+        unassigned: [],
+        alerts: [{ controlCode: "C1", criterionIndex: 0, reason: "no se mencionó" }],
+      },
+      controls,
+    );
+    expect(out.alerts).toHaveLength(1);
+    expect(out.alerts[0]).toMatchObject({ controlCode: "C1", criterionIndex: 0 });
+  });
+
+  it("descarta alert con control inexistente o índice fuera de rango a unassigned", () => {
+    const out = sanitizeExtraction(
+      {
+        rat: [],
+        compliance: [],
+        unassigned: [],
+        alerts: [
+          { controlCode: "NOPE", criterionIndex: 0, reason: "x" },
+          { controlCode: "C1", criterionIndex: 5, reason: "x" },
+        ],
+      },
+      controls,
+    );
+    expect(out.alerts).toHaveLength(0);
+    expect(out.unassigned).toHaveLength(2);
+    expect(out.unassigned.every((u) => typeof u.text === "string" && !u.text.startsWith("{"))).toBe(
+      true,
+    );
+  });
+
+  it("dedup: si un criterio ya tiene veredicto en compliance, descarta la alerta duplicada", () => {
+    const out = sanitizeExtraction(
+      {
+        rat: [],
+        compliance: [{ controlCode: "C1", criterionIndex: 0, answer: "yes", evidence: "cita" }],
+        unassigned: [],
+        alerts: [{ controlCode: "C1", criterionIndex: 0, reason: "no debería sobrevivir" }],
+      },
+      controls,
+    );
+    expect(out.compliance).toHaveLength(1);
+    expect(out.alerts).toHaveLength(0);
+  });
 });
 
 describe("extractDiagnosis", () => {
@@ -107,6 +155,7 @@ describe("extractDiagnosis", () => {
       rat: [{ fields: { name: "X" }, evidence: { name: "se llama X" } }],
       compliance: [{ controlCode: "C1", criterionIndex: 0, answer: "yes", evidence: "cita" }],
       unassigned: [],
+      alerts: [{ controlCode: "C1", criterionIndex: 1, reason: "no se determina" }],
     };
     vi.mocked(chatJSON).mockResolvedValueOnce({
       content: JSON.stringify(validPayload),
@@ -116,6 +165,8 @@ describe("extractDiagnosis", () => {
     const out = await extractDiagnosis({ transcript: "una transcripción", controls });
     expect(out.rat).toHaveLength(1);
     expect(out.compliance).toHaveLength(1);
+    expect(out.alerts).toHaveLength(1);
+    expect(out.alerts[0]).toMatchObject({ controlCode: "C1", criterionIndex: 1 });
     expect(chatJSON).toHaveBeenCalledTimes(1);
   });
 

@@ -15,7 +15,13 @@ import { ratActivitySchema, type RatActivity } from "@/lib/interview/rat-schema"
  * — misma forma canónica de `answers` en ambos (Tareas 6-8).
  */
 
-const CRITERION_ANSWERS: readonly CriterionAnswer[] = ["yes", "partial", "no", "unknown"];
+const CRITERION_ANSWERS: readonly CriterionAnswer[] = [
+  "yes",
+  "partial",
+  "no",
+  "unknown",
+  "flagged",
+];
 
 function isCriterionAnswer(value: unknown): value is CriterionAnswer {
   return typeof value === "string" && (CRITERION_ANSWERS as readonly string[]).includes(value);

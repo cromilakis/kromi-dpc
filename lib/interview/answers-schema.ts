@@ -20,6 +20,7 @@ export const criterionAnswerSchema = z.enum([
   "partial",
   "no",
   "unknown",
+  "flagged",
 ] as const satisfies readonly CriterionAnswer[]);
 
 export const diagnosisAnswersSchema = z.object({

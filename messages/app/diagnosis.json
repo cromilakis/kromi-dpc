@@ -128,7 +128,8 @@
           "yes": "Cumple",
           "partial": "Parcial",
           "no": "No cumple",
-          "unknown": "Sin evaluar"
+          "unknown": "Sin evaluar",
+          "flagged": "Requiere aclaración"
         },
         "statusPreview": {
           "pending": "Pendiente",
@@ -144,6 +145,9 @@
         "ratIncomplete": "Faltan campos obligatorios (área, nombre, finalidad o base de licitud): al aceptar, completarlos luego en el RAT.",
         "complianceGroup": "Cumplimiento sugerido",
         "complianceEmpty": "No quedan sugerencias de cumplimiento por revisar.",
+        "alertsGroup": "Requiere aclaración",
+        "alertsEmpty": "No quedan alertas por revisar.",
+        "alertReasonLabel": "Motivo",
         "unassignedGroup": "Información sin asignar",
         "unassignedHelp": "El sistema no pudo asociar estos fragmentos con certeza a un campo del RAT o a un criterio del checklist. Ubicarlos a mano si corresponde.",
         "unassignedEmpty": "No hay información sin asignar.",

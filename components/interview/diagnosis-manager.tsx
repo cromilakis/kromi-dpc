@@ -107,7 +107,7 @@ export function DiagnosisManager({
   function handleAcceptCompliance(
     controlCode: string,
     index: number,
-    answer: "yes" | "partial" | "no",
+    answer: "yes" | "partial" | "no" | "flagged",
   ) {
     updateAnswers((current) => {
       const next = [...(current.compliance[controlCode] ?? [])];

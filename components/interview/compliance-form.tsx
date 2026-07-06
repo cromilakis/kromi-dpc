@@ -28,13 +28,18 @@ import type { ComplianceQuestion } from "@/lib/interview/questions";
  * se trata como aplicable, sin sección ni botones adicionales.
  */
 
-const ANSWER_ORDER: readonly CriterionAnswer[] = ["yes", "partial", "no", "unknown"];
+// "flagged" (Requiere aclaración) es un 5º botón, no un veredicto: el
+// consultor puede ponerlo/quitarlo a mano igual que los otros 4, y así se ve
+// como alerta ámbar en vez de "Sin evaluar" cuando el LLM no pudo determinar
+// el criterio (Tarea 3, plan 2026-07-05-exhaustive-compliance-alerts).
+const ANSWER_ORDER: readonly CriterionAnswer[] = ["yes", "partial", "no", "unknown", "flagged"];
 
 const ANSWER_TINTS: Record<CriterionAnswer, string> = {
   yes: "border-success-green/40 bg-[#e9f2ec] text-success-green",
   partial: "border-warning-yellow/40 bg-[#f6f0df] text-warning-yellow",
   no: "border-danger-red/40 bg-[#f6e9e8] text-danger-red",
   unknown: "border-stone bg-white text-carbon",
+  flagged: "border-warning-yellow/40 bg-[#f6f0df] text-warning-yellow",
 };
 
 const STATUS_BADGE_VARIANT = {

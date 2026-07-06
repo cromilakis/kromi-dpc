@@ -113,6 +113,7 @@ const validExtraction: ExtractionResult = {
     { controlCode: "C1", criterionIndex: 0, answer: "yes", evidence: "cita" },
   ],
   unassigned: [{ text: "algo ambiguo", reason: "sin cita" }],
+  alerts: [],
 };
 
 describe("extractDiagnosisFromTranscript", () => {
