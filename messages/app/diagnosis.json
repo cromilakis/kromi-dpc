@@ -139,6 +139,8 @@
         "unassignedEmpty": "No hay información sin asignar.",
         "suggestedFrom": "Sugerido desde la transcripción",
         "evidenceLabel": "Cita",
+        "criterionLabel": "Se evalúa",
+        "whyLabel": "Por qué (según la transcripción)",
         "accept": "Aceptar",
         "acceptAll": "Aceptar todo",
         "discard": "Descartar",

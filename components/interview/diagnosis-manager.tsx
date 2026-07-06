@@ -318,6 +318,7 @@ export function DiagnosisManager({
       {extraction ? (
         <ExtractionReview
           extraction={extraction}
+          questions={questions}
           onAcceptRat={handleAcceptRat}
           onAcceptCompliance={handleAcceptCompliance}
           onClose={() => setExtraction(null)}

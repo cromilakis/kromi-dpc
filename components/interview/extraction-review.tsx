@@ -2,9 +2,17 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Card } from "@/components/ui";
+import { Button, Card, StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { ratActivitySchema, type RatActivity } from "@/lib/interview/rat-schema";
+import type { ComplianceQuestion } from "@/lib/interview/questions";
 import type { ExtractionResult } from "@/lib/llm/extract-diagnosis";
+
+/** Respuesta de cumplimiento → variante de color del badge. */
+const ANSWER_VARIANT: Record<"yes" | "partial" | "no", StatusBadgeVariant> = {
+  yes: "positive",
+  partial: "warning",
+  no: "negative",
+};
 
 /**
  * Pantalla de revisión de las sugerencias del LLM (Tarea 6): el consultor
@@ -65,11 +73,13 @@ function formatFieldValue(value: unknown): string {
 
 export function ExtractionReview({
   extraction,
+  questions,
   onAcceptRat,
   onAcceptCompliance,
   onClose,
 }: {
   extraction: ExtractionResult;
+  questions: ComplianceQuestion[];
   onAcceptRat: (activity: RatActivity) => void;
   onAcceptCompliance: (
     controlCode: string,
@@ -81,6 +91,10 @@ export function ExtractionReview({
   const t = useTranslations("app.diagnosis.review");
   const tRatFields = useTranslations("app.diagnosis.rat.fields");
   const tCriteria = useTranslations("app.diagnosis.compliance.criteria");
+
+  // Lookup del catálogo para resolver nombre del control y texto del criterio
+  // (qué se evalúa) a partir del controlCode + criterionIndex del LLM.
+  const controlByCode = new Map(questions.map((q) => [q.controlCode, q]));
 
   const [ratSuggestions, setRatSuggestions] = useState<RatSuggestion[]>(extraction.rat);
   const [complianceSuggestions, setComplianceSuggestions] = useState<ComplianceSuggestion[]>(
@@ -204,27 +218,43 @@ export function ExtractionReview({
           <p className="text-caption leading-caption text-carbon">{t("complianceEmpty")}</p>
         ) : (
           <ul className="flex flex-col gap-12">
-            {complianceSuggestions.map((suggestion, index) => (
-              <li key={index}>
-                <Card className="flex flex-col gap-8 border-ink/10">
-                  <p className="text-caption font-medium leading-caption text-ink">
-                    {suggestion.controlCode} · [{suggestion.criterionIndex}] ·{" "}
-                    {tCriteria(suggestion.answer)}
-                  </p>
-                  <p className="text-caption leading-caption text-carbon">
-                    {t("suggestedFrom")}: «{suggestion.evidence}»
-                  </p>
-                  <div className="flex flex-wrap items-center gap-8">
-                    <Button onClick={() => acceptCompliance(index, suggestion)}>
-                      {t("accept")}
-                    </Button>
-                    <Button variant="ghost" onClick={() => discardCompliance(index)}>
-                      {t("discard")}
-                    </Button>
-                  </div>
-                </Card>
-              </li>
-            ))}
+            {complianceSuggestions.map((suggestion, index) => {
+              const control = controlByCode.get(suggestion.controlCode);
+              const controlName = control?.controlName ?? suggestion.controlCode;
+              const criterionText =
+                control?.criteria[suggestion.criterionIndex] ??
+                `${suggestion.controlCode} · criterio ${suggestion.criterionIndex + 1}`;
+              return (
+                <li key={index}>
+                  <Card className="flex flex-col gap-8 border-ink/10">
+                    <div className="flex flex-wrap items-center justify-between gap-8">
+                      <p className="text-caption font-medium leading-caption text-ink">
+                        {controlName}
+                      </p>
+                      <StatusBadge variant={ANSWER_VARIANT[suggestion.answer]}>
+                        {tCriteria(suggestion.answer)}
+                      </StatusBadge>
+                    </div>
+                    <p className="text-caption leading-caption text-carbon">
+                      <span className="font-medium text-ink">{t("criterionLabel")}:</span>{" "}
+                      {criterionText}
+                    </p>
+                    <p className="text-caption leading-caption text-carbon">
+                      <span className="font-medium text-ink">{t("whyLabel")}:</span>{" "}
+                      «{suggestion.evidence}»
+                    </p>
+                    <div className="flex flex-wrap items-center gap-8">
+                      <Button onClick={() => acceptCompliance(index, suggestion)}>
+                        {t("accept")}
+                      </Button>
+                      <Button variant="ghost" onClick={() => discardCompliance(index)}>
+                        {t("discard")}
+                      </Button>
+                    </div>
+                  </Card>
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
