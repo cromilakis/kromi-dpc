@@ -165,6 +165,12 @@ export function LiveInterviewPanel({
             </StatusBadge>
           )}
         </div>
+        {/* Pregunta de apertura: siempre al tope, encuadra la conversación. No
+            se tacha ni cuenta para la cobertura (no está ligada a un control). */}
+        <div className="mb-8 flex items-baseline gap-8 rounded-tags bg-ash px-8 py-4">
+          <StatusBadge variant="neutral">{t("openerLabel")}</StatusBadge>
+          <span className="text-body-sm font-medium text-ink">{t("opener")}</span>
+        </div>
         {queue.length === 0 ? (
           <p className="text-caption leading-caption text-carbon">{t("queueEmpty")}</p>
         ) : (

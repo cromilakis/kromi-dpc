@@ -200,6 +200,75 @@ export async function createRemediationItem(
   return { ok: true };
 }
 
+const fromProposalSchema = z.object({
+  companyId: z.uuid(),
+  controlCode: z.string().trim().min(1).max(40),
+  criterionIndex: z.number().int().min(0),
+  title: z.string().trim().min(1).max(300),
+  priority: z.enum(["alta", "media", "baja"]),
+  effort: z.enum(["bajo", "medio", "alto"]),
+  /** Fecha ISO (YYYY-MM-DD) del input type="date". */
+  dueDate: z.iso.date().optional(),
+});
+
+/**
+ * Materializa una tarjeta de la propuesta de resolución (Fase 2) como tarea del
+ * plan: inserta un remediation_item con origin='diagnosis', la estructura
+ * (priority/effort_estimate) y la trazabilidad (control_code/criterion_index).
+ * El consultor confirma por tarjeta; el LLM nunca crea tareas por sí solo.
+ */
+export async function createRemediationFromProposal(
+  input: unknown,
+): Promise<RemediationActionResult> {
+  const parsed = fromProposalSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "validation" };
+
+  const supabase = await createClient();
+  const userId = await getSessionUserId(supabase);
+  if (!userId) return { ok: false, error: "unauthorized" };
+
+  const { companyId, controlCode, criterionIndex, title, priority, effort, dueDate } =
+    parsed.data;
+  const { data, error } = await supabase
+    .from("remediation_items")
+    .insert({
+      company_id: companyId,
+      title,
+      priority,
+      effort_estimate: effort,
+      origin: "diagnosis",
+      control_code: controlCode,
+      criterion_index: criterionIndex,
+      due_date: dueDate ?? null,
+    })
+    .select("id")
+    .single();
+
+  if (error || !data) {
+    if (error?.code === "42501") return { ok: false, error: "unauthorized" };
+    console.error("[remediation] createRemediationFromProposal falló:", error?.message);
+    return { ok: false, error: "unavailable" };
+  }
+
+  await writeAudit(supabase, {
+    actorId: userId,
+    action: "remediation.item_added",
+    entityId: data.id,
+    detail: {
+      company_id: companyId,
+      source: "diagnosis",
+      control_code: controlCode,
+      criterion_index: criterionIndex,
+      priority,
+      effort_estimate: effort,
+      title,
+    },
+  });
+
+  revalidatePath(`/app/companies/${companyId}/plan`);
+  return { ok: true };
+}
+
 /**
  * Edita el estado de una tarea (pending / in_progress / done) — mutación
  * sensible del ciclo: audit_log 'remediation.status_changed' con from/to.

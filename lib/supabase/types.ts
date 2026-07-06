@@ -851,9 +851,14 @@ export type Database = {
       remediation_items: {
         Row: {
           company_id: string
+          control_code: string | null
           created_at: string
+          criterion_index: number | null
           due_date: string | null
+          effort_estimate: string | null
           id: string
+          origin: string
+          priority: string | null
           responsible: string | null
           solution_id: string | null
           status: Database["public"]["Enums"]["remediation_status"]
@@ -862,9 +867,14 @@ export type Database = {
         }
         Insert: {
           company_id: string
+          control_code?: string | null
           created_at?: string
+          criterion_index?: number | null
           due_date?: string | null
+          effort_estimate?: string | null
           id?: string
+          origin?: string
+          priority?: string | null
           responsible?: string | null
           solution_id?: string | null
           status?: Database["public"]["Enums"]["remediation_status"]
@@ -873,9 +883,14 @@ export type Database = {
         }
         Update: {
           company_id?: string
+          control_code?: string | null
           created_at?: string
+          criterion_index?: number | null
           due_date?: string | null
+          effort_estimate?: string | null
           id?: string
+          origin?: string
+          priority?: string | null
           responsible?: string | null
           solution_id?: string | null
           status?: Database["public"]["Enums"]["remediation_status"]

@@ -67,6 +67,8 @@
         "nextLabel": "Siguiente",
         "answered": "Respondida",
         "clarify": "Falta aclarar",
+        "openerLabel": "Apertura",
+        "opener": "Cuéntame en general cómo funciona el negocio: qué datos de personas manejan (clientes, trabajadores, proveedores), de dónde salen y para qué los usan.",
         "coverage": "Faltan {n} de {total} criterios",
         "ready": "Cobertura completa: listo para aplicar",
         "ratSuggested": "Actividades detectadas",
@@ -75,6 +77,28 @@
           "llm_disabled": "Esta función no está configurada todavía. Contactar al equipo.",
           "llm_failed": "No fue posible analizar el tramo. Reintentar.",
           "generic": "Ocurrió un error inesperado. Reintentar."
+        }
+      },
+      "proposal": {
+        "title": "Propuesta de resolución",
+        "subtitle": "Genera acciones sugeridas por cada gap del diagnóstico. Revisa y acepta las que correspondan al plan.",
+        "generate": "Proponer resolución",
+        "generating": "Generando…",
+        "empty": "Sin gaps por resolver: nada que proponer.",
+        "actionLabel": "Acción sugerida",
+        "priorityLabel": "Prioridad",
+        "effortLabel": "Esfuerzo",
+        "dueLabel": "Plazo",
+        "accept": "Aceptar",
+        "dismiss": "Descartar",
+        "accepted": "Agregada al plan",
+        "priority": { "alta": "Alta", "media": "Media", "baja": "Baja" },
+        "effort": { "bajo": "Bajo", "medio": "Medio", "alto": "Alto" },
+        "verdict": { "no": "No cumple", "partial": "Parcial", "flagged": "Falta aclarar" },
+        "errors": {
+          "llm_disabled": "El asistente de IA no está configurado.",
+          "llm_failed": "El asistente no pudo generar la propuesta. Reintenta.",
+          "generic": "No se pudo generar la propuesta."
         }
       },
       "guide": {

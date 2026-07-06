@@ -9,6 +9,11 @@ import { selectNotApplicable } from "@/lib/interview/select-not-applicable";
 import type { AppliesWhen } from "@/lib/interview/applicability";
 import type { ControlLike } from "@/lib/interview/questions";
 import { extractDiagnosis, type ExtractionResult } from "@/lib/llm/extract-diagnosis";
+import { buildGaps } from "@/lib/interview/build-gaps";
+import {
+  proposeRemediation,
+  type ProposalItem,
+} from "@/lib/llm/propose-remediation";
 import { LlmError } from "@/lib/llm/deepseek";
 import { createClient } from "@/lib/supabase/server";
 import type { TablesInsert } from "@/lib/supabase/types";
@@ -57,6 +62,16 @@ export type MaterializeDiagnosisResult =
 
 export type ExtractFromTranscriptResult =
   | { ok: true; extraction: ExtractionResult }
+  | { ok: false; error: InterviewActionError | "llm_disabled" | "llm_failed" };
+
+/** Item de propuesta enriquecido para la UI (nombre del control + texto del criterio). */
+export type EnrichedProposalItem = ProposalItem & {
+  controlName: string;
+  criterion: string;
+};
+
+export type ProposeRemediationResult =
+  | { ok: true; proposal: EnrichedProposalItem[] }
   | { ok: false; error: InterviewActionError | "llm_disabled" | "llm_failed" };
 
 const companyIdSchema = z.object({ companyId: z.uuid() });
@@ -801,6 +816,133 @@ export async function extractDiagnosisFromTranscript(
   } catch (cause) {
     console.error(
       "[interview] extractDiagnosisFromTranscript no disponible:",
+      cause,
+    );
+    return { ok: false, error: "unavailable" };
+  }
+}
+
+/**
+ * Propuesta de resolución (Fase 2): lee el borrador de cumplimiento de la
+ * sesión, arma los gaps (no/partial/flagged) sobre los controles APLICABLES a
+ * la empresa (misma aplicabilidad que la extracción) y pide a DeepSeek una
+ * acción estructurada por gap. NO persiste: devuelve la propuesta enriquecida
+ * (nombre del control + texto del criterio) para que el consultor la revise y
+ * acepte por tarjeta (`createRemediationFromProposal`).
+ */
+export async function proposeRemediationForSession(
+  sessionId: string,
+): Promise<ProposeRemediationResult> {
+  const parsed = sessionIdSchema.safeParse({ sessionId });
+  if (!parsed.success) return { ok: false, error: "validation" };
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { ok: false, error: "unauthorized" };
+
+    const { data: session, error: sessionError } = await supabase
+      .from("interview_sessions")
+      .select("id, company_id, answers")
+      .eq("id", parsed.data.sessionId)
+      .maybeSingle();
+    if (sessionError) {
+      console.error(
+        "[interview] lectura de sesión para propuesta falló:",
+        sessionError.message,
+      );
+      return { ok: false, error: "unavailable" };
+    }
+    if (!session) return { ok: false, error: "not_found" };
+
+    const { data: company, error: companyError } = await supabase
+      .from("companies")
+      .select("factors, sectors ( code )")
+      .eq("id", session.company_id)
+      .maybeSingle();
+    if (companyError || !company) {
+      console.error(
+        "[interview] lectura de empresa para propuesta falló:",
+        companyError?.message,
+      );
+      return { ok: false, error: "unavailable" };
+    }
+    const sectorCode = company.sectors?.code ?? null;
+
+    const { data: sectorControls, error: controlsError } = await supabase
+      .from("controls")
+      .select("code, name, verification_criteria, applies_when")
+      .or(
+        sectorCode
+          ? `sector_scope.is.null,sector_scope.cs.{${sectorCode}}`
+          : "sector_scope.is.null",
+      );
+    if (controlsError) {
+      console.error(
+        "[interview] lectura de controles para propuesta falló:",
+        controlsError.message,
+      );
+      return { ok: false, error: "unavailable" };
+    }
+
+    // Aplicabilidad: mismo cálculo que la extracción (factores × applies_when
+    // × override answers.applicability). Solo se proponen acciones sobre
+    // controles que aplican a la empresa.
+    const rawAnswers = (session.answers ?? {}) as Record<string, unknown>;
+    const overrides =
+      rawAnswers.applicability && typeof rawAnswers.applicability === "object"
+        ? (rawAnswers.applicability as Record<string, boolean>)
+        : {};
+    const naCodes = new Set(
+      selectNotApplicable(
+        (sectorControls ?? []).map((c) => ({
+          code: c.code,
+          appliesWhen: c.applies_when as AppliesWhen,
+        })),
+        company.factors,
+        overrides,
+      ),
+    );
+    const applicable = (sectorControls ?? [])
+      .filter((c) => !naCodes.has(c.code))
+      .map((c) => ({
+        code: c.code,
+        name: c.name,
+        criteria: (c.verification_criteria ?? []) as string[],
+      }));
+
+    const compliance =
+      rawAnswers.compliance && typeof rawAnswers.compliance === "object"
+        ? (rawAnswers.compliance as Record<string, string[]>)
+        : {};
+
+    const gaps = buildGaps(compliance, applicable);
+
+    let proposal: ProposalItem[];
+    try {
+      proposal = await proposeRemediation(gaps);
+    } catch (cause) {
+      if (cause instanceof LlmError) return { ok: false, error: cause.code };
+      throw cause;
+    }
+
+    // Enriquecer con nombre de control + texto del criterio para la UI.
+    const byCode = new Map(applicable.map((c) => [c.code, c]));
+    const enriched: EnrichedProposalItem[] = proposal.map((item) => {
+      const control = byCode.get(item.controlCode);
+      return {
+        ...item,
+        controlName: control?.name ?? item.controlCode,
+        criterion: control?.criteria[item.criterionIndex] ?? "",
+      };
+    });
+
+    return { ok: true, proposal: enriched };
+  } catch (cause) {
+    console.error(
+      "[interview] proposeRemediationForSession no disponible:",
       cause,
     );
     return { ok: false, error: "unavailable" };

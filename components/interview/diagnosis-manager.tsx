@@ -20,6 +20,7 @@ import { ComplianceForm } from "./compliance-form";
 import { ExtractionReview } from "./extraction-review";
 import { InterviewGuidePanel } from "./interview-guide-panel";
 import { LiveInterviewPanel } from "./live-interview-panel";
+import { ResolutionProposal } from "./resolution-proposal";
 import { RatForm } from "./rat-form";
 import { TranscriptImport } from "./transcript-import";
 
@@ -319,6 +320,8 @@ export function DiagnosisManager({
         onAcceptCompliance={handleAcceptCompliance}
         onAcceptRat={handleAcceptRat}
       />
+
+      <ResolutionProposal sessionId={sessionId} companyId={companyId} />
 
       <InterviewGuidePanel
         guide={guide}
