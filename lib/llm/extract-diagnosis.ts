@@ -14,6 +14,14 @@ const stringArrayField = z
   )
   .optional();
 
+// Campo booleano tolerante: el LLM a veces manda un string en un booleano
+// (p. ej. intlTransfer: "Possible (Google Drive...)"). Si no es booleano, se
+// DESCARTA ese campo (undefined) en vez de tumbar toda la actividad — no se
+// asume true/false a partir de texto ambiguo (determinismo).
+const tolerantBoolean = z
+  .preprocess((v) => (typeof v === "boolean" ? v : undefined), z.boolean())
+  .optional();
+
 // `fields` SIN `.strict()`: si el LLM agrega una llave no reconocida, Zod la
 // descarta en vez de tumbar todo el item (parseo tolerante). `legalBasis` con
 // `.catch(undefined)`: si viene un valor fuera del enum (p. ej. "contrato
@@ -28,11 +36,11 @@ const ratFieldsSchema = z.object({
   source: z.string().optional(),
   recipients: stringArrayField,
   processors: stringArrayField,
-  intlTransfer: z.boolean().optional(),
+  intlTransfer: tolerantBoolean,
   intlCountries: stringArrayField,
   retention: z.string().optional(),
   securityMeasures: stringArrayField,
-  isSensitive: z.boolean().optional(),
+  isSensitive: tolerantBoolean,
 });
 
 const ratSuggestionSchema = z.object({
@@ -122,6 +130,26 @@ Extrae la información según las reglas del sistema y responde solo con el JSON
   ];
 }
 
+/** Descripción legible de una sugerencia de RAT para el apartado "sin asignar"
+ * (evita volcar JSON crudo en la UI). */
+function describeRatItem(item: unknown): string {
+  const fields =
+    (item as { fields?: unknown })?.fields &&
+    typeof (item as { fields?: unknown }).fields === "object"
+      ? ((item as { fields: Record<string, unknown> }).fields)
+      : (item as Record<string, unknown>);
+  const pick = (key: string) => {
+    const value = fields?.[key];
+    return typeof value === "string" && value.trim() ? value.trim() : null;
+  };
+  return (
+    pick("name") ??
+    pick("purpose") ??
+    pick("area") ??
+    "Actividad de tratamiento sugerida"
+  );
+}
+
 export function sanitizeExtraction(
   raw: unknown,
   controls: ControlLike[],
@@ -142,7 +170,7 @@ export function sanitizeExtraction(
   for (const item of top.rat) {
     const parsed = ratSuggestionSchema.safeParse(item);
     if (!parsed.success) {
-      unassigned.push({ text: JSON.stringify(item), reason: "formato inválido" });
+      unassigned.push({ text: describeRatItem(item), reason: "formato inválido" });
       continue;
     }
     const { fields, evidence } = parsed.data;
@@ -167,7 +195,7 @@ export function sanitizeExtraction(
       });
     } else {
       unassigned.push({
-        text: JSON.stringify(fields),
+        text: describeRatItem(fields),
         reason: "sin evidencia textual",
       });
     }
@@ -178,7 +206,14 @@ export function sanitizeExtraction(
   for (const item of top.compliance) {
     const parsed = complianceSuggestionSchema.safeParse(item);
     if (!parsed.success) {
-      unassigned.push({ text: JSON.stringify(item), reason: "formato inválido" });
+      const code = (item as { controlCode?: unknown })?.controlCode;
+      unassigned.push({
+        text:
+          typeof code === "string"
+            ? `Sugerencia de cumplimiento (${code})`
+            : "Sugerencia de cumplimiento no interpretable",
+        reason: "formato inválido",
+      });
       continue;
     }
     const suggestion = parsed.data;
