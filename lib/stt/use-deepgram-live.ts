@@ -1,15 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DeepgramClient } from "@deepgram/sdk";
 import { grantDeepgramToken } from "@/lib/actions/interview";
 
 /**
  * Escucha activa por voz (Fase 3, spec `2026-07-06-live-stt-deepgram-design.md`).
  * Hook cliente que: pide un token efímero al servidor (`grantDeepgramToken`),
- * captura audio del micrófono o de una pestaña (Meet), abre el WebSocket directo
- * a Deepgram con el SDK y transmite el audio; emite transcripción interina y
- * final por callbacks. El secreto nunca sale al cliente (solo el token TTL 60s).
+ * captura audio del micrófono o de una pestaña (Meet), abre un WebSocket directo
+ * a Deepgram y transmite el audio; emite transcripción interina y final por
+ * callbacks. El secreto nunca sale al cliente (solo el token JWT, TTL 60s).
+ *
+ * Se usa el `WebSocket` nativo (no el SDK): en el navegador la auth va por
+ * subprotocolo `["bearer", <token>]` (los headers no se pueden enviar en un
+ * WebSocket de navegador). Verificado contra Deepgram.
  *
  * No testeable con audio real en CI (sin micrófono); la prueba en vivo la hace
  * el usuario. La degradación (sin permisos/clave) devuelve error "stt_disabled"
@@ -20,16 +23,18 @@ export type SttStatus = "idle" | "connecting" | "listening" | "error";
 export type SttSource = "mic" | "tab";
 export type SttError = "stt_disabled" | "mic_denied" | "generic";
 
-// Tipo del socket de escucha en vivo, inferido del SDK (evita `any`).
-type DeepgramLiveSocket = Awaited<
-  ReturnType<InstanceType<typeof DeepgramClient>["listen"]["v1"]["connect"]>
->;
-
 interface UseDeepgramLiveArgs {
   onInterim?: (text: string) => void;
   onFinal?: (text: string) => void;
   onError?: (error: SttError) => void;
 }
+
+const DEEPGRAM_URL = `wss://api.deepgram.com/v1/listen?${new URLSearchParams({
+  model: "nova-2",
+  language: "es",
+  smart_format: "true",
+  interim_results: "true",
+}).toString()}`;
 
 // MediaRecorder no soporta el mismo mimeType en todos los navegadores; se elige
 // el primero disponible (Deepgram autodetecta el contenedor webm/opus).
@@ -43,10 +48,12 @@ export function useDeepgramLive({ onInterim, onFinal, onError }: UseDeepgramLive
   const [status, setStatus] = useState<SttStatus>("idle");
 
   // Refs mutables del ciclo de vida de la conexión (no re-render).
-  const socketRef = useRef<DeepgramLiveSocket | null>(null);
+  const socketRef = useRef<WebSocket | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const keepAliveRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Marca de parada intencional (para no reportar error en el close normal).
+  const stoppingRef = useRef(false);
 
   // Callbacks en refs para no recrear start/stop en cada render.
   const cbRef = useRef({ onInterim, onFinal, onError });
@@ -60,29 +67,38 @@ export function useDeepgramLive({ onInterim, onFinal, onError }: UseDeepgramLive
       keepAliveRef.current = null;
     }
     try {
-      recorderRef.current?.state !== "inactive" && recorderRef.current?.stop();
+      if (recorderRef.current && recorderRef.current.state !== "inactive") {
+        recorderRef.current.stop();
+      }
     } catch {
       /* noop */
     }
     recorderRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
-    try {
-      socketRef.current?.sendCloseStream({ type: "CloseStream" });
-      socketRef.current?.close();
-    } catch {
-      /* noop */
-    }
+    const ws = socketRef.current;
     socketRef.current = null;
+    if (ws) {
+      try {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: "CloseStream" }));
+        }
+        ws.close();
+      } catch {
+        /* noop */
+      }
+    }
   }, []);
 
   const stop = useCallback(() => {
+    stoppingRef.current = true;
     cleanup();
     setStatus("idle");
   }, [cleanup]);
 
   const start = useCallback(
     async (source: SttSource) => {
+      stoppingRef.current = false;
       setStatus("connecting");
       const fail = (error: SttError) => {
         cleanup();
@@ -90,7 +106,7 @@ export function useDeepgramLive({ onInterim, onFinal, onError }: UseDeepgramLive
         cbRef.current.onError?.(error);
       };
 
-      // 1) Token efímero.
+      // 1) Token efímero (secreto server-only; al cliente solo el JWT).
       const granted = await grantDeepgramToken();
       if (!granted.ok) return fail("stt_disabled");
 
@@ -114,61 +130,60 @@ export function useDeepgramLive({ onInterim, onFinal, onError }: UseDeepgramLive
       }
       streamRef.current = stream;
 
-      // 3) Conexión a Deepgram con el token.
+      // 3) WebSocket directo a Deepgram (auth por subprotocolo bearer).
+      let ws: WebSocket;
       try {
-        const dg = new DeepgramClient({ accessToken: granted.token });
-        const socket = await dg.listen.v1.connect({
-          model: "nova-2",
-          language: "es",
-          smart_format: "true",
-          interim_results: "true",
-        });
-        socketRef.current = socket;
-
-        socket.on("open", () => {
-          const mimeType = pickMimeType();
-          const recorder = new MediaRecorder(
-            stream,
-            mimeType ? { mimeType } : undefined,
-          );
-          recorderRef.current = recorder;
-          recorder.ondataavailable = (event) => {
-            if (event.data && event.data.size > 0) {
-              try {
-                socketRef.current?.sendMedia(event.data);
-              } catch {
-                /* socket cerrando */
-              }
-            }
-          };
-          recorder.start(250);
-          keepAliveRef.current = setInterval(() => {
-            try {
-              socketRef.current?.sendKeepAlive({ type: "KeepAlive" });
-            } catch {
-              /* noop */
-            }
-          }, 8000);
-          setStatus("listening");
-        });
-
-        socket.on("message", (message: unknown) => {
-          const m = message as {
-            type?: string;
-            is_final?: boolean;
-            channel?: { alternatives?: Array<{ transcript?: string }> };
-          };
-          if (m.type !== "Results") return;
-          const text = m.channel?.alternatives?.[0]?.transcript?.trim() ?? "";
-          if (!text) return;
-          if (m.is_final) cbRef.current.onFinal?.(text);
-          else cbRef.current.onInterim?.(text);
-        });
-
-        socket.on("error", () => fail("generic"));
+        ws = new WebSocket(DEEPGRAM_URL, ["bearer", granted.token]);
       } catch {
         return fail("generic");
       }
+      socketRef.current = ws;
+
+      ws.onopen = () => {
+        if (socketRef.current !== ws) return; // parado durante la conexión
+        const mimeType = pickMimeType();
+        const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+        recorderRef.current = recorder;
+        recorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0 && ws.readyState === WebSocket.OPEN) {
+            ws.send(event.data);
+          }
+        };
+        recorder.start(250);
+        keepAliveRef.current = setInterval(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: "KeepAlive" }));
+          }
+        }, 8000);
+        setStatus("listening");
+      };
+
+      ws.onmessage = (event) => {
+        let data: {
+          type?: string;
+          is_final?: boolean;
+          channel?: { alternatives?: Array<{ transcript?: string }> };
+        };
+        try {
+          data = JSON.parse(event.data as string);
+        } catch {
+          return;
+        }
+        if (data.type !== "Results") return;
+        const text = data.channel?.alternatives?.[0]?.transcript?.trim() ?? "";
+        if (!text) return;
+        if (data.is_final) cbRef.current.onFinal?.(text);
+        else cbRef.current.onInterim?.(text);
+      };
+
+      ws.onerror = () => {
+        if (!stoppingRef.current) fail("generic");
+      };
+
+      ws.onclose = () => {
+        // Cierre inesperado antes/durante la escucha (no provocado por stop).
+        if (!stoppingRef.current && socketRef.current === ws) fail("generic");
+      };
     },
     [cleanup],
   );
