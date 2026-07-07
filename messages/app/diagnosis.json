@@ -26,11 +26,7 @@
         "error": "No fue posible guardar."
       },
       "actions": {
-        "shareLink": "Generar enlace de autodiagnóstico",
-        "generatingLink": "Generando…",
-        "materialize": "Aplicar diagnóstico",
-        "materializing": "Aplicando…",
-        "materialized": "Se generó el RAT y se actualizó el checklist DPC."
+        "shareLink": "Generar enlace de autodiagnóstico"
       },
       "shareLink": {
         "title": "Enlace de autodiagnóstico generado",

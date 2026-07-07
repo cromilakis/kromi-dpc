@@ -4,7 +4,6 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { PageHeader } from "@/components/app/shell";
 import { DiagnosisManager } from "@/components/interview/diagnosis-manager";
-import { StatusBadge } from "@/components/ui";
 import type { AppliesWhen } from "@/lib/interview/applicability";
 import { buildComplianceQuestions, type ControlLike } from "@/lib/interview/questions";
 import { loadInterviewGuide } from "@/lib/interview/load-guide.server";
@@ -103,13 +102,6 @@ export default async function DiagnosisPage({
         eyebrow={t("eyebrow", { company: companyRes.data.name })}
         title={t("title")}
         description={t("description")}
-        actions={
-          assessmentRes.data ? (
-            <StatusBadge pill variant="neutral">
-              {t("cycleBadge", { cycle: assessmentRes.data.cycle })}
-            </StatusBadge>
-          ) : null
-        }
       />
 
       <DiagnosisManager
@@ -120,6 +112,7 @@ export default async function DiagnosisPage({
         initialAnswers={session?.answers ?? null}
         companyFactors={companyRes.data.factors ?? []}
         guide={guide}
+        cycle={assessmentRes.data?.cycle ?? null}
       />
     </>
   );

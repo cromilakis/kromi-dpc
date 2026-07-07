@@ -14,7 +14,6 @@ import type { DiagnosisAnswers } from "@/lib/interview/answers-schema";
 import type { GuideDomain } from "@/lib/interview/guide";
 import { normalizeAnswers } from "@/lib/interview/normalize-answers";
 import type { ComplianceQuestion } from "@/lib/interview/questions";
-import type { RatActivity } from "@/lib/interview/rat-schema";
 import { applyAnswer } from "@/lib/interview/script/engine";
 import { RAT_SCRIPT } from "@/lib/interview/script/rat-script";
 import { ComplianceForm } from "./compliance-form";
@@ -36,19 +35,13 @@ import { RatForm } from "./rat-form";
 type SessionStatus = "draft" | "in_progress" | "submitted" | "reviewed";
 type SaveState = "idle" | "saving" | "saved" | "error";
 type ShareState = "idle" | "loading" | "error";
-type MaterializeState = "idle" | "loading" | "done" | "error";
 
-/** Botón-icono de la barra de acciones (32px, cuadrado). Clases completas —
- * sin componer con Button — porque `cn` no dedupea (sin tailwind-merge). */
-// Botones del toolbar del diagnóstico (icono + texto).
+/** Botón de la barra superior del diagnóstico (icono + texto). Clases completas
+ * — sin componer con Button — porque `cn` no dedupea (sin tailwind-merge). */
 const TEXT_BTN =
   "inline-flex h-32 shrink-0 cursor-pointer items-center gap-6 px-12 " +
   "rounded-buttons border border-slate bg-white text-body-sm text-ink transition-colors " +
   "hover:bg-ash disabled:pointer-events-none disabled:opacity-60";
-const TEXT_BTN_PRIMARY =
-  "inline-flex h-32 shrink-0 cursor-pointer items-center gap-6 px-12 " +
-  "rounded-buttons border border-ink bg-ink text-body-sm text-white transition-colors " +
-  "hover:bg-ink/90 disabled:pointer-events-none disabled:opacity-60";
 
 export function DiagnosisManager({
   companyId,
@@ -58,6 +51,7 @@ export function DiagnosisManager({
   initialAnswers,
   companyFactors,
   guide,
+  cycle,
 }: {
   companyId: string;
   sessionId: string | null;
@@ -66,6 +60,7 @@ export function DiagnosisManager({
   initialAnswers: unknown;
   companyFactors: string[];
   guide: GuideDomain[];
+  cycle: number | null;
 }) {
   const t = useTranslations("app.diagnosis");
   const tErrors = useTranslations("app.diagnosis.errors");
@@ -89,9 +84,6 @@ export function DiagnosisManager({
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const [materializeState, setMaterializeState] = useState<MaterializeState>("idle");
-  const [materializeError, setMaterializeError] = useState<InterviewActionError | null>(null);
-
   // Autosave con debounce: se omite en el primer render (esos `answers` ya
   // son los que trajo el server) y cuando todavía no existe sesión. El
   // estado "saving" se marca en `updateAnswers` (evento del usuario), no aquí
@@ -108,15 +100,21 @@ export function DiagnosisManager({
     const timer = setTimeout(() => {
       void (async () => {
         const result = await saveDiagnosisDraft(sessionId, answers);
-        if (result.ok) {
-          setSaveState("saved");
-          setSaveError(null);
-          // El server marca la sesión 'in_progress' en cada guardado exitoso
-          // (incluso si ya estaba 'reviewed' tras una materialización previa).
-          setSessionStatus("in_progress");
-        } else {
+        if (!result.ok) {
           setSaveState("error");
           setSaveError(result.error);
+          return;
+        }
+        setSaveError(null);
+        // Flujo tipo encuesta: se aplica automáticamente tras guardar — el
+        // diagnóstico se vuelca al checklist DPC y al RAT oficial sin botón. Si
+        // la materialización falla (p. ej. borrador aún incompleto) se conserva
+        // el guardado y el estado 'in_progress'; no se interrumpe al usuario.
+        const applied = await materializeDiagnosis(sessionId);
+        setSaveState("saved");
+        setSessionStatus(applied.ok ? "reviewed" : "in_progress");
+        if (!applied.ok) {
+          console.warn("[diagnosis] autoaplicar falló:", applied.error);
         }
       })();
     }, 1200);
@@ -211,22 +209,6 @@ export function DiagnosisManager({
     void navigator.clipboard.writeText(absolute).then(() => setCopied(true));
   }
 
-  function handleMaterialize() {
-    if (!sessionId) return;
-    setMaterializeState("loading");
-    setMaterializeError(null);
-    void (async () => {
-      const result = await materializeDiagnosis(sessionId);
-      if (result.ok) {
-        setMaterializeState("done");
-        setSessionStatus("reviewed");
-      } else {
-        setMaterializeState("error");
-        setMaterializeError(result.error);
-      }
-    })();
-  }
-
   if (!sessionId) {
     return (
       <Card className="p-32 text-center">
@@ -248,58 +230,50 @@ export function DiagnosisManager({
     );
   }
 
-  // Toolbar del diagnóstico (estado + acciones + autoguardado). Encabeza la
-  // vista: estado de la sesión, enlace de autodiagnóstico, aplicar y autosave.
+  // Barra superior del diagnóstico: ciclo + estado + enlace de autodiagnóstico +
+  // autoguardado. Ya no hay botón "Aplicar" — el diagnóstico se aplica solo tras
+  // guardar (flujo tipo encuesta), así que la barra queda junto a la pill de ciclo.
   const toolbar = (
-    <Card className="flex flex-wrap items-center justify-between gap-12">
+    <div className="flex flex-wrap items-center justify-between gap-12">
       <div className="flex flex-wrap items-center gap-8">
-          {sessionStatus ? (
-            <StatusBadge pill variant="neutral">
-              {t(`status.${sessionStatus}`)}
-            </StatusBadge>
-          ) : null}
-          {/* Acciones del diagnóstico (icono + texto), al costado del estado. */}
-          <button
-            type="button"
-            onClick={handleShareLink}
-            disabled={shareState === "loading"}
-            title={t("actions.shareLink")}
-            className={TEXT_BTN}
-          >
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-            </svg>
-            {t("actions.shareLink")}
-          </button>
-          <button
-            type="button"
-            onClick={handleMaterialize}
-            disabled={materializeState === "loading"}
-            title={t("actions.materialize")}
-            className={TEXT_BTN_PRIMARY}
-          >
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <path d="m9 11 3 3L22 4" />
-            </svg>
-            {t("actions.materialize")}
-          </button>
-        </div>
-        <p
-          role="status"
-          aria-live="polite"
-          className="text-caption leading-caption text-carbon"
+        {cycle !== null ? (
+          <StatusBadge pill variant="neutral">
+            {t("cycleBadge", { cycle })}
+          </StatusBadge>
+        ) : null}
+        {sessionStatus ? (
+          <StatusBadge pill variant="neutral">
+            {t(`status.${sessionStatus}`)}
+          </StatusBadge>
+        ) : null}
+        <button
+          type="button"
+          onClick={handleShareLink}
+          disabled={shareState === "loading"}
+          title={t("actions.shareLink")}
+          className={TEXT_BTN}
         >
-          {saveState === "saving" ? t("autosave.saving") : null}
-          {saveState === "saved" ? t("autosave.saved") : null}
-          {saveState === "error" ? (
-            <span className="text-danger-red">
-              {saveError ? tErrors(saveError) : t("autosave.error")}
-            </span>
-          ) : null}
-        </p>
-    </Card>
+          <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          {t("actions.shareLink")}
+        </button>
+      </div>
+      <p
+        role="status"
+        aria-live="polite"
+        className="text-caption leading-caption text-carbon"
+      >
+        {saveState === "saving" ? t("autosave.saving") : null}
+        {saveState === "saved" ? t("autosave.saved") : null}
+        {saveState === "error" ? (
+          <span className="text-danger-red">
+            {saveError ? tErrors(saveError) : t("autosave.error")}
+          </span>
+        ) : null}
+      </p>
+    </div>
   );
 
   return (
@@ -332,17 +306,6 @@ export function DiagnosisManager({
             </div>
           </div>
         </Card>
-      ) : null}
-
-      {materializeError ? (
-        <p role="alert" className="text-caption leading-caption text-danger-red">
-          {tErrors(materializeError)}
-        </p>
-      ) : null}
-      {materializeState === "done" ? (
-        <p role="status" className="text-caption leading-caption text-success-green">
-          {t("actions.materialized")}
-        </p>
       ) : null}
 
       {/* Entrevista guiada (modo principal): guion determinista de opción
