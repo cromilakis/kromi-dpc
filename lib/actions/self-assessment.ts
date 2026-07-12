@@ -1,15 +1,20 @@
 "use server";
 
 import { headers } from "next/headers";
+import { provisionCompany } from "@/lib/companies/provision.server";
 import { formatRut } from "@/lib/companies/rut";
 import type { SizeTier } from "@/lib/companies/schema";
-import { diagnosisLeadSchema } from "@/lib/self-assessment/lead-schema";
+import {
+  diagnosisLeadSchema,
+  registrationLeadSchema,
+} from "@/lib/self-assessment/lead-schema";
 import {
   computeServiceUf,
   serviceChargeClp,
 } from "@/lib/self-assessment/pricing";
 import { getStripe, StripeError } from "@/lib/stripe/client";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import type { z } from "zod";
 
 type DiagnosisLead = z.infer<typeof diagnosisLeadSchema>;
@@ -244,6 +249,152 @@ export async function startDiagnosisCheckout(
     return { ok: true, url: session.url };
   } catch (cause) {
     console.error("[diagnosis-lead] startDiagnosisCheckout no disponible:", cause);
+    return { ok: false, error: "unavailable" };
+  }
+}
+
+export type RegisterAndStartCheckoutResult =
+  | { ok: true; url: string }
+  | { ok: false; error: "validation" | "account_exists" | "disabled" | "unavailable" };
+
+/**
+ * Registro ANTES de pagar (supersede a `startDiagnosisCheckout` para
+ * micro/pequeña; enterprise sigue con `submitDiagnosisLead`, bajo
+ * cotización). Crea el usuario auth confirmado, aprovisiona la empresa,
+ * vincula al usuario como miembro activo, guarda el lead con `company_id` y
+ * abre la Checkout Session. El correo es obligatorio (es la identidad de la
+ * cuenta): si falta, se rechaza como 'validation' antes de tocar auth/DB.
+ *
+ * El sign-in automático (cookies) NO es bloqueante: si falla, el usuario
+ * puede iniciar sesión manualmente igual (la cuenta y el pago ya quedaron).
+ */
+export async function registerAndStartCheckout(
+  input: unknown,
+): Promise<RegisterAndStartCheckoutResult> {
+  const parsed = registrationLeadSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "validation" };
+  const data = parsed.data;
+  if (data.website) return { ok: false, error: "validation" }; // honeypot
+  if (data.sizeTier === "enterprise") return { ok: false, error: "validation" };
+  if (!data.contactEmail) return { ok: false, error: "validation" }; // identidad de la cuenta
+
+  const amountClp = serviceChargeClp(computeServiceUf(data.sizeTier, data.factors));
+
+  try {
+    const admin = createAdminClient();
+
+    // 1) Usuario auth confirmado. Si el email ya existe -> account_exists.
+    const created = await admin.auth.admin.createUser({
+      email: data.contactEmail,
+      password: data.password,
+      email_confirm: true,
+    });
+    if (created.error || !created.data.user) {
+      const exists =
+        created.error?.code === "email_exists" ||
+        /already.*registered|exists/i.test(created.error?.message ?? "");
+      if (exists) return { ok: false, error: "account_exists" };
+      console.error("[register] createUser falló:", created.error?.message);
+      return { ok: false, error: "unavailable" };
+    }
+    const authUserId = created.data.user.id;
+
+    // 2) Provisiona la empresa (service-role).
+    const prov = await provisionCompany(admin, {
+      name: data.name,
+      rut: data.rut,
+      sectorCode: data.sectorCode,
+      sizeTier: data.sizeTier,
+      factors: [...data.factors],
+      contact: {
+        name: data.contactName,
+        email: data.contactEmail ?? null,
+        phone: data.contactPhone ?? null,
+      },
+      preliminaryPanorama: data.panorama ?? null,
+    });
+    if (!prov.ok) {
+      console.error("[register] provisionCompany falló:", prov.error);
+      return {
+        ok: false,
+        error: prov.error === "rutTaken" ? "unavailable" : prov.error,
+      };
+    }
+
+    // 3) company_members active (sin invited_by: no hay consultor).
+    const { error: memberError } = await admin.from("company_members").insert({
+      user_id: authUserId,
+      company_id: prov.companyId,
+      invited_by: null,
+      status: "active",
+    });
+    if (memberError) {
+      console.error("[register] company_members:", memberError.message);
+      return { ok: false, error: "unavailable" };
+    }
+
+    // 4) Inserta el lead vinculado (reusa buildLeadRow + company_id + amount).
+    const { data: lead, error: leadError } = await admin
+      .from("self_assessments")
+      .insert({ ...buildLeadRow(data), amount_clp: amountClp, company_id: prov.companyId })
+      .select("id")
+      .single();
+    if (leadError || !lead) {
+      console.error("[register] lead:", leadError?.message);
+      return { ok: false, error: "unavailable" };
+    }
+
+    // 5) Inicia sesión (cookies) con el cliente server.
+    const supabase = await createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: data.contactEmail,
+      password: data.password,
+    });
+    if (signInError) console.warn("[register] auto sign-in falló:", signInError.message);
+    // (no bloqueante: el usuario podrá iniciar sesión manualmente igual.)
+
+    // 6) Checkout Session (mismo armado que startDiagnosisCheckout).
+    let stripe;
+    try {
+      stripe = getStripe();
+    } catch (cause) {
+      if (cause instanceof StripeError) return { ok: false, error: "disabled" };
+      throw cause;
+    }
+    const origin = await resolveOrigin();
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        line_items: [
+          {
+            price_data: {
+              currency: "clp",
+              product_data: {
+                name: `Servicio DPC — ${data.name}`,
+                description:
+                  "Diagnóstico completo + propuesta de mitigación + certificación (IVA incluido).",
+              },
+              unit_amount: amountClp,
+            },
+            quantity: 1,
+          },
+        ],
+        customer_email: data.contactEmail ?? undefined,
+        metadata: { kind: "diagnosis_lead", lead_id: lead.id },
+        success_url: `${origin}/portal`,
+        cancel_url: `${origin}/portal`,
+      });
+    } catch (cause) {
+      console.error("[register] checkout:", cause);
+      return { ok: false, error: "unavailable" };
+    }
+    if (!session.url) return { ok: false, error: "unavailable" };
+
+    await admin.from("self_assessments").update({ stripe_session_id: session.id }).eq("id", lead.id);
+    return { ok: true, url: session.url };
+  } catch (cause) {
+    console.error("[register] registerAndStartCheckout no disponible:", cause);
     return { ok: false, error: "unavailable" };
   }
 }
