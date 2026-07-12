@@ -98,8 +98,8 @@ async function findPayment(
 /** Concilia el pago del lead público del diagnóstico (/self-assessment): marca
  * self_assessments.payment_status = 'paid'. Idempotente por el filtro
  * `eq('payment_status','pending')`. La Checkout Session la crea
- * lib/actions/self-assessment.ts#startDiagnosisCheckout con metadata
- * {kind:'diagnosis_lead', lead_id}. */
+ * lib/actions/self-assessment.ts#registerAndStartCheckout (o
+ * #resumeDiagnosisCheckout) con metadata {kind:'diagnosis_lead', lead_id}. */
 async function reconcileDiagnosisLead(
   session: Stripe.Checkout.Session,
   event: Stripe.Event,

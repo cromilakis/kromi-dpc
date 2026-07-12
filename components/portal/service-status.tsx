@@ -27,10 +27,19 @@ const SEVERITY_TAG: Record<Severity, string> = {
 export interface ServiceStatusProps {
   state: Exclude<PortalServiceState, "ready">;
   panorama: PreliminaryPanorama | null;
+  /**
+   * true cuando el cliente acaba de volver del Checkout de Stripe exitoso
+   * (`/portal?paid=1`, ver app/portal/page.tsx). En la ventana de carrera del
+   * webhook el estado sigue siendo "pending" (`service_paid_at` aún null): NO
+   * se debe mostrar el aviso de "completa tu pago" ni el botón de re-pago acá,
+   * porque un clic abriría una SEGUNDA Checkout Session → doble cobro.
+   */
+  justPaid?: boolean;
 }
 
-export function ServiceStatus({ state, panorama }: ServiceStatusProps) {
+export function ServiceStatus({ state, panorama, justPaid = false }: ServiceStatusProps) {
   const t = useTranslations("portal.service");
+  const tPaid = useTranslations("portal.paidNotice");
   const tLabel = useTranslations("diagnosis.severity.label");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +54,17 @@ export function ServiceStatus({ state, panorama }: ServiceStatusProps) {
       }
       window.location.href = result.url;
     });
+  }
+
+  if (state === "pending" && justPaid) {
+    return (
+      <Card className="flex flex-col items-start gap-12">
+        <p className="text-caption leading-caption tracking-caption text-carbon">
+          {tPaid("title")}
+        </p>
+        <p className="max-w-[52ch] text-body-sm text-metal">{tPaid("description")}</p>
+      </Card>
+    );
   }
 
   if (state === "pending") {

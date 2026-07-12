@@ -144,115 +144,6 @@ async function resolveOrigin(): Promise<string> {
   return "http://localhost:3000";
 }
 
-export type StartDiagnosisCheckoutResult =
-  | { ok: true; url: string }
-  | { ok: false; error: "validation" | "disabled" | "unavailable" };
-
-/**
- * Pago online al confirmar el diagnóstico (micro/pequeña, con precio
- * definitivo). Inserta el lead, crea una Stripe Checkout Session (hosted, modo
- * test) por el precio de LANZAMIENTO en CLP (bruto, IVA incluido) y devuelve la
- * URL para redirigir. El estado 'paid' NO se fija aquí ni en el redirect de
- * retorno: lo concilia el webhook verificado por firma (única fuente de verdad).
- *
- * Enterprise no paga online (bajo cotización): la UI no llama a esta action para
- * ese tramo; si llegara igual, se rechaza como 'validation'.
- *
- * Degradación con gracia: si Stripe está deshabilitado (sin key) el lead YA
- * quedó guardado; se devuelve 'disabled' y la UI cae al mensaje de "solicitud
- * recibida" (el consultor contactará), sin perder el lead.
- */
-export async function startDiagnosisCheckout(
-  input: unknown,
-): Promise<StartDiagnosisCheckoutResult> {
-  const parsed = diagnosisLeadSchema.safeParse(input);
-  if (!parsed.success) return { ok: false, error: "validation" };
-  const data = parsed.data;
-
-  // Honeypot: bot detectado → ok simulado sin insertar ni cobrar.
-  if (data.website) return { ok: false, error: "validation" };
-
-  // Enterprise es bajo cotización: no se cobra online.
-  if (data.sizeTier === "enterprise") return { ok: false, error: "validation" };
-
-  const amountClp = serviceChargeClp(computeServiceUf(data.sizeTier, data.factors));
-
-  try {
-    const admin = createAdminClient();
-
-    const { data: lead, error: insertError } = await admin
-      .from("self_assessments")
-      .insert({ ...buildLeadRow(data), amount_clp: amountClp })
-      .select("id")
-      .single();
-    if (insertError || !lead) {
-      console.error("[diagnosis-lead] insert (pago) falló:", insertError?.message);
-      return { ok: false, error: "unavailable" };
-    }
-
-    let stripe;
-    try {
-      stripe = getStripe();
-    } catch (cause) {
-      // Sin key: el lead ya quedó guardado; la UI cae al flujo sin pago.
-      if (cause instanceof StripeError) return { ok: false, error: "disabled" };
-      throw cause;
-    }
-
-    const origin = await resolveOrigin();
-
-    let session;
-    try {
-      session = await stripe.checkout.sessions.create({
-        mode: "payment",
-        line_items: [
-          {
-            price_data: {
-              currency: "clp",
-              product_data: {
-                name: `Servicio DPC — ${data.name}`,
-                description:
-                  "Diagnóstico completo + propuesta de mitigación + certificación (IVA incluido).",
-              },
-              // CLP zero-decimal: monto en pesos TAL CUAL, sin ×100.
-              unit_amount: amountClp,
-            },
-            quantity: 1,
-          },
-        ],
-        customer_email: data.contactEmail ?? undefined,
-        metadata: { kind: "diagnosis_lead", lead_id: lead.id },
-        success_url: `${origin}/self-assessment/pago?status=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/self-assessment/pago?status=cancel`,
-      });
-    } catch (cause) {
-      console.error("[diagnosis-lead] checkout.sessions.create falló:", cause);
-      return { ok: false, error: "unavailable" };
-    }
-    if (!session.url) {
-      console.error("[diagnosis-lead] Stripe no devolvió session.url");
-      return { ok: false, error: "unavailable" };
-    }
-
-    const { error: sessionIdError } = await admin
-      .from("self_assessments")
-      .update({ stripe_session_id: session.id })
-      .eq("id", lead.id);
-    if (sessionIdError) {
-      console.error(
-        "[diagnosis-lead] persistir stripe_session_id falló:",
-        sessionIdError.message,
-      );
-      return { ok: false, error: "unavailable" };
-    }
-
-    return { ok: true, url: session.url };
-  } catch (cause) {
-    console.error("[diagnosis-lead] startDiagnosisCheckout no disponible:", cause);
-    return { ok: false, error: "unavailable" };
-  }
-}
-
 export type ResumeDiagnosisCheckoutResult =
   | { ok: true; url: string }
   | {
@@ -333,7 +224,7 @@ export async function resumeDiagnosisCheckout(): Promise<ResumeDiagnosisCheckout
         ],
         customer_email: lead.contact_email ?? undefined,
         metadata: { kind: "diagnosis_lead", lead_id: lead.id },
-        success_url: `${origin}/portal`,
+        success_url: `${origin}/portal?paid=1`,
         cancel_url: `${origin}/portal`,
       });
     } catch (cause) {
@@ -366,9 +257,9 @@ export type RegisterAndStartCheckoutResult =
   | { ok: false; error: "validation" | "account_exists" | "disabled" | "unavailable" };
 
 /**
- * Registro ANTES de pagar (supersede a `startDiagnosisCheckout` para
- * micro/pequeña; enterprise sigue con `submitDiagnosisLead`, bajo
- * cotización). Crea el usuario auth confirmado, aprovisiona la empresa,
+ * Registro ANTES de pagar (único camino de pago online para micro/pequeña;
+ * enterprise sigue con `submitDiagnosisLead`, bajo cotización). Crea el
+ * usuario auth confirmado, aprovisiona la empresa,
  * vincula al usuario como miembro activo, guarda el lead con `company_id` y
  * abre la Checkout Session. El correo es obligatorio (es la identidad de la
  * cuenta): si falta, se rechaza como 'validation' antes de tocar auth/DB.
@@ -483,7 +374,7 @@ export async function registerAndStartCheckout(
     if (signInError) console.warn("[register] auto sign-in falló:", signInError.message);
     // (no bloqueante: el usuario podrá iniciar sesión manualmente igual.)
 
-    // 6) Checkout Session (mismo armado que startDiagnosisCheckout).
+    // 6) Checkout Session (mismo armado que resumeDiagnosisCheckout).
     let stripe;
     try {
       stripe = getStripe();
@@ -512,7 +403,7 @@ export async function registerAndStartCheckout(
         ],
         customer_email: data.contactEmail ?? undefined,
         metadata: { kind: "diagnosis_lead", lead_id: lead.id },
-        success_url: `${origin}/portal`,
+        success_url: `${origin}/portal?paid=1`,
         cancel_url: `${origin}/portal`,
       });
     } catch (cause) {

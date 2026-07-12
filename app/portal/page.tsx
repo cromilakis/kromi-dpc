@@ -45,20 +45,19 @@ export default async function PortalPage({
     evidenceSlots,
     t,
     tHome,
-    tPaid,
     params,
   ] = await Promise.all([
     loadClientDashboard(),
     loadClientEvidences(),
     getTranslations("portal.dashboard"),
     getTranslations("portal.home"),
-    getTranslations("portal.paidNotice"),
     searchParams,
   ]);
   // El estado real de pago lo fija el webhook (fuente de verdad, tarea 5),
   // NUNCA este query param del redirect de retorno (manipulable por el
-  // cliente): acá solo se usa para mostrar un aviso transitorio.
-  const showPaidNotice = params.paid === "1";
+  // cliente): acá solo se usa para decidir qué aviso transitorio mostrar
+  // mientras el estado sigue "pending" (ver ServiceStatus.justPaid).
+  const justPaid = params.paid === "1";
 
   const today = new Date().toISOString().slice(0, 10);
   const standing = certificateStanding(cert, today);
@@ -79,17 +78,8 @@ export default async function PortalPage({
         {tHome("title", { company: company?.name ?? "" })}
       </h1>
 
-      {showPaidNotice ? (
-        <div className="mb-16 rounded-lg border border-stone bg-ash p-16">
-          <p className="text-body-sm font-medium text-ink">{tPaid("title")}</p>
-          <p className="mt-4 text-caption leading-caption tracking-caption text-carbon">
-            {tPaid("description")}
-          </p>
-        </div>
-      ) : null}
-
       {state !== "ready" ? (
-        <ServiceStatus state={state} panorama={panorama} />
+        <ServiceStatus state={state} panorama={panorama} justPaid={justPaid} />
       ) : (
         <>
           <div className="grid gap-16 sm:grid-cols-2">
