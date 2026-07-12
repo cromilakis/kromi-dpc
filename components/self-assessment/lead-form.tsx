@@ -11,9 +11,10 @@ import {
   type SizeTier,
 } from "@/lib/companies/schema";
 import {
-  startDiagnosisCheckout,
+  registerAndStartCheckout,
   submitDiagnosisLead,
 } from "@/lib/actions/self-assessment";
+import type { PreliminaryPanorama } from "@/lib/self-assessment/panorama";
 import {
   computeServiceUf,
   formatClp,
@@ -33,6 +34,7 @@ type ErrorField =
   | "contactName"
   | "contactEmail"
   | "contactPhone"
+  | "password"
   | "sectorCode";
 
 /** Prefijo fijo del teléfono (móvil chileno): +569 + 8 dígitos. */
@@ -46,6 +48,8 @@ export interface DiagnosisLeadFormProps {
   factors: ComplexityFactor[];
   sectorCode: string;
   diagnosis: { riskLevel: RiskLevel; totalBreaches: number };
+  /** Panorama preliminar (calculado por el wizard) para el registro previo al pago. */
+  panorama: PreliminaryPanorama;
   onBack: () => void;
 }
 
@@ -63,6 +67,7 @@ export function DiagnosisLeadForm({
   factors,
   sectorCode,
   diagnosis,
+  panorama,
   onBack,
 }: DiagnosisLeadFormProps) {
   const t = useTranslations("diagnosis.lead");
@@ -73,17 +78,23 @@ export function DiagnosisLeadForm({
   const [contactName, setContactName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
+  const [password, setPassword] = useState("");
 
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<ErrorField, boolean>>
   >({});
   const [submitError, setSubmitError] = useState(false);
+  const [accountExists, setAccountExists] = useState(false);
   const [isPending, startTransition] = useTransition();
   const topRef = useRef<HTMLDivElement>(null);
   const honeypotRef = useRef<HTMLInputElement>(null);
   const [honeypot, setHoneypot] = useState("");
 
   const selectedSector = sectors.find((s) => s.code === sectorCode);
+
+  // Micro/pequeña pagan online al confirmar (precio definitivo); enterprise es
+  // bajo cotización → solo se registra el lead.
+  const paysOnline = sizeTier !== "enterprise";
 
   function handleRutBlur() {
     const value = rut.trim();
@@ -127,6 +138,17 @@ export function DiagnosisLeadForm({
       errors.contactPhone = true;
     }
 
+    // Micro/pequeña se registran (cuenta) antes de pagar: correo obligatorio
+    // (es la identidad de la cuenta) y contraseña mínima de 8 caracteres.
+    if (paysOnline) {
+      if (!contactEmail.trim()) {
+        errors.contactEmail = true;
+      }
+      if (password.length < 8) {
+        errors.password = true;
+      }
+    }
+
     const cls = classificationSchema.safeParse({ sectorCode, sizeTier });
     if (!cls.success) {
       for (const issue of cls.error.issues) {
@@ -145,12 +167,9 @@ export function DiagnosisLeadForm({
     topRef.current?.focus();
   }
 
-  // Micro/pequeña pagan online al confirmar (precio definitivo); enterprise es
-  // bajo cotización → solo se registra el lead.
-  const paysOnline = sizeTier !== "enterprise";
-
   function submit() {
     setSubmitError(false);
+    setAccountExists(false);
     const payload = {
       name,
       rut,
@@ -168,14 +187,25 @@ export function DiagnosisLeadForm({
     };
     startTransition(async () => {
       if (paysOnline) {
-        const res = await startDiagnosisCheckout(payload);
+        // Registra la cuenta ANTES de pagar (correo = identidad de la cuenta).
+        const res = await registerAndStartCheckout({
+          ...payload,
+          password,
+          panorama,
+        });
         if (res.ok) {
           // Redirige a la página de pago alojada por Stripe.
           window.location.href = res.url;
           return;
         }
-        // Stripe deshabilitado (sin key): el lead YA quedó guardado; caemos al
-        // mensaje de "solicitud recibida" en vez de fallar.
+        if (res.error === "account_exists") {
+          setFieldErrors((prev) => ({ ...prev, contactEmail: true }));
+          setAccountExists(true);
+          setSubmitError(true);
+          return;
+        }
+        // Stripe deshabilitado (sin key): la cuenta y el lead YA quedaron
+        // guardados; caemos al mensaje de "solicitud recibida" en vez de fallar.
         if (res.error === "disabled") {
           setPhase("done");
           topRef.current?.focus();
@@ -328,7 +358,7 @@ export function DiagnosisLeadForm({
             role="alert"
             className="mt-16 rounded-cards border border-danger-red/15 bg-[#f6e9e8] px-16 py-12 text-[13px] leading-[1.5] text-danger-red"
           >
-            {t("confirm.error")}
+            {accountExists ? t("confirm.accountExists") : t("confirm.error")}
           </p>
         )}
 
@@ -468,6 +498,25 @@ export function DiagnosisLeadForm({
                   />
                 </div>
               </Field>
+              {paysOnline && (
+                <Field
+                  label={t("form.passwordLabel")}
+                  htmlFor="lead-password"
+                  error={fieldError("password")}
+                  hint={t("form.passwordHint")}
+                  className="sm:col-span-2"
+                >
+                  <Input
+                    id="lead-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={t("form.passwordPlaceholder")}
+                    autoComplete="new-password"
+                    aria-invalid={fieldErrors.password ? true : undefined}
+                  />
+                </Field>
+              )}
             </div>
           </fieldset>
         </div>

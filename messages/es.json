@@ -540,6 +540,9 @@
         "contactEmailPlaceholder": "nombre@empresa.cl",
         "contactPhoneLabel": "Teléfono",
         "contactPhonePlaceholder": "12345678",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "Mínimo 8 caracteres",
+        "passwordHint": "Con esta contraseña entrarás a tu portal",
         "sectorLegend": "Rubro",
         "sectorHint": "Elige el que mejor describe tu operación.",
         "sizeLegend": "Tamaño de la empresa",
@@ -571,6 +574,7 @@
           "contactName": "Ingresa un nombre de contacto.",
           "contactEmail": "Ingresa un correo o teléfono de contacto.",
           "contactPhone": "Ingresa los 8 dígitos del teléfono.",
+          "password": "Elige una contraseña de al menos 8 caracteres.",
           "sectorCode": "Elige un rubro.",
           "sizeTier": "Elige el tamaño."
         }
@@ -595,7 +599,8 @@
         "payButton": "Pagar ahora",
         "submitting": "Procesando…",
         "back": "Volver",
-        "error": "No pudimos procesar tu solicitud. Inténtalo nuevamente o escríbenos por WhatsApp."
+        "error": "No pudimos procesar tu solicitud. Inténtalo nuevamente o escríbenos por WhatsApp.",
+        "accountExists": "Ya existe una cuenta con ese correo. Inicia sesión para continuar."
       },
       "done": {
         "title": "Recibimos tu solicitud",

@@ -20,6 +20,7 @@ import { DiagnosisResultPanel } from "./diagnosis-result";
 import { DiagnosisLeadForm } from "./lead-form";
 import type { WizardSector } from "@/components/companies/new-company-wizard";
 import type { ComplexityFactor, SizeTier } from "@/lib/companies/schema";
+import { buildPreliminaryPanorama } from "@/lib/self-assessment/panorama";
 
 /** Tramo del cuestionario (S-001) → tramo de empresa (micro/small/enterprise). */
 const SIZE_MAP: Record<string, SizeTier> = {
@@ -240,6 +241,13 @@ export function DiagnosisWizard({ sectors }: { sectors: WizardSector[] }) {
     return { sizeTier, factors, sectorCode };
   }, [screeningAnswers, result]);
 
+  // Panorama preliminar (para el registro/portal): se calcula una sola vez
+  // acá, en vez de que el formulario del lead conozca lib/legal.
+  const panorama = useMemo(
+    () => (result ? buildPreliminaryPanorama(result) : null),
+    [result],
+  );
+
   // ── Focus management ────────────────────────────────────────────────
   useEffect(() => {
     questionRef.current?.focus();
@@ -366,6 +374,7 @@ export function DiagnosisWizard({ sectors }: { sectors: WizardSector[] }) {
             riskLevel: result.riskLevel,
             totalBreaches: result.totalBreaches,
           }}
+          panorama={panorama ?? buildPreliminaryPanorama(result)}
           onBack={() => setShowLead(false)}
         />
       );
