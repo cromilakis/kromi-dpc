@@ -268,6 +268,26 @@ export type RegisterAndStartCheckoutResult =
  * El sign-in automático (cookies) NO es bloqueante: si falla, el usuario
  * puede iniciar sesión manualmente igual (la cuenta y el pago ya quedaron).
  */
+/**
+ * Compensación best-effort: borra el usuario auth recién creado cuando un paso
+ * posterior falla ANTES de insertar su fila en `company_members` (FK
+ * company_members.user_id → auth.users impediría el borrado si esa fila ya
+ * existe). Nunca lanza: solo loguea si el borrado falla.
+ */
+async function cleanupAuthUser(
+  admin: ReturnType<typeof createAdminClient>,
+  authUserId: string,
+): Promise<void> {
+  try {
+    const { error } = await admin.auth.admin.deleteUser(authUserId);
+    if (error) {
+      console.error("[register] cleanup deleteUser falló:", error.message);
+    }
+  } catch (cause) {
+    console.error("[register] cleanup deleteUser lanzó:", cause);
+  }
+}
+
 export async function registerAndStartCheckout(
   input: unknown,
 ): Promise<RegisterAndStartCheckoutResult> {
@@ -315,6 +335,7 @@ export async function registerAndStartCheckout(
     });
     if (!prov.ok) {
       console.error("[register] provisionCompany falló:", prov.error);
+      await cleanupAuthUser(admin, authUserId);
       return {
         ok: false,
         error: prov.error === "rutTaken" ? "unavailable" : prov.error,
@@ -330,6 +351,7 @@ export async function registerAndStartCheckout(
     });
     if (memberError) {
       console.error("[register] company_members:", memberError.message);
+      await cleanupAuthUser(admin, authUserId);
       return { ok: false, error: "unavailable" };
     }
 
@@ -391,7 +413,15 @@ export async function registerAndStartCheckout(
     }
     if (!session.url) return { ok: false, error: "unavailable" };
 
-    await admin.from("self_assessments").update({ stripe_session_id: session.id }).eq("id", lead.id);
+    const { error: sessionIdError } = await admin
+      .from("self_assessments")
+      .update({ stripe_session_id: session.id })
+      .eq("id", lead.id);
+    if (sessionIdError) {
+      console.error("[register] persistir stripe_session_id falló:", sessionIdError.message);
+      return { ok: false, error: "unavailable" };
+    }
+
     return { ok: true, url: session.url };
   } catch (cause) {
     console.error("[register] registerAndStartCheckout no disponible:", cause);
