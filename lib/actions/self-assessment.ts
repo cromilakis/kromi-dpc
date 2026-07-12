@@ -253,6 +253,114 @@ export async function startDiagnosisCheckout(
   }
 }
 
+export type ResumeDiagnosisCheckoutResult =
+  | { ok: true; url: string }
+  | {
+      ok: false;
+      error: "unauthorized" | "not_found" | "already_paid" | "disabled" | "unavailable";
+    };
+
+/**
+ * Re-pago del lead del diagnóstico para un cliente que ya se registró
+ * (`registerAndStartCheckout`) pero abandonó/canceló el Checkout de Stripe
+ * (spec company-accounts fase 2, tarea 9 — portal estado A "pago pendiente").
+ * NO inserta un lead nuevo: reabre una Checkout Session sobre el `self_assessments`
+ * ya existente de la empresa del usuario autenticado.
+ *
+ * Resuelve la empresa con el cliente autenticado (RLS de `company_client_view`
+ * acota a `current_company_id()`); el lead en sí se busca con `createAdminClient()`
+ * porque el cliente no tiene SELECT sobre `self_assessments` (solo el consultor y
+ * el service role la leen).
+ *
+ * "Ya pagado": si `company_client_view.service_paid_at` ya está fijado (fuente
+ * de verdad proyectada por el webhook), se rechaza como 'already_paid' sin
+ * tocar Stripe — evita cobrar dos veces por una carrera entre el webhook y un
+ * clic tardío en el botón de pago.
+ */
+export async function resumeDiagnosisCheckout(): Promise<ResumeDiagnosisCheckoutResult> {
+  try {
+    const supabase = await createClient();
+    const { data: company } = await supabase
+      .from("company_client_view")
+      .select("id,name,service_paid_at")
+      .maybeSingle();
+    if (!company?.id) return { ok: false, error: "unauthorized" };
+    if (company.service_paid_at) return { ok: false, error: "already_paid" };
+
+    const admin = createAdminClient();
+    const { data: lead, error: leadError } = await admin
+      .from("self_assessments")
+      .select("id,amount_clp,contact_email,payment_status")
+      .eq("company_id", company.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (leadError) {
+      console.error("[resume-checkout] lookup del lead falló:", leadError.message);
+      return { ok: false, error: "unavailable" };
+    }
+    if (!lead) return { ok: false, error: "not_found" };
+    if (lead.payment_status === "paid") return { ok: false, error: "already_paid" };
+    if (!lead.amount_clp) return { ok: false, error: "not_found" };
+
+    let stripe;
+    try {
+      stripe = getStripe();
+    } catch (cause) {
+      if (cause instanceof StripeError) return { ok: false, error: "disabled" };
+      throw cause;
+    }
+
+    const origin = await resolveOrigin();
+
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        line_items: [
+          {
+            price_data: {
+              currency: "clp",
+              product_data: {
+                name: `Servicio DPC — ${company.name}`,
+                description:
+                  "Diagnóstico completo + propuesta de mitigación + certificación (IVA incluido).",
+              },
+              unit_amount: lead.amount_clp,
+            },
+            quantity: 1,
+          },
+        ],
+        customer_email: lead.contact_email ?? undefined,
+        metadata: { kind: "diagnosis_lead", lead_id: lead.id },
+        success_url: `${origin}/portal`,
+        cancel_url: `${origin}/portal`,
+      });
+    } catch (cause) {
+      console.error("[resume-checkout] checkout.sessions.create falló:", cause);
+      return { ok: false, error: "unavailable" };
+    }
+    if (!session.url) return { ok: false, error: "unavailable" };
+
+    const { error: sessionIdError } = await admin
+      .from("self_assessments")
+      .update({ stripe_session_id: session.id })
+      .eq("id", lead.id);
+    if (sessionIdError) {
+      console.error(
+        "[resume-checkout] persistir stripe_session_id falló:",
+        sessionIdError.message,
+      );
+      return { ok: false, error: "unavailable" };
+    }
+
+    return { ok: true, url: session.url };
+  } catch (cause) {
+    console.error("[resume-checkout] resumeDiagnosisCheckout no disponible:", cause);
+    return { ok: false, error: "unavailable" };
+  }
+}
+
 export type RegisterAndStartCheckoutResult =
   | { ok: true; url: string }
   | { ok: false; error: "validation" | "account_exists" | "disabled" | "unavailable" };

@@ -87,6 +87,22 @@
       "title": "Estamos confirmando tu pago…",
       "description": "Recibimos tu pago en Stripe; puede tardar unos segundos en reflejarse aquí. Actualiza la página en un momento."
     },
+    "service": {
+      "pendingTitle": "Completa tu pago para comenzar",
+      "pendingBody": "Recibimos tu registro, pero tu pago aún está pendiente. Completa el pago para que nuestro equipo prepare tu diagnóstico completo, propuesta y certificación.",
+      "payButton": "Completar pago",
+      "paying": "Redirigiendo a Stripe…",
+      "preparingTitle": "Pago recibido — estamos preparando tu diagnóstico",
+      "preparingBody": "Ya confirmamos tu pago. Nuestro equipo está preparando tu diagnóstico completo, propuesta de mitigación y certificación; te avisaremos cuando esté listo.",
+      "panoramaTitle": "Panorama preliminar",
+      "payErrors": {
+        "unauthorized": "Tu sesión no tiene una empresa asociada.",
+        "not_found": "No encontramos tu solicitud de diagnóstico.",
+        "already_paid": "Tu pago ya fue confirmado.",
+        "disabled": "El pago no está configurado todavía. Contacta a tu consultor.",
+        "unavailable": "No se pudo iniciar el pago. Intenta nuevamente."
+      }
+    },
     "evidences": {
       "title": "Tus evidencias",
       "subtitle": "Sube los documentos que respaldan cada control aplicable a tu empresa.",

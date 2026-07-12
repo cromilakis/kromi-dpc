@@ -53,6 +53,10 @@ export default async function PortalLayout({
       messages={{
         portal: messages.portal as AbstractIntlMessages,
         common: messages.common as AbstractIntlMessages,
+        // ServiceStatus (estado "preparing") reutiliza las labels de severidad
+        // del diagnóstico público (diagnosis.severity.label) para no duplicar
+        // el catálogo de textos.
+        diagnosis: messages.diagnosis as AbstractIntlMessages,
       }}
     >
       <div className="flex min-h-screen flex-col bg-white">

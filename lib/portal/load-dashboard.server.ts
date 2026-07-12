@@ -2,6 +2,7 @@ import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import { checklistProgress } from "@/lib/companies/display";
+import type { PreliminaryPanorama } from "@/lib/self-assessment/panorama";
 import type { Database } from "@/lib/supabase/types";
 
 /**
@@ -45,6 +46,16 @@ export interface ClientDashboard {
    * 3): el consultor la "publica" (status 'sent') al crearla, así que el
    * cliente nunca ve borradores. `null` si aún no hay ninguna publicada. */
   proposal: ClientDashboardProposal | null;
+  /** Fecha de pago del servicio (spec company-accounts fase 2, tarea 9):
+   * junto a `clientReadyAt` determina el estado A/B/C del portal vía
+   * `portalServiceState()`. */
+  servicePaidAt: string | null;
+  /** Fecha en que el consultor publicó el trabajo para el cliente (estado
+   * "ready" del portal). */
+  clientReadyAt: string | null;
+  /** Panorama preliminar del diagnóstico (estado "preparing"): jsonb de
+   * `company_client_view.preliminary_panorama`, casteado a su forma tipada. */
+  panorama: PreliminaryPanorama | null;
 }
 
 const EMPTY_PROGRESS = { evaluated: 0, total: 0, pct: 0 };
@@ -104,8 +115,19 @@ export async function loadClientDashboard(): Promise<ClientDashboard> {
             status: proposalRow.status,
           }
         : null,
+      servicePaidAt: company?.service_paid_at ?? null,
+      clientReadyAt: company?.client_ready_at ?? null,
+      panorama: (company?.preliminary_panorama as PreliminaryPanorama | null) ?? null,
     };
   } catch {
-    return { company: null, cert: null, progress: EMPTY_PROGRESS, proposal: null };
+    return {
+      company: null,
+      cert: null,
+      progress: EMPTY_PROGRESS,
+      proposal: null,
+      servicePaidAt: null,
+      clientReadyAt: null,
+      panorama: null,
+    };
   }
 }
