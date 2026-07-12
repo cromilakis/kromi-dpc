@@ -54,11 +54,12 @@ export async function Hero() {
           <p className="mx-auto mb-12 mt-36 text-[13px] font-semibold tracking-[0.2px] text-carbon">
             {t("hero.quoteLabel")}
           </p>
-          {/* Cotizar es el CTA primario (objetivo de negocio); la autoevaluación
-              gratis queda como alternativa secundaria (jerarquía 2026-07-04). */}
+          {/* Dos modalidades de evaluación: la asistida (agendar reunión con el
+              consultor por WhatsApp) es el CTA primario —objetivo de negocio—; la
+              autoevaluación gratis queda como alternativa secundaria. */}
           <div className="flex flex-wrap items-center justify-center gap-[10px]">
             <WhatsAppButton
-              message={t("whatsapp.quoteMessage")}
+              message={t("whatsapp.assistedMessage")}
               className="px-[22px] py-[13px] text-body"
             >
               {t("hero.ctaWhatsApp")}

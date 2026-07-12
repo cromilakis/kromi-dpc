@@ -1,86 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import { SectionHeading } from "@/components/ui";
-import { COMPLEMENTARY_DOMAINS, PRINCIPLE_DOMAINS, type DomainRef } from "./data";
+import { DomainsMesh, type MeshDomain } from "./domains-mesh";
 
 /**
- * Los 14 dominios (prototipo isLanding §DOMINIOS, anchor #dominios): dos grupos
- * con divisor de sección (label uppercase + línea flexible) y cards compactas
- * con nombre + una frase simple (clave i18n "simple", 2026-07-04). Reemplaza la
- * versión original con código + descripción legal por card, que abrumaba al
- * usuario no técnico; el detalle legal completo vive en la plataforma interna.
+ * Los 14 dominios (prototipo isLanding §DOMINIOS, anchor #dominios): heading +
+ * "malla de seguridad" interactiva (WebGL) — la lista de dominios a un lado y
+ * una malla de energía que envuelve un núcleo de información al otro. Al elegir
+ * un dominio, su color tiñe la escena. Los textos salen de i18n
+ * (landing.domains.mesh); el detalle legal completo vive en la plataforma interna.
  */
-
-interface DomainDividerProps {
-  label: string;
-  note: string;
-}
-
-function DomainDivider({ label, note }: DomainDividerProps) {
-  return (
-    <div className="mb-16 flex items-center gap-12">
-      <span className="text-caption font-semibold uppercase tracking-[0.4px] text-ink">
-        {label}
-      </span>
-      {/* Contraste AA en texto pequeño: carbon (≤13px). */}
-      <span className="text-caption font-medium text-carbon">{note}</span>
-      <span aria-hidden="true" className="h-px flex-1 bg-stone" />
-    </div>
-  );
-}
-
-interface DomainCardsProps {
-  domains: DomainRef[];
-  /** Traductor del namespace landing.domains (firma mínima, ver page.tsx). */
-  t: (key: string) => string;
-}
-
-function DomainCards({ domains, t }: DomainCardsProps) {
-  return (
-    <ul className="grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
-      {domains.map((domain) => (
-        <li
-          key={domain.code}
-          className="rounded-cards border border-stone bg-white p-[16px]"
-        >
-          <div className="mb-[6px] text-[15px] font-semibold tracking-[-0.2px] text-ink">
-            {t(`items.${domain.key}.name`)}
-          </div>
-          <p className="text-[13px] leading-[1.5] text-carbon">
-            {t(`items.${domain.key}.simple`)}
-          </p>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/**
- * Los complementarios como lista compacta (no cards): otra textura visual que
- * corta el "muro de tarjetas iguales" y jerarquiza — principios = núcleo (cards),
- * complementarios = obligaciones operativas (lista con divisores).
- */
-function DomainList({ domains, t }: DomainCardsProps) {
-  return (
-    <ul className="grid grid-cols-1 gap-x-40 sm:grid-cols-2">
-      {domains.map((domain) => (
-        <li
-          key={domain.code}
-          className="flex flex-col border-t border-ash py-[14px]"
-        >
-          <span className="text-[14px] font-semibold tracking-[-0.2px] text-ink">
-            {t(`items.${domain.key}.name`)}
-          </span>
-          <span className="mt-[3px] text-[13px] leading-[1.5] text-carbon">
-            {t(`items.${domain.key}.simple`)}
-          </span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export async function DomainsSection() {
   const t = await getTranslations("landing.domains");
+  const domains = t.raw("mesh.domains") as MeshDomain[];
 
   return (
     <section
@@ -95,16 +26,11 @@ export async function DomainsSection() {
         className="mb-48"
       />
 
-      <DomainDivider label={t("principlesLabel")} note={t("principlesNote")} />
-      <div className="mb-40">
-        <DomainCards domains={PRINCIPLE_DOMAINS} t={t} />
-      </div>
-
-      <DomainDivider
-        label={t("complementaryLabel")}
-        note={t("complementaryNote")}
+      <DomainsMesh
+        domains={domains}
+        phrase={t("mesh.phrase")}
+        emptyPrompt={t("mesh.emptyPrompt")}
       />
-      <DomainList domains={COMPLEMENTARY_DOMAINS} t={t} />
     </section>
   );
 }
