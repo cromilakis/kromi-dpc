@@ -113,10 +113,24 @@ async function reconcileDiagnosisLead(
     .update({ payment_status: "paid", paid_at: new Date().toISOString() })
     .eq("payment_status", "pending");
   const { data: updated, error } = leadId
-    ? await query.eq("id", leadId).select("id").maybeSingle()
-    : await query.eq("stripe_session_id", session.id).select("id").maybeSingle();
+    ? await query.eq("id", leadId).select("id, company_id").maybeSingle()
+    : await query.eq("stripe_session_id", session.id).select("id, company_id").maybeSingle();
   if (error) throw new Error(`update de self_assessments falló: ${error.message}`);
   if (!updated) return; // ya conciliado o lead desconocido: idempotente.
+
+  if (updated.company_id) {
+    const { error: companyError } = await admin
+      .from("companies")
+      .update({ service_paid_at: new Date().toISOString() })
+      .eq("id", updated.company_id)
+      .is("service_paid_at", null); // idempotente
+    if (companyError) {
+      console.error(
+        `[stripe-webhook] proyectar service_paid_at (company=${updated.company_id}) falló:`,
+        companyError.message,
+      );
+    }
+  }
 
   const { error: auditError } = await admin.from("audit_log").insert({
     actor_id: null,
