@@ -3,11 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { formatRut } from "@/lib/companies/rut";
+import { provisionCompany } from "@/lib/companies/provision.server";
 import {
   createCompanySchema,
   updateCompanyPhaseSchema,
 } from "@/lib/companies/schema";
-import { computeCompanyScore } from "@/lib/companies/scoring.server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -16,15 +16,11 @@ import { createClient } from "@/lib/supabase/server";
  * sesión en la action (defensa en profundidad además de RLS, que ya restringe
  * a consultores) e insert en audit_log en toda mutación sensible.
  *
- * Sin transacciones (supabase-js no las expone): el alta es una secuencia
- * empresa → evaluación ciclo 1 → controles pending → audit. Si un paso
- * intermedio falla se loggea, se devuelve "unavailable" y la empresa puede
- * quedar creada sin evaluación (el detalle tolera ese estado); un reintento
- * con el mismo RUT devuelve "rutTaken", que guía al listado.
+ * El alta (empresa → evaluación ciclo 1 → controles pending) vive en el
+ * núcleo reutilizable `provisionCompany` (lib/companies/provision.server.ts,
+ * también usado por el aprovisionamiento post-pago); esta action se limita a
+ * validar, resolver la sesión, invocar el núcleo y dejar rastro de auditoría.
  */
-
-/** Código de violación de unicidad de Postgres (companies.rut unique). */
-const PG_UNIQUE_VIOLATION = "23505";
 
 export type CompanyActionError =
   | "validation"
@@ -56,98 +52,19 @@ export async function createCompany(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "session" };
 
-  // El catálogo de rubros vive en la base: el código enviado debe existir y
-  // de ahí sale el multiplicador (fuente de verdad, no duplicado en código).
-  const { data: sector, error: sectorError } = await supabase
-    .from("sectors")
-    .select("id, code, complexity_multiplier")
-    .eq("code", data.sectorCode)
-    .maybeSingle();
-  if (sectorError) {
-    console.error("[companies] lectura de sector falló:", sectorError.message);
-    return { ok: false, error: "unavailable" };
-  }
-  if (!sector) return { ok: false, error: "validation" };
-
-  // Complexity Score interno (server-only, RFC §14.3).
-  const score = computeCompanyScore({
+  const result = await provisionCompany(supabase, {
+    name: data.name,
+    rut: data.rut,
+    sectorCode: data.sectorCode,
     sizeTier: data.sizeTier,
-    sectorMultiplier: sector.complexity_multiplier,
     factors: data.factors,
+    contact: {
+      name: data.contactName,
+      email: data.contactEmail ?? null,
+      phone: data.contactPhone ?? null,
+    },
   });
-
-  const { data: company, error: companyError } = await supabase
-    .from("companies")
-    .insert({
-      name: data.name,
-      rut: formatRut(data.rut),
-      sector_id: sector.id,
-      size_tier: data.sizeTier,
-      phase: "diagnostico",
-      complexity_score: score.score,
-      factors: [...data.factors],
-      contact: {
-        name: data.contactName,
-        email: data.contactEmail ?? null,
-        phone: data.contactPhone ?? null,
-      },
-    })
-    .select("id")
-    .single();
-  if (companyError || !company) {
-    if (companyError?.code === PG_UNIQUE_VIOLATION) {
-      return { ok: false, error: "rutTaken" };
-    }
-    console.error("[companies] insert de empresa falló:", companyError?.message);
-    return { ok: false, error: "unavailable" };
-  }
-
-  // Controles aplicables al rubro: transversales (sector_scope null) + los
-  // de la vertical del sector. sector.code viene de la base (no del cliente).
-  const { data: controls, error: controlsError } = await supabase
-    .from("controls")
-    .select("id")
-    .or(`sector_scope.is.null,sector_scope.cs.{${sector.code}}`);
-
-  let controlsSeeded = 0;
-  if (controlsError || !controls) {
-    console.error(
-      "[companies] lectura de controles falló:",
-      controlsError?.message,
-    );
-    return { ok: false, error: "unavailable" };
-  }
-
-  const { data: assessment, error: assessmentError } = await supabase
-    .from("assessments")
-    .insert({ company_id: company.id, cycle: 1 })
-    .select("id")
-    .single();
-  if (assessmentError || !assessment) {
-    console.error(
-      "[companies] insert de evaluación falló:",
-      assessmentError?.message,
-    );
-    return { ok: false, error: "unavailable" };
-  }
-
-  if (controls.length > 0) {
-    const { error: seedError } = await supabase.from("assessment_controls").insert(
-      controls.map((control) => ({
-        assessment_id: assessment.id,
-        control_id: control.id,
-        // status 'pending' por default de la columna.
-      })),
-    );
-    if (seedError) {
-      console.error(
-        "[companies] seed de assessment_controls falló:",
-        seedError.message,
-      );
-      return { ok: false, error: "unavailable" };
-    }
-    controlsSeeded = controls.length;
-  }
+  if (!result.ok) return { ok: false, error: result.error };
 
   // Rastro de auditoría (mutación sensible). Si falla, la mutación ya ocurrió:
   // se loggea y no se interrumpe el flujo (limitación aceptada sin transacción).
@@ -155,17 +72,14 @@ export async function createCompany(
     actor_id: user.id,
     action: "company.created",
     entity: "companies",
-    entity_id: company.id,
+    entity_id: result.companyId,
     detail: {
       name: data.name,
       rut: formatRut(data.rut),
-      sector_code: sector.code,
+      sector_code: data.sectorCode,
       size_tier: data.sizeTier,
       factors: [...data.factors],
-      complexity_score: score.score,
-      score_tier: score.scoreTier,
       assessment_cycle: 1,
-      controls_seeded: controlsSeeded,
     },
   });
   if (auditError) {
@@ -174,7 +88,7 @@ export async function createCompany(
 
   revalidatePath("/app");
   revalidatePath("/app/companies");
-  redirect(`/app/companies/${company.id}`);
+  redirect(`/app/companies/${result.companyId}`);
 }
 
 export type UpdatePhaseState =
