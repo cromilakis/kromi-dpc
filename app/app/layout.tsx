@@ -67,6 +67,11 @@ export default async function AppLayout({
       messages={{
         app: messages.app as AbstractIntlMessages,
         common: messages.common as AbstractIntlMessages,
+        // `DiagnosisQuestionnaire`/`DiagnosisResultPanel` (reusadas del
+        // autodiagnóstico público en /app/companies/new) usan el namespace
+        // "diagnosis"; sin él el cuestionario asistido del consultor
+        // renderiza claves crudas (p. ej. "diagnosis.nav.continue").
+        diagnosis: messages.diagnosis as AbstractIntlMessages,
       }}
     >
       <ShellProvider>
