@@ -241,7 +241,7 @@
           "contactEmailLabel": "Correo del contacto",
           "contactEmailPlaceholder": "nombre@empresa.cl",
           "contactPhoneLabel": "Teléfono del contacto",
-          "contactPhonePlaceholder": "+56 9 1234 5678",
+          "contactPhonePlaceholder": "12345678",
           "continue": "Continuar",
           "errors": {
             "name": "La razón social necesita entre 3 y 160 caracteres.",

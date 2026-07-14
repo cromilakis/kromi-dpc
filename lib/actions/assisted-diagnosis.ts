@@ -1,32 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { z } from "zod";
-import { identificationSchema } from "@/lib/companies/schema";
+import { assistedDiagnosisInputSchema } from "@/lib/companies/assisted-schema";
 import { deriveClassification } from "@/lib/diagnosis/derive";
 import { persistDiagnosis } from "@/lib/diagnosis/persist.server";
 import { provisionCompany } from "@/lib/companies/provision.server";
 import { createClient } from "@/lib/supabase/server";
-
-const answersSchema = z.object({
-  screening: z
-    .array(z.strictObject({ nodeId: z.string().max(200), value: z.string().max(200) }))
-    .max(200),
-  deepDive: z
-    .array(
-      z.strictObject({
-        questionId: z.string().max(200),
-        branchId: z.string().max(200),
-        value: z.string().max(200),
-      }),
-    )
-    .max(200),
-});
-
-const inputSchema = z.strictObject({
-  ...identificationSchema.shape,
-  answers: answersSchema,
-});
 
 export type CreateCompanyWithDiagnosisError =
   | "validation"
@@ -42,7 +21,7 @@ export type CreateCompanyWithDiagnosisResult = {
 export async function createCompanyWithDiagnosis(
   input: unknown,
 ): Promise<CreateCompanyWithDiagnosisResult> {
-  const parsed = inputSchema.safeParse(input);
+  const parsed = assistedDiagnosisInputSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "validation" };
   const data = parsed.data;
 
