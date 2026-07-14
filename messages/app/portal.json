@@ -7,6 +7,11 @@
       "brand": "DPC · Portal del cliente",
       "signOut": "Cerrar sesión"
     },
+    "nav": {
+      "label": "Navegación del portal",
+      "home": "Inicio",
+      "evaluations": "Evaluaciones"
+    },
     "home": {
       "title": "Bienvenido/a, {company}",
       "description": "Tu panel de cumplimiento estará disponible aquí.",

@@ -1,6 +1,7 @@
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
+import { PortalNav } from "@/components/portal/portal-nav";
 import { signOut } from "@/lib/actions/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -61,9 +62,12 @@ export default async function PortalLayout({
     >
       <div className="flex min-h-screen flex-col bg-white">
         <header className="flex h-[56px] shrink-0 items-center justify-between border-b border-stone bg-[#fbfbfc] px-24">
-          <span className="text-[15px] font-semibold text-ink">
-            {company.name}
-          </span>
+          <div className="flex items-center gap-24">
+            <span className="text-[15px] font-semibold text-ink">
+              {company.name}
+            </span>
+            <PortalNav />
+          </div>
           <form action={signOut}>
             <button
               type="submit"
