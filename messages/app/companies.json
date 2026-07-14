@@ -228,6 +228,40 @@
           "text": "El alta necesita el catálogo de rubros del Marco DPC. Revisar la carga de seeds de la base de datos."
         }
       },
+      "assistedDiagnosis": {
+        "identity": {
+          "legend": "Datos de la empresa",
+          "nameLabel": "Razón social",
+          "namePlaceholder": "p. ej. Clínica Andes Salud SpA",
+          "rutLabel": "RUT",
+          "rutPlaceholder": "76.421.905-K",
+          "contactLegend": "Contacto en la empresa",
+          "contactNameLabel": "Nombre del contacto",
+          "contactNamePlaceholder": "p. ej. Carolina Díaz",
+          "contactEmailLabel": "Correo del contacto",
+          "contactEmailPlaceholder": "nombre@empresa.cl",
+          "contactPhoneLabel": "Teléfono del contacto",
+          "contactPhonePlaceholder": "+56 9 1234 5678",
+          "continue": "Continuar",
+          "errors": {
+            "name": "La razón social necesita entre 3 y 160 caracteres.",
+            "rut": "El RUT no es válido (se verifica el dígito verificador).",
+            "contactName": "El nombre del contacto necesita al menos 2 caracteres.",
+            "contactEmail": "Ingresa un correo o un teléfono de contacto.",
+            "contactPhone": "El teléfono supera el largo permitido."
+          }
+        },
+        "survey": {
+          "save": "Guardar diagnóstico",
+          "saving": "Guardando…"
+        },
+        "errors": {
+          "validation": "Hay datos inválidos en el diagnóstico. Revisar la identificación e intentar de nuevo.",
+          "unauthorized": "No tienes permisos para registrar empresas.",
+          "rutTaken": "Ya existe una empresa registrada con ese RUT.",
+          "unavailable": "No fue posible guardar el diagnóstico. Reintentar en unos minutos."
+        }
+      },
       "detail": {
         "eyebrow": "Resumen de la evaluación",
         "clientRecertRequested": "Re-certificación solicitada por el cliente",

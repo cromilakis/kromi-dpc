@@ -37,8 +37,12 @@ const LEVEL_ORDER: RiskLevel[] = ["bajo", "medio", "alto", "critico"];
 export interface DiagnosisResultPanelProps {
   /** Diagnóstico completo (screening + profundización + inferencia). */
   result: FullDiagnosisResult;
-  /** Abre el flujo de captura del lead ("Obtener el diagnóstico completo"). */
-  onGetFullDiagnosis: () => void;
+  /**
+   * Abre el flujo de captura del lead ("Obtener el diagnóstico completo").
+   * Opcional: cuando se omite (p. ej. flujo asistido del consultor, que ya
+   * tiene su propio botón de guardado) el bloque de CTA no se renderiza.
+   */
+  onGetFullDiagnosis?: () => void;
 }
 
 export function DiagnosisResultPanel({
@@ -139,19 +143,24 @@ export function DiagnosisResultPanel({
         </div>
       )}
 
-      {/* CTA — texto a la izquierda, botón a la derecha (sin panel) */}
-      <div className="flex items-center justify-between gap-24 max-sm:flex-col max-sm:items-start max-sm:gap-16">
-        <h3 className="flex-1 text-subheading font-semibold leading-[1.3] tracking-[-0.2px] text-ink">
-          {t("cta.title")}
-        </h3>
-        <button
-          type="button"
-          onClick={onGetFullDiagnosis}
-          className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-buttons bg-ink px-24 py-12 text-body-sm font-medium text-white transition-opacity hover:opacity-90"
-        >
-          {t("cta.button")}
-        </button>
-      </div>
+      {/* CTA — texto a la izquierda, botón a la derecha (sin panel).
+          Solo se renderiza si el consumidor provee onGetFullDiagnosis: el
+          flujo asistido del consultor lo omite y maneja el guardado con su
+          propio botón (gate único de isPending). */}
+      {onGetFullDiagnosis && (
+        <div className="flex items-center justify-between gap-24 max-sm:flex-col max-sm:items-start max-sm:gap-16">
+          <h3 className="flex-1 text-subheading font-semibold leading-[1.3] tracking-[-0.2px] text-ink">
+            {t("cta.title")}
+          </h3>
+          <button
+            type="button"
+            onClick={onGetFullDiagnosis}
+            className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-buttons bg-ink px-24 py-12 text-body-sm font-medium text-white transition-opacity hover:opacity-90"
+          >
+            {t("cta.button")}
+          </button>
+        </div>
+      )}
     </section>
   );
 }
