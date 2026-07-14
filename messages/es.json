@@ -4,7 +4,17 @@
     "appFullName": "Data Protection Compliance",
     "tagline": "Protección Certificada",
     "skipToContent": "Saltar al contenido principal",
-    "opensInNewWindow": "(se abre en una ventana nueva)"
+    "opensInNewWindow": "(se abre en una ventana nueva)",
+    "downloadReport": {
+      "label": "Descargar informe",
+      "downloading": "Generando informe…",
+      "errors": {
+        "no_paid": "Completa tu pago para descargar el informe.",
+        "not_found": "Aún no hay un diagnóstico para generar el informe.",
+        "unauthorized": "Tu sesión no tiene acceso a este informe.",
+        "unavailable": "No se pudo generar el informe. Intenta nuevamente."
+      }
+    }
   },
   "landing": {
     "nav": {

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { DownloadReportButton } from "@/components/documents/download-report-button";
 import { buttonClasses, Card, cn } from "@/components/ui";
 import { formatFineClp } from "@/lib/legal/fine";
 import { loadClientDiagnosis } from "@/lib/portal/load-diagnosis.server";
@@ -47,45 +48,50 @@ export default async function EvaluationsPage() {
           <p className="text-body-sm text-metal">{t("empty")}</p>
         </Card>
       ) : (
-        <ul className="flex flex-col gap-12">
-          {breaches.map((breach) => {
-            const fine = formatFineClp(breach.fineMinUtm, breach.fineMaxUtm);
-            return (
-              <li key={breach.id}>
-                <Link href={`/portal/evaluaciones/${breach.id}`} className="block">
-                  <Card className="flex items-center justify-between gap-16 transition-colors hover:bg-ash/40">
-                    <span className="flex min-w-0 flex-1 flex-col gap-4">
-                      <span className="text-caption font-semibold uppercase tracking-[0.4px] text-carbon">
-                        {t("findingLabel")}
-                      </span>
-                      <span className="text-body font-medium leading-[1.35] text-ink">
-                        {breach.areaLabel}
-                      </span>
-                      {fine ? (
-                        <span className="text-caption text-metal">
-                          {t("fineLabel")}: {fine}
+        <>
+          <div className="mb-16 flex justify-end">
+            <DownloadReportButton href="/portal/evaluaciones/informe" />
+          </div>
+          <ul className="flex flex-col gap-12">
+            {breaches.map((breach) => {
+              const fine = formatFineClp(breach.fineMinUtm, breach.fineMaxUtm);
+              return (
+                <li key={breach.id}>
+                  <Link href={`/portal/evaluaciones/${breach.id}`} className="block">
+                    <Card className="flex items-center justify-between gap-16 transition-colors hover:bg-ash/40">
+                      <span className="flex min-w-0 flex-1 flex-col gap-4">
+                        <span className="text-caption font-semibold uppercase tracking-[0.4px] text-carbon">
+                          {t("findingLabel")}
                         </span>
-                      ) : null}
-                    </span>
-                    <span className="flex shrink-0 items-center gap-10">
-                      <span
-                        className={cn(
-                          "rounded-full px-8 py-[3px] text-caption font-semibold",
-                          severityTagClass(breach.severity),
-                        )}
-                      >
-                        {tLabel(breach.severity)}
+                        <span className="text-body font-medium leading-[1.35] text-ink">
+                          {breach.areaLabel}
+                        </span>
+                        {fine ? (
+                          <span className="text-caption text-metal">
+                            {t("fineLabel")}: {fine}
+                          </span>
+                        ) : null}
                       </span>
-                      <span aria-hidden="true" className="text-metal">
-                        ›
+                      <span className="flex shrink-0 items-center gap-10">
+                        <span
+                          className={cn(
+                            "rounded-full px-8 py-[3px] text-caption font-semibold",
+                            severityTagClass(breach.severity),
+                          )}
+                        >
+                          {tLabel(breach.severity)}
+                        </span>
+                        <span aria-hidden="true" className="text-metal">
+                          ›
+                        </span>
                       </span>
-                    </span>
-                  </Card>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                    </Card>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </>
       )}
     </div>
   );

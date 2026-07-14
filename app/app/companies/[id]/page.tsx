@@ -8,6 +8,7 @@ import { CompanyMemberInviteForm } from "@/components/companies/company-member-i
 import { PhaseForm } from "@/components/companies/phase-form";
 import { ProposalForm } from "@/components/companies/proposal-form";
 import { PageHeader } from "@/components/app/shell";
+import { DownloadReportButton } from "@/components/documents/download-report-button";
 import { Card, ProgressBar, StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { checklistProgress, PHASE_BADGE_VARIANT, progressFillClass } from "@/lib/companies/display";
 import { scoreTierOf, type ScoreTier } from "@/lib/companies/scoring.server";
@@ -335,11 +336,14 @@ export default async function CompanySummaryPage({
           date: createdAt,
         })}
         actions={
-          isClientRecertRequested ? (
-            <StatusBadge pill variant="warning">
-              {t("detail.clientRecertRequested")}
-            </StatusBadge>
-          ) : undefined
+          <>
+            {isClientRecertRequested ? (
+              <StatusBadge pill variant="warning">
+                {t("detail.clientRecertRequested")}
+              </StatusBadge>
+            ) : null}
+            <DownloadReportButton href={`/app/companies/${company.id}/informe`} />
+          </>
         }
       />
 
