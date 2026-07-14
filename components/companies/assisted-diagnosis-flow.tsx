@@ -31,6 +31,10 @@ interface Identity {
 
 const legendClasses = "text-[13px] font-semibold text-ink";
 
+/** Prefijo fijo del teléfono (móvil chileno): +569 + 8 dígitos. */
+const PHONE_PREFIX = "+569";
+const PHONE_DIGITS = 8;
+
 /**
  * Flujo de diagnóstico asistido por el consultor (reemplaza el alta manual
  * en /app/companies/new). Dos fases en estado local:
@@ -90,9 +94,13 @@ export function AssistedDiagnosisFlow() {
       errors.rut = true;
     }
 
-    // Contacto mínimo: al menos correo o teléfono (regla del servidor).
-    if (!contactEmail.trim() && !contactPhone.trim()) {
+    // Contacto mínimo: al menos correo o teléfono (revalidado en servidor).
+    if (!contactEmail.trim() && !contactPhone) {
       errors.contactEmail = true;
+    }
+    // Si escribió teléfono, deben ser los 8 dígitos exactos (tras el +569).
+    if (contactPhone && contactPhone.length !== PHONE_DIGITS) {
+      errors.contactPhone = true;
     }
 
     setFieldErrors(errors);
@@ -103,7 +111,7 @@ export function AssistedDiagnosisFlow() {
       rut: parsed.data.rut,
       contactName: parsed.data.contactName,
       contactEmail: parsed.data.contactEmail,
-      contactPhone: parsed.data.contactPhone,
+      contactPhone: contactPhone ? `${PHONE_PREFIX}${contactPhone}` : undefined,
     };
   }
 
@@ -198,15 +206,32 @@ export function AssistedDiagnosisFlow() {
                   error={fieldError("contactPhone")}
                   className="sm:col-span-2"
                 >
-                  <Input
-                    id="assisted-contact-phone"
-                    type="tel"
-                    value={contactPhone}
-                    onChange={(e) => setContactPhone(e.target.value)}
-                    placeholder={t("identity.contactPhonePlaceholder")}
-                    autoComplete="tel"
-                    aria-invalid={fieldErrors.contactPhone ? true : undefined}
-                  />
+                  {/* Prefijo fijo +569 + 8 dígitos (móvil chileno). */}
+                  <div
+                    className={`flex items-stretch rounded-inputs border bg-white transition-colors focus-within:border-focus-blue focus-within:ring-[3px] focus-within:ring-focus-blue/40 ${
+                      fieldErrors.contactPhone ? "border-danger-red" : "border-slate"
+                    }`}
+                  >
+                    <span className="flex select-none items-center border-r border-slate px-12 text-body-sm text-metal">
+                      {PHONE_PREFIX}
+                    </span>
+                    <input
+                      id="assisted-contact-phone"
+                      type="tel"
+                      value={contactPhone}
+                      onChange={(e) =>
+                        setContactPhone(
+                          e.target.value.replace(/\D/g, "").slice(0, PHONE_DIGITS),
+                        )
+                      }
+                      placeholder={t("identity.contactPhonePlaceholder")}
+                      inputMode="numeric"
+                      maxLength={PHONE_DIGITS}
+                      autoComplete="tel-national"
+                      aria-invalid={fieldErrors.contactPhone ? true : undefined}
+                      className="block w-full rounded-r-inputs bg-transparent px-12 py-[9px] text-body-sm leading-body-sm tracking-body-sm text-ink placeholder:text-overcast focus:outline-none"
+                    />
+                  </div>
                 </Field>
               </div>
             </fieldset>
