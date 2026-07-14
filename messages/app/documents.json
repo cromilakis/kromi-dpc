@@ -1,0 +1,30 @@
+{
+  "documents": {
+    "report": {
+      "title": "Informe de diagnóstico",
+      "brand": "DPC · Data Protection Compliance",
+      "summaryTitle": "Resumen",
+      "riskLabel": "Nivel de riesgo",
+      "riskLevels": {
+        "alto": "Alto",
+        "medio": "Medio",
+        "bajo": "Bajo"
+      },
+      "totalBreachesLabel": "Brechas detectadas",
+      "findingsTitle": "Detalle de brechas",
+      "tableArea": "Área",
+      "tableSeverity": "Severidad",
+      "tableFine": "Multa potencial",
+      "severityLabels": {
+        "critico": "Crítico",
+        "alto": "Alto",
+        "medio": "Medio",
+        "bajo": "Bajo"
+      },
+      "noFine": "—",
+      "empty": "No se detectaron brechas en tu diagnóstico.",
+      "generatedLabel": "Generado el",
+      "footerNote": "Documento generado automáticamente por la plataforma DPC. Refleja el diagnóstico vigente al momento de su emisión."
+    }
+  }
+}
