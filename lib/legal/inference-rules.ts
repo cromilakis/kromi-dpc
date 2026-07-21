@@ -85,9 +85,10 @@ export const INFERENCE_RULES: InferenceRule[] = [
 
   // =========================================================================
   // Datos sensibles + sin política de privacidad = brecha de gobernanza crítica
+  // (fix 2026-07-21: tenía el id "IR-006" duplicado con la regla anterior)
   // =========================================================================
   {
-    id: "IR-006",
+    id: "IR-016",
     description:
       "Empresa maneja datos sensibles Y no tiene política de privacidad → brecha crítica de transparencia",
     conditions: [

@@ -430,6 +430,11 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
           {
             value: "solo_aviso",
             label: "Tenemos aviso pero no se pueden rechazar",
+            breach: {
+              ...B["B-WEB-001"],
+              description:
+                "Cookies de terceros instaladas sin posibilidad de rechazo — el consentimiento no es libre ni específico.",
+            },
           },
           {
             value: "no_banner",
@@ -562,6 +567,11 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
           {
             value: "no_se",
             label: "No está definido / Lo desconozco",
+            breach: {
+              ...B["B-CCT-001"],
+              description:
+                "Retención de grabaciones de videovigilancia sin plazo definido ni responsable conocido (DFL 3/2025).",
+            },
           },
         ],
       },
@@ -717,6 +727,11 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
           {
             value: "no_se_acuerdo",
             label: "Lo desconozco",
+            breach: {
+              ...B["B-TER-002"],
+              description:
+                "Transferencia internacional de datos sin poder acreditar garantías contractuales de protección (Art. 14 ter letra h, Art. 15).",
+            },
           },
         ],
       },
@@ -776,6 +791,7 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
           {
             value: "si_comparten",
             label: "Sí, compartimos datos entre empresas relacionadas",
+            breach: B["B-CES-001"],
           },
         ],
       },
@@ -828,6 +844,245 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
             value: "no_consentimiento",
             label: "No, no pedimos consentimiento específico",
             breach: B["B-MEN-001"],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // DD-INCIDENTES — Incidentes de seguridad (activado por S-019, todas las
+  // respuestas: incluso con plan importa el historial y el registro).
+  // =========================================================================
+  {
+    id: "DD-INCIDENTES",
+    name: "Incidentes de seguridad",
+    dimension: 6,
+    triggerCondition: { questionId: "S-019", answer: "si_plan" },
+    questions: [
+      {
+        id: "DD-INC-001",
+        question:
+          "En los últimos 2 años, ¿han tenido algún incidente con datos? (filtración, hackeo, pérdida o robo de equipos, correo con datos enviado a quien no correspondía)",
+        answers: [
+          {
+            value: "ninguno",
+            label: "No, ninguno que sepamos",
+          },
+          {
+            value: "si_gestionado",
+            label: "Sí, y lo gestionamos: avisamos a los afectados y quedó registrado",
+          },
+          {
+            value: "si_sin_gestion",
+            label: "Sí, pero no avisamos a nadie ni quedó registro",
+            breach: B["B-INC-001"],
+          },
+        ],
+      },
+      {
+        id: "DD-INC-002",
+        question:
+          "¿Llevan un registro escrito de los incidentes de seguridad, aunque sean menores?",
+        answers: [
+          {
+            value: "si_registro",
+            label: "Sí, cada incidente queda documentado",
+          },
+          {
+            value: "no_registro",
+            label: "No, no llevamos registro de incidentes",
+            breach: {
+              ...B["B-INC-001"],
+              severity: "medio",
+              description:
+                "Sin registro interno de incidentes de seguridad — exigido como parte de la gestión de vulneraciones (Art. 14 sexies).",
+              fineRangeUtn: { min: 500, max: 5_000 },
+            },
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // DD-AUTOMATIZADAS — Decisiones automatizadas y EIPD (activado por S-020
+  // "si" o "no_seguro"). Dimensión 8: Arts. 8° bis y 15 ter.
+  // =========================================================================
+  {
+    id: "DD-AUTOMATIZADAS",
+    name: "Decisiones automatizadas",
+    dimension: 8,
+    triggerCondition: { questionId: "S-020", answer: "si" },
+    questions: [
+      {
+        id: "DD-AUT-001",
+        question:
+          "¿Las personas afectadas saben que la decisión la toma un sistema, y pueden pedir que un humano la revise?",
+        answers: [
+          {
+            value: "si_informado",
+            label: "Sí, se informa y existe una vía para pedir revisión humana",
+          },
+          {
+            value: "parcial",
+            label: "Se informa, pero no hay una vía clara de revisión",
+            breach: B["B-EIA-001"],
+          },
+          {
+            value: "no",
+            label: "No, las personas no saben que hay una decisión automática",
+            breach: B["B-EIA-001"],
+          },
+        ],
+      },
+      {
+        id: "DD-AUT-002",
+        question:
+          "Antes de poner en marcha ese sistema, ¿evaluaron por escrito los riesgos que implica para las personas (una Evaluación de Impacto)?",
+        answers: [
+          {
+            value: "si_eipd",
+            label: "Sí, hay una evaluación documentada",
+          },
+          {
+            value: "no_eipd",
+            label: "No, se implementó sin una evaluación formal",
+            breach: B["B-EIA-002"],
+          },
+          {
+            value: "no_se",
+            label: "Lo desconozco (lo implementó un proveedor)",
+            breach: B["B-EIA-002"],
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // DD-ENCARGADO — La empresa como encargada de tratamiento (activado por
+  // S-021 "si"). Art. 15 bis visto desde el prestador del servicio.
+  // =========================================================================
+  {
+    id: "DD-ENCARGADO",
+    name: "Tratamiento por encargo",
+    dimension: 7,
+    triggerCondition: { questionId: "S-021", answer: "si" },
+    questions: [
+      {
+        id: "DD-ENC-001",
+        question:
+          "¿Firman con esos clientes un contrato que regule cómo deben tratar sus datos? (confidencialidad, medidas de seguridad, qué pasa con los datos al terminar el servicio)",
+        answers: [
+          {
+            value: "si_todos",
+            label: "Sí, con todos los clientes",
+          },
+          {
+            value: "algunos",
+            label: "Con algunos, pero no con todos",
+            breach: B["B-ENC-001"],
+          },
+          {
+            value: "ninguno",
+            label: "No, trabajamos sin ese tipo de contrato",
+            breach: B["B-ENC-001"],
+          },
+        ],
+      },
+      {
+        id: "DD-ENC-002",
+        question:
+          "¿Subcontratan parte del servicio (freelancers, otra empresa, herramientas en la nube) con acceso a los datos de sus clientes?",
+        answers: [
+          {
+            value: "no_subcontrata",
+            label: "No, todo lo hacemos internamente",
+          },
+          {
+            value: "si_autorizado",
+            label: "Sí, con autorización o conocimiento del cliente",
+          },
+          {
+            value: "si_sin_autorizacion",
+            label: "Sí, sin que el cliente lo sepa o autorice",
+            breach: {
+              ...B["B-ENC-001"],
+              severity: "critico",
+              description:
+                "Subcontratación del tratamiento de datos de clientes de terceros sin autorización del responsable (Art. 15 bis).",
+              fineRangeUtn: { min: 5_000, max: 20_000 },
+            },
+          },
+        ],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // DD-LABORAL — Datos de trabajadores (activado por S-002 "rrhh"; cubre el
+  // régimen laboral: Art. 154 bis CT, dictámenes DT, no discriminación).
+  // =========================================================================
+  {
+    id: "DD-LABORAL",
+    name: "Datos de trabajadores",
+    dimension: 9,
+    triggerCondition: { questionId: "S-002", answer: "rrhh" },
+    questions: [
+      {
+        id: "DD-LAB-001",
+        question:
+          "En los procesos de selección o reclutamiento, ¿piden datos que no son necesarios para evaluar el cargo? (estado civil, hijos, salud, situación socioeconómica)",
+        answers: [
+          {
+            value: "solo_necesarios",
+            label: "No, solo pedimos lo necesario para evaluar al postulante",
+          },
+          {
+            value: "si_adicionales",
+            label: "Sí, pedimos varios de esos datos por costumbre",
+            breach: B["B-LAB-001"],
+          },
+        ],
+      },
+      {
+        id: "DD-LAB-002",
+        question:
+          "¿Los trabajadores (propios o suministrados) saben qué datos suyos se manejan y quién puede verlos? (carpeta personal, remuneraciones, evaluaciones)",
+        answers: [
+          {
+            value: "si_informado",
+            label: "Sí, está informado y el acceso es restringido",
+          },
+          {
+            value: "no_informado",
+            label: "No se les informa, o cualquiera del equipo puede verlos",
+            breach: B["B-LAB-002"],
+          },
+        ],
+      },
+      {
+        id: "DD-LAB-003",
+        question:
+          "¿Monitorean el correo, el computador o la ubicación de los trabajadores?",
+        answers: [
+          {
+            value: "no_monitoreo",
+            label: "No monitoreamos",
+          },
+          {
+            value: "si_con_politica",
+            label: "Sí, con una política escrita que los trabajadores conocen",
+          },
+          {
+            value: "si_sin_politica",
+            label: "Sí, sin una política formal ni aviso",
+            breach: {
+              ...B["B-LAB-002"],
+              description:
+                "Monitoreo de correo, equipos o ubicación de trabajadores sin política formal ni conocimiento del trabajador (dictámenes DT; Art. 154 bis CT).",
+            },
           },
         ],
       },

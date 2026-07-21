@@ -364,6 +364,12 @@ export const BREACH_AREA_LABELS: Record<string, string> = {
   GOB: "Gobernanza y transparencia",
   DER: "Derechos de los titulares",
   CAP: "Capacitación del personal",
+  INV: "Inventario y registro de datos",
+  INC: "Incidentes de seguridad",
+  EIA: "Decisiones automatizadas y evaluación de impacto",
+  ENC: "Tratamiento por encargo de terceros",
+  LAB: "Datos de trabajadores",
+  CES: "Cesión de datos entre empresas",
 };
 
 function areaOf(breachId: string): string {

@@ -4,8 +4,8 @@
  * Basado en la Ley 21.719 (texto promulgado, BCN idNorma=1209272) y el
  * ecosistema normativo chileno. Árbol de decisión en tres fases:
  *
- *   1. SCREENING (15 preguntas) → clasifica el perfil de riesgo
- *   2. DEEP DIVE (11 ramas condicionales) → seguimiento específico
+ *   1. SCREENING (22 preguntas) → clasifica el perfil de riesgo
+ *   2. DEEP DIVE (15 ramas condicionales) → seguimiento específico
  *   3. INFERENCE (16 reglas de detección cruzada) → brechas no declaradas
  *
  * Uso:

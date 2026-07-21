@@ -124,6 +124,60 @@ export const BREACH_CONTENT: Record<string, BreachContent> = {
     lawDetail:
       "La responsabilidad proactiva incluye medidas organizativas como la capacitación del personal que trata datos personales, de modo que las políticas de la empresa se apliquen efectivamente en el día a día.",
   },
+  "B-GOB-002": {
+    whyRisk:
+      "Sin una persona formalmente a cargo, la protección de datos queda huérfana: nadie responde las solicitudes de los titulares, nadie mantiene las políticas al día y ante una fiscalización no hay interlocutor. La designación formal es de las primeras evidencias de gobernanza que se revisan.",
+    lawDetail:
+      "La política de tratamiento debe identificar al responsable y a quien ejerza el rol de prevención dentro de la organización. Designarlo formalmente —con respaldo escrito— es parte del estándar de gobernanza que la ley espera demostrar.",
+  },
+  "B-INV-001": {
+    whyRisk:
+      "Si la empresa no sabe qué datos tiene, dónde están y para qué los usa, no puede cumplir casi ninguna otra obligación: no puede responder a un titular, ni borrar datos a tiempo, ni contener bien un incidente. El inventario es la base de todo el cumplimiento.",
+    lawDetail:
+      "La ley exige poder dar cuenta del tratamiento: categorías de datos, finalidades, destinatarios, plazos de conservación y origen. Eso solo es posible con un registro de actividades de tratamiento (inventario) levantado y actualizado.",
+  },
+  "B-INC-001": {
+    whyRisk:
+      "Un incidente mal gestionado multiplica el daño: los afectados no pueden protegerse (cambiar claves, bloquear tarjetas), y la empresa que no registró ni notificó queda expuesta a que el incidente aparezca después, ya sin defensa de diligencia posible.",
+    lawDetail:
+      "Ante una vulneración de seguridad con riesgo para las personas, la ley obliga a reportar a la autoridad sin dilaciones indebidas y, si afecta datos sensibles, de menores o financieros, también a los titulares. Además exige llevar un registro de los incidentes.",
+  },
+  "B-EIA-001": {
+    whyRisk:
+      "Cuando un sistema decide solo (un crédito, una postulación, un precio), la persona afectada tiene derecho a saberlo y a pedir revisión humana. Ocultarlo convierte cada decisión del sistema en un reclamo potencial, con efecto multiplicado por el volumen de decisiones automatizadas.",
+    lawDetail:
+      "La ley reconoce el derecho a no ser objeto de decisiones puramente automatizadas con efectos significativos: el titular debe ser informado, poder expresar su punto de vista, obtener una explicación y solicitar la intervención de una persona.",
+  },
+  "B-EIA-002": {
+    whyRisk:
+      "Implementar un tratamiento de alto riesgo sin evaluar antes su impacto es avanzar a ciegas: los problemas se descubren cuando ya afectaron a personas. La EIPD es además la evidencia de diligencia que la autoridad pedirá primero si algo sale mal.",
+    lawDetail:
+      "Para tratamientos de alto riesgo —decisiones automatizadas con efectos relevantes, tratamiento masivo, monitoreo sistemático o datos sensibles— la ley exige una Evaluación de Impacto en Protección de Datos previa y documentada.",
+  },
+  "B-ENC-001": {
+    whyRisk:
+      "Cuando la empresa trata datos de los clientes de otros, trabaja con material ajeno: sin contrato que regule ese encargo, cualquier incidente o mal uso la deja expuesta ante su cliente y ante la autoridad, y puede perder la cuenta comercial completa.",
+    lawDetail:
+      "El tratamiento por encargo debe constar en un contrato escrito que fije objeto, duración, finalidad, medidas de seguridad, régimen de subcontratación y el destino de los datos al terminar el servicio.",
+  },
+  "B-LAB-001": {
+    whyRisk:
+      "Pedir en la selección datos que no se relacionan con el cargo (hijos, salud, situación socioeconómica) expone a la empresa a reclamos por discriminación laboral y constituye sobre-recolección de datos: dos frentes de riesgo por una misma costumbre.",
+    lawDetail:
+      "El principio de proporcionalidad limita la recolección a lo estrictamente necesario para la finalidad, y el Código del Trabajo prohíbe condicionar la contratación a datos ajenos a la capacidad e idoneidad para el cargo.",
+  },
+  "B-LAB-002": {
+    whyRisk:
+      "Los datos del trabajador (carpeta, sueldo, evaluaciones, monitoreo) son de las categorías más reclamadas ante la Dirección del Trabajo. Tratarlos sin informar ni restringir accesos daña la relación laboral y suma un frente de fiscalización adicional al de datos personales.",
+    lawDetail:
+      "El Código del Trabajo obliga al empleador a mantener reserva de la información y datos privados del trabajador, y los dictámenes de la Dirección del Trabajo exigen que todo monitoreo o control (correo, videovigilancia, ubicación) sea proporcional, informado y regulado en una política conocida.",
+  },
+  "B-CES-001": {
+    whyRisk:
+      "Compartir bases de clientes con otras empresas —aunque sean del mismo grupo— sin autorización convierte cada registro compartido en un tratamiento sin base de licitud, y suele descubrirse cuando el cliente recibe contactos de una empresa que no conoce.",
+    lawDetail:
+      "La cesión de datos personales a otra entidad requiere el consentimiento del titular u otra base legal, y debe constar por escrito. Cada empresa receptora pasa a responder también por el uso que haga de esos datos.",
+  },
 };
 
 export function getBreachContent(breachCode: string): BreachContent | null {

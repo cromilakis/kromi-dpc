@@ -1,10 +1,17 @@
 /**
- * Nodos de screening — 15 preguntas amplias que clasifican el perfil de
+ * Nodos de screening — 22 preguntas amplias que clasifican el perfil de
  * riesgo de la empresa. Cada respuesta puede activar ramas de deep-dive,
  * disparar brechas directamente, o redirigir a preguntas condicionales.
  *
  * Las brechas referencian artículos del texto promulgado de la Ley 21.719,
  * verificados contra BCN (idNorma=1209272).
+ *
+ * Ampliación de cobertura 2026-07-21 (análisis de cobertura vs universo
+ * legal): S-016..S-022 cubren inventario/RAT (dim 2), responsable designado
+ * (dim 1), canal ARCOP (dim 5), incidentes (dim 6, Art. 14 sexies),
+ * decisiones automatizadas/EIPD (dim 8, Arts. 8° bis y 15 ter), rol de
+ * encargado (dim 7, Art. 15 bis) y capacitación (dim 10). Con esto las 10
+ * dimensiones del toolkit legal tienen al menos una señal directa.
  */
 
 import type { BreachDescriptor, ScreeningNode } from "./decision-tree";
@@ -26,6 +33,7 @@ export const RISK_FACTOR_LABELS: Record<string, string> = {
   minors_data: "Datos de niños, niñas o adolescentes",
   multi_site: "Múltiples sucursales o sedes",
   web_presence: "Presencia web o formularios online",
+  data_processor: "Tratamiento por encargo de terceros",
 };
 
 // ---------------------------------------------------------------------------
@@ -226,6 +234,103 @@ export const SCREENING_BREACHES: Record<string, BreachDescriptor> = {
     estimatedWeeks: 2,
     dimension: 7,
   },
+  // --- Gobernanza: responsable designado ---
+  "B-GOB-002": {
+    id: "B-GOB-002",
+    description:
+      "No hay una persona formalmente designada como responsable de la protección de datos dentro de la organización.",
+    severity: "medio",
+    articles: ["Art. 14 ter letra b)"],
+    fineRangeUtn: { min: 500, max: 5_000 },
+    estimatedWeeks: 2,
+    dimension: 1,
+  },
+  // --- Inventario / RAT ---
+  "B-INV-001": {
+    id: "B-INV-001",
+    description:
+      "No existe un inventario o registro escrito de qué datos personales trata la empresa, dónde se almacenan, con qué finalidad y por cuánto tiempo (función del Registro de Actividades de Tratamiento).",
+    severity: "alto",
+    articles: ["Art. 14 ter (12 literales)", "Art. 3° letra e) (responsabilidad)"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 4,
+    dimension: 2,
+  },
+  // --- Incidentes ---
+  "B-INC-001": {
+    id: "B-INC-001",
+    description:
+      "Incidentes de seguridad ocurridos sin gestión formal: sin notificación a los afectados cuando correspondía y sin registro interno del incidente.",
+    severity: "alto",
+    articles: ["Art. 14 sexies"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 2,
+    dimension: 6,
+  },
+  // --- Decisiones automatizadas / EIPD ---
+  "B-EIA-001": {
+    id: "B-EIA-001",
+    description:
+      "Decisiones automatizadas que afectan a personas (créditos, selección, precios) sin informar al titular ni ofrecer la posibilidad de revisión humana.",
+    severity: "alto",
+    articles: ["Art. 8° bis"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 3,
+    dimension: 8,
+  },
+  "B-EIA-002": {
+    id: "B-EIA-002",
+    description:
+      "Tratamiento de alto riesgo (decisiones automatizadas, perfilamiento) implementado sin una Evaluación de Impacto en Protección de Datos (EIPD) previa y documentada.",
+    severity: "alto",
+    articles: ["Art. 15 ter"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 4,
+    dimension: 8,
+  },
+  // --- Rol de encargado (la empresa trata datos de clientes de terceros) ---
+  "B-ENC-001": {
+    id: "B-ENC-001",
+    description:
+      "La empresa trata datos personales por encargo de sus clientes sin un contrato de encargo que regule confidencialidad, medidas de seguridad, subcontratación y destino de los datos al término del servicio.",
+    severity: "alto",
+    articles: ["Art. 15 bis"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 3,
+    dimension: 7,
+  },
+  // --- Sectorial: Laboral / RRHH ---
+  "B-LAB-001": {
+    id: "B-LAB-001",
+    description:
+      "En procesos de selección se solicitan datos personales innecesarios para el cargo (estado civil, hijos, salud, situación socioeconómica), contraviniendo la minimización y la no discriminación laboral.",
+    severity: "alto",
+    articles: ["Art. 2 Código del Trabajo", "Art. 3° letra c) (proporcionalidad)"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 2,
+    dimension: 9,
+  },
+  "B-LAB-002": {
+    id: "B-LAB-002",
+    description:
+      "Datos de trabajadores (carpeta personal, remuneraciones, evaluaciones, monitoreo) tratados sin informar al trabajador ni resguardar la reserva que exige el Código del Trabajo.",
+    severity: "alto",
+    articles: ["Art. 154 bis Código del Trabajo", "Dictámenes DT (monitoreo y videovigilancia laboral)"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 3,
+    dimension: 9,
+  },
+  // --- Cesión de datos entre empresas ---
+  "B-CES-001": {
+    id: "B-CES-001",
+    description:
+      "Datos de clientes compartidos o cedidos a otras empresas (grupo, franquicias, partners) sin consentimiento del titular ni contrato escrito de cesión.",
+    severity: "alto",
+    articles: ["Art. 15", "Art. 12"],
+    fineRangeUtn: { min: 2_000, max: 10_000 },
+    estimatedWeeks: 3,
+    dimension: 7,
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -281,10 +386,19 @@ export const SCREENING_NODES: ScreeningNode[] = [
       {
         value: "rrhh",
         label: "RRHH / Servicios transitorios / Capacitación laboral",
+        activatesBranches: ["DD-LABORAL"],
       },
       {
         value: "tecnologia",
         label: "Tecnología / Software / SaaS",
+      },
+      {
+        value: "telco",
+        label: "Telecomunicaciones / Conectividad",
+      },
+      {
+        value: "estado",
+        label: "Proveedor del Estado / Sector público",
       },
       {
         value: "otro",
@@ -311,23 +425,25 @@ export const SCREENING_NODES: ScreeningNode[] = [
         label: "Ambos: de clientes y también internos (empleados, proveedores)",
       },
       {
+        // Sin salto (fix cobertura 2026-07-21): los datos internos de
+        // trabajadores también pueden ser sensibles (salud laboral Ley 16.744,
+        // afiliación sindical, biometría de asistencia — Art. 154 bis CT), así
+        // que S-004 aplica igual para quien solo maneja datos internos.
         value: "no",
         label: "No, solo manejamos datos internos (empleados, proveedores)",
-        nextNodeId: "S-005",
       },
     ],
   },
 
   // =========================================================================
-  // S-004 — Datos sensibles
+  // S-004 — Datos sensibles (incluye los de trabajadores)
   // =========================================================================
   {
     id: "S-004",
     question:
-      "De los datos que maneja, ¿alguno incluye información de salud, biométrica (huella, rostro), financiera, o de menores de edad?",
+      "De los datos que maneja —incluidos los de sus trabajadores—, ¿alguno incluye información de salud, biométrica (huella, rostro), financiera, o de menores de edad?",
     dimension: 3,
     riskFactor: "sensitive_data",
-    appliesIfFactor: "has_titulares",
     answers: [
       {
         value: "si",
@@ -629,6 +745,195 @@ export const SCREENING_NODES: ScreeningNode[] = [
         value: "no",
         label: "No, no tenemos nada por escrito",
         triggersBreaches: [SCREENING_BREACHES["B-GOB-001"]],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // S-016 — Inventario / RAT (dim 2)
+  // =========================================================================
+  {
+    id: "S-016",
+    question:
+      "¿Tienen un registro escrito de qué datos personales maneja la empresa: cuáles son, dónde están y para qué se usan?",
+    dimension: 2,
+    answers: [
+      {
+        value: "si_registro",
+        label: "Sí, tenemos un inventario o registro actualizado",
+      },
+      {
+        value: "parcial",
+        label: "Lo sabemos “de memoria”, pero no está escrito",
+        triggersBreaches: [SCREENING_BREACHES["B-INV-001"]],
+      },
+      {
+        value: "no",
+        label: "No, nunca lo hemos levantado",
+        triggersBreaches: [SCREENING_BREACHES["B-INV-001"]],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // S-017 — Responsable designado (dim 1)
+  // =========================================================================
+  {
+    id: "S-017",
+    question:
+      "¿Hay alguien en la empresa formalmente encargado de la protección de datos personales?",
+    dimension: 1,
+    answers: [
+      {
+        value: "si_formal",
+        label: "Sí, hay un responsable designado formalmente",
+      },
+      {
+        value: "informal",
+        label: "Alguien lo asume en la práctica, sin designación formal",
+        triggersBreaches: [SCREENING_BREACHES["B-GOB-002"]],
+      },
+      {
+        value: "nadie",
+        label: "No, nadie cumple ese rol",
+        triggersBreaches: [SCREENING_BREACHES["B-GOB-002"]],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // S-018 — Canal de derechos ARCOP (dim 5). Complementa a S-014 (que solo
+  // testea supresión) con canal y plazo de respuesta (Arts. 10-11: 30 días).
+  // =========================================================================
+  {
+    id: "S-018",
+    question:
+      "Si una persona pidiera ver, corregir o llevarse los datos que tienen de ella, ¿existe un canal definido para recibir esa solicitud y responderla dentro de 30 días?",
+    dimension: 5,
+    answers: [
+      {
+        value: "si_canal",
+        label: "Sí, hay un canal definido y conocemos los plazos",
+      },
+      {
+        value: "informal",
+        label: "Se resolvería caso a caso, sin procedimiento definido",
+        triggersBreaches: [SCREENING_BREACHES["B-DER-001"]],
+      },
+      {
+        value: "no",
+        label: "No, no tenemos cómo canalizar esas solicitudes",
+        triggersBreaches: [SCREENING_BREACHES["B-DER-001"]],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // S-019 — Incidentes y plan de respuesta (dim 6, Art. 14 sexies). Da el
+  // gatillo que le faltaba a B-SEG-003 (antes huérfana) y activa DD-INCIDENTES
+  // en todas las respuestas: incluso con plan, importa el historial.
+  // =========================================================================
+  {
+    id: "S-019",
+    question:
+      "Si mañana se filtraran los datos que maneja (hackeo, robo de un computador, correo enviado por error), ¿saben qué hacer?",
+    dimension: 6,
+    answers: [
+      {
+        value: "si_plan",
+        label: "Sí, tenemos un plan: contener, evaluar y notificar a quien corresponda",
+        activatesBranches: ["DD-INCIDENTES"],
+      },
+      {
+        value: "improvisado",
+        label: "Reaccionaríamos sobre la marcha, no hay nada escrito",
+        activatesBranches: ["DD-INCIDENTES"],
+        triggersBreaches: [SCREENING_BREACHES["B-SEG-003"]],
+      },
+      {
+        value: "no",
+        label: "No, no lo hemos pensado",
+        activatesBranches: ["DD-INCIDENTES"],
+        triggersBreaches: [SCREENING_BREACHES["B-SEG-003"]],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // S-020 — Decisiones automatizadas (dim 8, Arts. 8° bis y 15 ter). Primera
+  // señal de la dimensión "Modelos de prevención / EIPD".
+  // =========================================================================
+  {
+    id: "S-020",
+    question:
+      "¿Usan sistemas que toman decisiones automáticas sobre personas, sin que intervenga un humano? (aprobar créditos, filtrar postulantes, calcular precios o riesgos según el perfil)",
+    dimension: 8,
+    riskFactor: "automated_decisions",
+    answers: [
+      {
+        value: "si",
+        label: "Sí, usamos sistemas que deciden automáticamente",
+        activatesBranches: ["DD-AUTOMATIZADAS"],
+      },
+      {
+        value: "no_seguro",
+        label: "No estoy seguro; usamos software que quizás lo hace (scoring, plataformas de RRHH, publicidad segmentada)",
+        activatesBranches: ["DD-AUTOMATIZADAS"],
+      },
+      {
+        value: "no",
+        label: "No, las decisiones siempre las toma una persona",
+      },
+    ],
+  },
+
+  // =========================================================================
+  // S-021 — Rol de encargado (dim 7, Art. 15 bis "desde el otro lado"):
+  // la empresa que presta servicios tratando datos de los clientes de OTRAS
+  // empresas (típico en tecnología/SaaS, RRHH, contabilidad, marketing).
+  // =========================================================================
+  {
+    id: "S-021",
+    question:
+      "¿Su empresa maneja datos de los clientes de OTRAS empresas como parte de un servicio? (desarrollo o soporte de software, contabilidad, reclutamiento, marketing, logística)",
+    dimension: 7,
+    riskFactor: "data_processor",
+    answers: [
+      {
+        value: "si",
+        label: "Sí, tratamos datos por encargo de nuestros clientes",
+        activatesBranches: ["DD-ENCARGADO"],
+      },
+      {
+        value: "no",
+        label: "No, solo manejamos datos propios",
+      },
+    ],
+  },
+
+  // =========================================================================
+  // S-022 — Capacitación (dim 10). Antes B-CAP-001 solo se infería de la
+  // ausencia de política (IR-015); ahora tiene señal directa.
+  // =========================================================================
+  {
+    id: "S-022",
+    question:
+      "¿El personal que maneja datos personales ha recibido capacitación sobre protección de datos o confidencialidad?",
+    dimension: 10,
+    answers: [
+      {
+        value: "si",
+        label: "Sí, con capacitaciones o inducciones formales",
+      },
+      {
+        value: "solo_algunos",
+        label: "Solo algunas personas, o fue hace mucho tiempo",
+        triggersBreaches: [SCREENING_BREACHES["B-CAP-001"]],
+      },
+      {
+        value: "no",
+        label: "No, nunca hemos capacitado en esto",
+        triggersBreaches: [SCREENING_BREACHES["B-CAP-001"]],
       },
     ],
   },

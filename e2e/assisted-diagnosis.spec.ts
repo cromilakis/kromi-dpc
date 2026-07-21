@@ -199,7 +199,11 @@ test.describe("Diagnóstico asistido del consultor", () => {
     await selectSingle(
       page,
       "No, solo manejamos datos internos (empleados, proveedores)",
-    ); // S-003 (salta S-004: sin has_titulares)
+    ); // S-003 (ya no salta S-004: los datos internos también pueden ser sensibles)
+    await selectSingle(
+      page,
+      "No, solo datos básicos (nombre, teléfono, correo, RUT)",
+    ); // S-004 datos sensibles
     await selectSingle(page, "No, todo lo manejamos internamente"); // S-005 proveedores
     await selectAndContinue(page, "En papel / carpetas físicas"); // S-006 almacenamiento (multi)
     await selectSingle(page, "No usamos nube"); // S-007
@@ -216,7 +220,31 @@ test.describe("Diagnóstico asistido del consultor", () => {
     await selectSingle(
       page,
       "Sí, está publicado/accesible (web, local, documento)",
-    ); // S-015 — última pregunta, completa el diagnóstico
+    ); // S-015 política de privacidad
+    await selectSingle(
+      page,
+      "Sí, tenemos un inventario o registro actualizado",
+    ); // S-016 inventario/RAT
+    await selectSingle(page, "Sí, hay un responsable designado formalmente"); // S-017
+    await selectSingle(
+      page,
+      "Sí, hay un canal definido y conocemos los plazos",
+    ); // S-018 canal ARCOP
+    await selectSingle(
+      page,
+      "Sí, tenemos un plan: contener, evaluar y notificar a quien corresponda",
+    ); // S-019 incidentes → activa DD-INCIDENTES (todas las respuestas)
+    await selectSingle(page, "No, ninguno que sepamos"); // DD-INC-001
+    await selectSingle(page, "Sí, cada incidente queda documentado"); // DD-INC-002
+    await selectSingle(
+      page,
+      "No, las decisiones siempre las toma una persona",
+    ); // S-020 decisiones automatizadas
+    await selectSingle(page, "No, solo manejamos datos propios"); // S-021 encargado
+    await selectSingle(
+      page,
+      "Sí, con capacitaciones o inducciones formales",
+    ); // S-022 capacitación — última pregunta, completa el diagnóstico
 
     // ── Guardar diagnóstico → redirige a /app/companies/<id> ────────────
     await page.getByRole("button", { name: "Guardar diagnóstico" }).click();
