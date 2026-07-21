@@ -22,6 +22,49 @@
       },
       "empty": "Aún no tenemos evaluaciones registradas para tu empresa.",
       "downloadMitigationPlan": "Descargar plan de mitigación",
+      "downloadDossier": "Descargar catastro de cumplimiento",
+      "resolvedTag": "Resuelta",
+      "progress": "{resolved} de {total} brechas marcadas como resueltas",
+      "evidence": {
+        "title": "Evidencias de la mitigación",
+        "hint": "Sube el respaldo de lo que implementaste (documentos firmados, capturas de configuración, contratos). El consultor revisa cada evidencia antes de la certificación.",
+        "empty": "Aún no hay evidencias para esta brecha.",
+        "nameLabel": "Nombre de la evidencia",
+        "namePlaceholder": "Ej.: Acta de capacitación firmada",
+        "fileLabel": "Archivo",
+        "upload": "Subir evidencia",
+        "uploading": "Subiendo…",
+        "download": "Descargar",
+        "statuses": {
+          "validated": "Validada",
+          "partial": "Parcial",
+          "missing": "En revisión",
+          "rejected": "Rechazada"
+        },
+        "errors": {
+          "validation": "Revisa el nombre y el archivo e inténtalo de nuevo.",
+          "unauthorized": "Tu sesión no tiene acceso a esta acción.",
+          "not_found": "No encontramos esta brecha en tu diagnóstico.",
+          "too_large": "El archivo supera el tamaño máximo permitido.",
+          "bad_type": "Tipo de archivo no permitido.",
+          "unavailable": "No pudimos subir la evidencia. Inténtalo nuevamente."
+        }
+      },
+      "resolution": {
+        "openTitle": "¿Completaste la mitigación de esta brecha?",
+        "openHint": "Cuando hayas aplicado los pasos y firmado los documentos, márcala como resuelta. El consultor validará las resoluciones antes de la certificación.",
+        "resolvedTitle": "Marcaste esta brecha como resuelta",
+        "resolvedHint": "Queda pendiente la validación del consultor. Si la marcaste por error, puedes reabrirla.",
+        "markResolved": "Marcar como resuelta",
+        "reopen": "Reabrir brecha",
+        "saving": "Guardando…",
+        "errors": {
+          "validation": "La solicitud no es válida. Recarga la página e inténtalo de nuevo.",
+          "unauthorized": "Tu sesión no tiene acceso a esta acción.",
+          "not_found": "No encontramos esta brecha en tu diagnóstico.",
+          "unavailable": "No pudimos guardar el cambio. Inténtalo nuevamente."
+        }
+      },
       "findingLabel": "Hallazgo",
       "fineLabel": "Multa",
       "detail": {
@@ -55,6 +98,7 @@
         "validUntil": "Válido hasta {date}",
         "code": "Código",
         "verifyOnline": "Verificar en línea",
+        "downloadPdf": "Descargar certificado (PDF)",
         "empty": "Aún no tienes un certificado emitido."
       },
       "progress": {

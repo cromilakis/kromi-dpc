@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { DownloadReportButton } from "@/components/documents/download-report-button";
 import { Card, ProgressBar, StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { ProposalCard } from "@/components/portal/proposal-card";
 import { EvidenceSection } from "@/components/portal/evidence-section";
@@ -107,6 +108,13 @@ export default async function PortalPage({
                   >
                     {t("certificate.verifyOnline")}
                   </a>
+                  {/* PDF con QR de verificación (sub-proyecto #7). */}
+                  <div className="mt-8">
+                    <DownloadReportButton
+                      href="/portal/certificado"
+                      label={t("certificate.downloadPdf")}
+                    />
+                  </div>
                 </div>
               ) : (
                 <p className="text-body-sm text-metal">{t("certificate.empty")}</p>

@@ -49,12 +49,27 @@ export default async function EvaluationsPage() {
         </Card>
       ) : (
         <>
-          <div className="mb-16 flex flex-wrap justify-end gap-10">
-            <DownloadReportButton href="/portal/evaluaciones/informe" />
-            <DownloadReportButton
-              href="/portal/evaluaciones/plan-mitigacion"
-              label={t("downloadMitigationPlan")}
-            />
+          <div className="mb-16 flex flex-wrap items-center justify-between gap-10">
+            {/* Progreso de resolución (sub-proyecto #6). */}
+            <p className="text-body-sm font-medium text-carbon">
+              {t("progress", {
+                resolved: breaches.filter(
+                  (breach) => breach.resolutionStatus === "resolved",
+                ).length,
+                total: breaches.length,
+              })}
+            </p>
+            <div className="flex flex-wrap gap-10">
+              <DownloadReportButton href="/portal/evaluaciones/informe" />
+              <DownloadReportButton
+                href="/portal/evaluaciones/plan-mitigacion"
+                label={t("downloadMitigationPlan")}
+              />
+              <DownloadReportButton
+                href="/portal/evaluaciones/catastro"
+                label={t("downloadDossier")}
+              />
+            </div>
           </div>
           <ul className="flex flex-col gap-12">
             {breaches.map((breach) => {
@@ -77,6 +92,11 @@ export default async function EvaluationsPage() {
                         ) : null}
                       </span>
                       <span className="flex shrink-0 items-center gap-10">
+                        {breach.resolutionStatus === "resolved" ? (
+                          <span className="rounded-full bg-success-green px-8 py-[3px] text-caption font-semibold text-white">
+                            {t("resolvedTag")}
+                          </span>
+                        ) : null}
                         <span
                           className={cn(
                             "rounded-full px-8 py-[3px] text-caption font-semibold",

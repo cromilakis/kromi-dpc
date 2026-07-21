@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { CertificateActions } from "@/components/certificates/certificate-actions";
+import { DownloadReportButton } from "@/components/documents/download-report-button";
 import { PageHeader } from "@/components/app/shell";
 import {
   buttonClasses,
@@ -18,11 +19,8 @@ import {
   TableRow,
   type StatusBadgeVariant,
 } from "@/components/ui";
-import {
-  CRITICAL_DOMAIN_CODES,
-  type EligibilityGap,
-} from "@/lib/certificates/eligibility.server";
-import { loadCompanyEligibility } from "@/lib/certificates/load-eligibility.server";
+import type { DiagnosisEligibilityGap } from "@/lib/certificates/diagnosis-eligibility.server";
+import { loadCompanyDiagnosisEligibility } from "@/lib/certificates/load-diagnosis-eligibility.server";
 import { todayISODate } from "@/lib/certificates/issue.server";
 import { createClient } from "@/lib/supabase/server";
 
@@ -101,8 +99,8 @@ export default async function CertificationPage({
       .eq("company_id", id)
       .order("issued_at", { ascending: false })
       .order("created_at", { ascending: false }),
-    // loadCompanyEligibility lanza ante falla de lectura → error boundary.
-    loadCompanyEligibility(supabase, id),
+    // loadCompanyDiagnosisEligibility lanza ante falla de lectura → error boundary.
+    loadCompanyDiagnosisEligibility(id),
   ]);
 
   if (companyResult.error) {
@@ -117,7 +115,7 @@ export default async function CertificationPage({
 
   const company = companyResult.data;
   const certificates = certificatesResult.data ?? [];
-  const { assessment, result } = eligibility;
+  const { diagnosis, result } = eligibility;
 
   const today = todayISODate();
   const activeCertificate =
@@ -127,28 +125,22 @@ export default async function CertificationPage({
     : null;
 
   const counters = [
-    { key: "compliant", value: result.compliant, accent: "text-success-green" },
-    { key: "partial", value: result.partial, accent: "text-warning-yellow" },
-    { key: "nonCompliant", value: result.nonCompliant, accent: "text-danger-red" },
-    { key: "pending", value: result.pending, accent: "text-metal" },
+    { key: "total", value: result.totalBreaches, accent: "text-ink" },
+    { key: "resolved", value: result.resolved, accent: "text-success-green" },
+    { key: "open", value: result.open, accent: "text-danger-red" },
+    { key: "openCritical", value: result.openCritical, accent: "text-warning-yellow" },
   ] as const;
 
-  const gapText = (gap: EligibilityGap): string => {
+  const gapText = (gap: DiagnosisEligibilityGap): string => {
     switch (gap.kind) {
-      case "no_assessment":
-        return t("eligibility.gaps.noAssessment");
-      case "no_evaluated_controls":
-        return t("eligibility.gaps.noEvaluatedControls");
-      case "below_threshold":
-        return t("eligibility.gaps.belowThreshold", {
-          pct: gap.compliancePct,
-          threshold: gap.thresholdPct,
-          missing: gap.missingCompliantCount,
-        });
-      case "critical_non_compliant":
-        return t("eligibility.gaps.criticalNonCompliant", {
-          domain: gap.domainCode,
-          controls: gap.controlCodes.join(", "),
+      case "no_diagnosis":
+        return t("eligibility.gaps.noDiagnosis");
+      case "open_breaches":
+        return t("eligibility.gaps.openBreaches", {
+          count: gap.open.length,
+          areas: gap.open
+            .map((breach) => `${breach.areaLabel} (${breach.breachCode})`)
+            .join(", "),
         });
     }
   };
@@ -168,9 +160,9 @@ export default async function CertificationPage({
             <h2 className="text-body-sm font-semibold text-ink">
               {t("eligibility.title")}
             </h2>
-            {assessment ? (
+            {diagnosis ? (
               <StatusBadge variant="neutral">
-                {t("eligibility.cycleLabel", { cycle: assessment.cycle })}
+                {t(`eligibility.sourceLabels.${diagnosis.source}`)}
               </StatusBadge>
             ) : null}
           </div>
@@ -193,28 +185,23 @@ export default async function CertificationPage({
 
           <div className="mt-16">
             <ProgressBar
-              value={result.compliancePct}
+              value={result.resolvedPct}
               aria-label={t("eligibility.progressLabel")}
               fillClassName={result.eligible ? "bg-success-green" : "bg-ink"}
             />
             <p className="mt-8 text-[13px] text-carbon">
               {t("eligibility.summaryLine", {
-                total: result.totalControls,
-                pct: result.compliancePct,
+                resolved: result.resolved,
+                total: result.totalBreaches,
+                pct: result.resolvedPct,
               })}
             </p>
           </div>
 
-          {/* Parámetros documentados de la regla (RFC §11; regla dura pendiente
-              de validación del equipo). */}
+          {/* Regla del modelo nuevo (sub-proyecto #7): cero brechas abiertas. */}
           <div className="mt-16 border-t border-ash pt-12">
             <p className="text-caption leading-caption text-carbon">
-              {t("eligibility.thresholdNote", { threshold: result.thresholdPct })}
-            </p>
-            <p className="mt-4 text-caption leading-caption text-carbon">
-              {t("eligibility.hardRuleNote", {
-                domains: CRITICAL_DOMAIN_CODES.join(" y "),
-              })}
+              {t("eligibility.ruleNote")}
             </p>
           </div>
 
@@ -306,7 +293,7 @@ export default async function CertificationPage({
                       {t("certificate.complianceLabel")}
                     </dt>
                     <dd className="mt-2 text-body-sm font-semibold text-white">
-                      {result.compliancePct}%
+                      {result.resolvedPct}%
                     </dd>
                   </div>
                   <div>
@@ -351,6 +338,13 @@ export default async function CertificationPage({
                 >
                   {t("certificate.verify")} ↗
                 </Link>
+                {/* PDF con QR de verificación (sub-proyecto #7). */}
+                <div className="mt-8 [&>div]:w-full [&_button]:w-full">
+                  <DownloadReportButton
+                    href={`/app/companies/${company.id}/certificado`}
+                    label={t("certificate.downloadPdf")}
+                  />
+                </div>
               </>
             ) : (
               <p className="mt-24 border-t border-[#34353a] pt-16 text-[13px] leading-[1.55] text-[#b5bdc9]">

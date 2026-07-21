@@ -604,6 +604,7 @@ export type Database = {
       }
       evidences: {
         Row: {
+          breach_id: string | null
           company_id: string
           control_id: string | null
           created_at: string
@@ -616,6 +617,7 @@ export type Database = {
           version: number
         }
         Insert: {
+          breach_id?: string | null
           company_id: string
           control_id?: string | null
           created_at?: string
@@ -628,6 +630,7 @@ export type Database = {
           version?: number
         }
         Update: {
+          breach_id?: string | null
           company_id?: string
           control_id?: string | null
           created_at?: string
@@ -640,6 +643,13 @@ export type Database = {
           version?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "evidences_breach_id_fkey"
+            columns: ["breach_id"]
+            isOneToOne: false
+            referencedRelation: "diagnosis_breaches"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "evidences_company_id_fkey"
             columns: ["company_id"]

@@ -2,12 +2,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { DownloadReportButton } from "@/components/documents/download-report-button";
+import { BreachEvidence } from "@/components/portal/breach-evidence";
+import { BreachResolution } from "@/components/portal/breach-resolution";
 import { cn } from "@/components/ui";
 import { getTemplate } from "@/lib/documents/templates/registry";
 import { getBreachContent } from "@/lib/legal/breach-content";
 import { getBreachMitigation } from "@/lib/legal/breach-mitigation";
 import { formatFineClp } from "@/lib/legal/fine";
-import { loadClientBreach } from "@/lib/portal/load-diagnosis.server";
+import {
+  loadClientBreach,
+  loadClientBreachEvidences,
+} from "@/lib/portal/load-diagnosis.server";
 import { severityTagClass } from "@/lib/portal/severity-tag";
 
 /**
@@ -29,6 +34,7 @@ export default async function EvaluationDetailPage({
   const { breachId } = await params;
   const breach = await loadClientBreach(breachId);
   if (!breach) notFound();
+  const evidences = await loadClientBreachEvidences(breachId);
 
   const [t, tEvaluations, tLabel] = await Promise.all([
     getTranslations("portal.evaluations.detail"),
@@ -66,6 +72,11 @@ export default async function EvaluationDetailPage({
           >
             {tLabel(breach.severity)}
           </span>
+          {breach.resolutionStatus === "resolved" ? (
+            <span className="rounded-full bg-success-green px-8 py-[3px] text-caption font-semibold text-white">
+              {tEvaluations("resolvedTag")}
+            </span>
+          ) : null}
         </div>
         {fine ? (
           <p className="mt-12 text-body-sm text-metal">
@@ -169,6 +180,18 @@ export default async function EvaluationDetailPage({
             ) : null}
           </section>
         ) : null}
+
+        {/* Evidencias de la mitigación (sub-proyecto #7): respaldo por brecha. */}
+        <section className="rounded-cards border border-stone bg-white p-16">
+          <BreachEvidence breachId={breach.id} evidences={evidences} />
+        </section>
+
+        {/* Cierre del ciclo (sub-proyecto #6): el cliente marca la brecha como
+            resuelta cuando completó la mitigación; el consultor valida en #7. */}
+        <BreachResolution
+          breachId={breach.id}
+          resolved={breach.resolutionStatus === "resolved"}
+        />
       </div>
     </div>
   );

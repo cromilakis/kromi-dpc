@@ -105,29 +105,30 @@
       "description": "Emisión y verificación criptográfica del sello DPC según el estado del assessment activo.",
       "eligibility": {
         "title": "Elegibilidad de emisión",
-        "summaryLine": "{total, plural, one {# control evaluado} other {# controles evaluados}} · {pct}% de cumplimiento global",
-        "cycleLabel": "Ciclo {cycle}",
-        "progressLabel": "Cumplimiento global del assessment activo",
-        "counters": {
-          "compliant": "Cumple",
-          "partial": "Parcial",
-          "nonCompliant": "No cumple",
-          "pending": "Pendiente"
+        "summaryLine": "{resolved} de {total, plural, one {# brecha resuelta} other {# brechas resueltas}} · {pct}%",
+        "sourceLabels": {
+          "self_service": "Autodiagnóstico",
+          "consultant_assisted": "Diagnóstico asistido"
         },
-        "thresholdNote": "Umbral de emisión: {threshold}% de los controles del assessment activo en «Cumple».",
-        "hardRuleNote": "Regla dura: cero controles «No cumple» en los dominios {domains} (pendiente de validación del equipo).",
+        "progressLabel": "Resolución de brechas del diagnóstico activo",
+        "counters": {
+          "total": "Brechas",
+          "resolved": "Resueltas",
+          "open": "Abiertas",
+          "openCritical": "Críticas abiertas"
+        },
+        "ruleNote": "Regla de emisión: cero brechas abiertas en el diagnóstico activo. La emisión es un acto del consultor tras validar las resoluciones del cliente.",
         "eligibleTitle": "Empresa elegible",
-        "eligibleText": "El assessment activo cumple el umbral y la regla dura de dominios críticos. Se puede emitir el certificado.",
+        "eligibleText": "Todas las brechas del diagnóstico activo están resueltas. Se puede emitir el certificado.",
         "gapsTitle": "Qué falta para emitir",
         "gaps": {
-          "noAssessment": "La empresa no tiene ningún ciclo de evaluación. Iniciar un assessment y evaluar los controles.",
-          "noEvaluatedControls": "El assessment activo no tiene controles asociados. Revisar la carga del checklist.",
-          "belowThreshold": "Cumplimiento global {pct}% — bajo el umbral de {threshold}%. {missing, plural, one {Falta # control adicional en «Cumple»} other {Faltan # controles adicionales en «Cumple»}}.",
-          "criticalNonCompliant": "Dominio crítico {domain} con controles en «No cumple»: {controls}."
+          "noDiagnosis": "La empresa no tiene un diagnóstico activo. Aplicar el diagnóstico (asistido o self-service) para evaluar la elegibilidad.",
+          "openBreaches": "{count, plural, one {# brecha abierta} other {# brechas abiertas}}: {areas}."
         }
       },
       "certificate": {
         "brand": "DPC Certification",
+        "downloadPdf": "Descargar certificado (PDF)",
         "grantedTo": "Certificado de cumplimiento otorgado a",
         "meta": "Rubro {sector} · Estándar DPC v0.4",
         "metaNoSector": "Estándar DPC v0.4",

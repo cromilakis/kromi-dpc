@@ -11,6 +11,9 @@ export interface DiagnosisBreachRow {
   fineMinUtm: number | null;
   fineMaxUtm: number | null;
   description: string;
+  /** Resolución por el cliente (sub-proyecto #6): 'open' | 'resolved'. */
+  resolutionStatus: string;
+  resolvedAt: string | null;
 }
 
 export interface ClientDiagnosis {
@@ -36,6 +39,8 @@ function mapBreach(row: {
   fine_min_utm: number | null;
   fine_max_utm: number | null;
   description: string;
+  resolution_status: string;
+  resolved_at: string | null;
 }): DiagnosisBreachRow {
   return {
     id: row.id,
@@ -47,6 +52,8 @@ function mapBreach(row: {
     fineMinUtm: row.fine_min_utm,
     fineMaxUtm: row.fine_max_utm,
     description: row.description,
+    resolutionStatus: row.resolution_status,
+    resolvedAt: row.resolved_at,
   };
 }
 
@@ -74,7 +81,7 @@ export async function loadClientDiagnosis(): Promise<ClientDiagnosis> {
     const { data: rows } = await supabase
       .from("diagnosis_breaches")
       .select(
-        "id, breach_code, area, area_label, severity, articles, fine_min_utm, fine_max_utm, description",
+        "id, breach_code, area, area_label, severity, articles, fine_min_utm, fine_max_utm, description, resolution_status, resolved_at",
       )
       .eq("diagnosis_id", diagnosis.id);
 
@@ -98,4 +105,36 @@ export async function loadClientBreach(
 ): Promise<DiagnosisBreachRow | null> {
   const { breaches } = await loadClientDiagnosis();
   return breaches.find((b) => b.id === breachId) ?? null;
+}
+
+export interface BreachEvidenceRow {
+  id: string;
+  name: string;
+  status: string;
+  version: number;
+}
+
+/**
+ * Evidencias subidas para una brecha (sub-proyecto #7). Lectura con el cliente
+ * autenticado: la RLS evidences_client_select la acota a su empresa.
+ */
+export async function loadClientBreachEvidences(
+  breachId: string,
+): Promise<BreachEvidenceRow[]> {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("evidences")
+      .select("id, name, status, version")
+      .eq("breach_id", breachId)
+      .order("created_at", { ascending: true });
+    return (data ?? []).map((row) => ({
+      id: row.id,
+      name: row.name,
+      status: row.status,
+      version: row.version,
+    }));
+  } catch {
+    return [];
+  }
 }

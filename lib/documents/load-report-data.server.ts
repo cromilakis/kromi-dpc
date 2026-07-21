@@ -19,6 +19,8 @@ function mapBreach(row: {
   fine_min_utm: number | null;
   fine_max_utm: number | null;
   description: string;
+  resolution_status: string;
+  resolved_at: string | null;
 }): DiagnosisBreachRow {
   return {
     id: row.id,
@@ -30,6 +32,8 @@ function mapBreach(row: {
     fineMinUtm: row.fine_min_utm,
     fineMaxUtm: row.fine_max_utm,
     description: row.description,
+    resolutionStatus: row.resolution_status,
+    resolvedAt: row.resolved_at,
   };
 }
 
@@ -121,7 +125,7 @@ export async function loadCompanyReportData(companyId: string): Promise<ReportRe
     const { data: rows } = await admin
       .from("diagnosis_breaches")
       .select(
-        "id, breach_code, area, area_label, severity, articles, fine_min_utm, fine_max_utm, description",
+        "id, breach_code, area, area_label, severity, articles, fine_min_utm, fine_max_utm, description, resolution_status, resolved_at",
       )
       .eq("diagnosis_id", diagnosis.id);
 

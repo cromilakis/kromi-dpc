@@ -9,7 +9,7 @@ import {
   generateCertificateCode,
   todayISODate,
 } from "@/lib/certificates/issue.server";
-import { loadCompanyEligibility } from "@/lib/certificates/load-eligibility.server";
+import { loadCompanyDiagnosisEligibility } from "@/lib/certificates/load-diagnosis-eligibility.server";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -125,9 +125,10 @@ export async function issueCertificate(
     }
     if (active) return { ok: false, error: "already_active" };
 
-    // Re-chequeo autoritativo de la regla de elegibilidad (umbral 80% +
-    // regla dura DPC-SEG/DPC-INC) — nunca se confía en el cliente.
-    const { result } = await loadCompanyEligibility(supabase, companyId);
+    // Re-chequeo autoritativo de la regla de elegibilidad del MODELO NUEVO
+    // (sub-proyecto #7: cero brechas abiertas en el diagnóstico activo) —
+    // nunca se confía en el cliente.
+    const { result } = await loadCompanyDiagnosisEligibility(companyId);
     if (!result.eligible) return { ok: false, error: "not_eligible" };
 
     const issuedAt = todayISODate();
@@ -171,8 +172,8 @@ export async function issueCertificate(
           issued_at: issuedAt,
           valid_until: validUntil,
           sha256_hash: sha256Hash,
-          compliance_pct: result.compliancePct,
-          assessment_total_controls: result.totalControls,
+          resolved_breaches: result.resolved,
+          total_breaches: result.totalBreaches,
         },
       });
 
@@ -220,8 +221,7 @@ export async function revalidateCertificate(
       return { ok: false, error: "not_active" };
     }
 
-    const { result } = await loadCompanyEligibility(
-      supabase,
+    const { result } = await loadCompanyDiagnosisEligibility(
       certificate.company_id,
     );
     if (!result.eligible) return { ok: false, error: "not_eligible" };
@@ -248,7 +248,8 @@ export async function revalidateCertificate(
         old_valid_until: certificate.valid_until,
         new_valid_until: newValidUntil,
         revalidated_at: revalidatedAt,
-        compliance_pct: result.compliancePct,
+        resolved_breaches: result.resolved,
+        total_breaches: result.totalBreaches,
       },
     });
 

@@ -31,6 +31,48 @@
       "brand": "DPC · Data Protection Compliance",
       "generatedLabel": "Generado el {date}"
     },
+    "certificate": {
+      "title": "Certificado DPC",
+      "brand": "DPC · Data Protection Compliance",
+      "generatedLabel": "Generado el {date}",
+      "grantedTo": "Certificado privado de cumplimiento otorgado a",
+      "scopeText": "Se certifica que la organización completó el proceso de diagnóstico y mitigación del estándar DPC para la Ley N° 21.719 de protección de datos personales: todas las brechas detectadas en su diagnóstico fueron resueltas y validadas por el equipo consultor, con evidencia documentada en el catastro de cumplimiento.",
+      "codeLabel": "Código de verificación",
+      "issuedLabel": "Fecha de emisión",
+      "validUntilLabel": "Vigente hasta",
+      "revalidatedLabel": "Revalidado el",
+      "sectorLabel": "Rubro",
+      "hashLabel": "Huella de integridad (SHA-256)",
+      "verifyLabel": "Verifica este certificado en línea:",
+      "disclaimer": "Certificado privado emitido bajo el Marco de trabajo DPC. No constituye una certificación gubernamental ni suplanta las potestades de la Agencia de Protección de Datos Personales. Su vigencia puede verificarse en línea con el código indicado."
+    },
+    "dossier": {
+      "title": "Catastro de cumplimiento",
+      "brand": "DPC · Data Protection Compliance",
+      "generatedLabel": "Generado el {date}",
+      "intro": "Este catastro documenta, para cada brecha detectada en el diagnóstico vigente, su estado de resolución, los documentos tipo aplicados y las evidencias aportadas con su estado de revisión. Es el expediente que respalda la certificación DPC.",
+      "summary": "Brechas resueltas",
+      "resolvedLabel": "Resuelta",
+      "openLabel": "Abierta",
+      "resolvedOn": "el",
+      "severityLabels": {
+        "critico": "Crítico",
+        "alto": "Alto",
+        "medio": "Medio",
+        "bajo": "Bajo"
+      },
+      "evidenceStatuses": {
+        "validated": "Validada",
+        "partial": "Parcial",
+        "missing": "En revisión",
+        "rejected": "Rechazada"
+      },
+      "documentsTitle": "Documentos tipo aplicables",
+      "evidencesTitle": "Evidencias aportadas",
+      "noEvidence": "Sin evidencias registradas.",
+      "empty": "El diagnóstico vigente no registra brechas.",
+      "footerNote": "Documento generado automáticamente por la plataforma DPC. Refleja el estado del diagnóstico y sus evidencias al momento de su emisión."
+    },
     "mitigation": {
       "title": "Plan de mitigación",
       "brand": "DPC · Data Protection Compliance",
