@@ -37,6 +37,8 @@ const data: ReportData = {
       fineMinUtm: 100,
       fineMaxUtm: 5000,
       description: "No existen registros de auditoría.",
+      resolutionStatus: "open",
+      resolvedAt: null,
     },
   ],
 };

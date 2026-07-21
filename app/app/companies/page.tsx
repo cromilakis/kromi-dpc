@@ -21,7 +21,7 @@ import {
 } from "@/components/ui";
 import { COMPANY_PHASES } from "@/lib/companies/schema";
 import {
-  checklistProgress,
+  diagnosisProgress,
   companyInitials,
   PHASE_BADGE_VARIANT,
   progressFillClass,
@@ -112,17 +112,17 @@ export default async function CompaniesPage({
       ? (sectors ?? []).find((sector) => sector.code === filters.rubro)
       : undefined;
 
-  // Embed acotado a la evaluación ABIERTA de ciclo mayor (mismo criterio que
-  // el panel general): evita transferir los controles de todos los ciclos.
+  // Modelo nuevo (#8): embed acotado al diagnóstico ACTIVO (mismo criterio
+  // que el panel general): avance = brechas resueltas.
   let query = supabase
     .from("companies")
     .select(
-      "id, name, phase, complexity_score, created_at, sectors ( name ), assessments ( cycle, assessment_controls ( status ) ), company_risks ( id )",
+      "id, name, phase, complexity_score, created_at, sectors ( name ), company_diagnoses ( status, diagnosis_breaches ( resolution_status ) ), company_risks ( id )",
     )
-    .eq("assessments.status", "open")
+    .eq("company_diagnoses.status", "active")
     .order("name", { ascending: true })
-    .order("cycle", { referencedTable: "assessments", ascending: false })
-    .limit(1, { referencedTable: "assessments" });
+    .order("created_at", { referencedTable: "company_diagnoses", ascending: false })
+    .limit(1, { referencedTable: "company_diagnoses" });
   if (filters.q !== undefined) {
     query = query.ilike("name", `%${escapeLikePattern(filters.q)}%`);
   }
@@ -138,16 +138,14 @@ export default async function CompaniesPage({
     throw new Error(`No fue posible cargar las empresas: ${error.message}`);
   }
 
-  // Avance del checklist (ciclo mayor), riesgos y días en cartera por fila —
-  // mismas derivaciones que el panel general (§1.4.1).
+  // Avance (brechas resueltas del diagnóstico activo), riesgos y días en
+  // cartera por fila — mismas derivaciones que el panel general (§1.4.1).
   const rows = (companies ?? []).map((company) => {
-    const latest = company.assessments.reduce<
-      (typeof company.assessments)[number] | null
-    >((best, assessment) => {
-      return !best || assessment.cycle > best.cycle ? assessment : best;
-    }, null);
-    const progress = checklistProgress(
-      (latest?.assessment_controls ?? []).map((control) => control.status),
+    const active = company.company_diagnoses[0] ?? null;
+    const progress = diagnosisProgress(
+      active
+        ? active.diagnosis_breaches.map((breach) => breach.resolution_status)
+        : null,
     );
     return {
       company,

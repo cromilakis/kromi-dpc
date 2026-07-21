@@ -17,7 +17,6 @@ import { RECERT_CONSENT_VERSION } from "@/lib/recert/gate";
 
 const CLIENT_USER_ID = "22222222-2222-4222-a222-222222222222";
 const COMPANY_ID = "33333333-3333-4333-a333-333333333333";
-const ASSESSMENT_ID = "44444444-4444-4444-a444-444444444444";
 
 type QueryResult = { data: unknown; error: unknown };
 
@@ -68,52 +67,39 @@ function fakeSessionClient(opts: SessionOpts = {}) {
 
 type AdminOpts = {
   companyScore?: QueryResult;
-  openRecert?: QueryResult;
-  latestCycle?: QueryResult;
-  assessmentInsert?: QueryResult;
+  companyPhase?: QueryResult;
+  phaseUpdate?: { error: unknown };
   auditInsert?: QueryResult;
 };
 
-/** Cliente service-role: lee `companies.complexity_score`, chequea el ciclo
- * abierto `client_recert`, lee el último ciclo, inserta el nuevo
- * `assessments` y las dos entradas de `audit_log`. */
+/** Cliente service-role (modelo nuevo, #8): lee `companies.complexity_score`,
+ * lee `companies.phase` (idempotencia), actualiza la fase a 'revalidacion' y
+ * escribe las dos entradas de `audit_log`. */
 function fakeAdminClient(opts: AdminOpts = {}) {
   const {
     companyScore = { data: { complexity_score: 30 }, error: null },
-    openRecert = { data: null, error: null },
-    latestCycle = { data: { cycle: 1 }, error: null },
-    assessmentInsert = { data: { id: ASSESSMENT_ID }, error: null },
+    companyPhase = { data: { phase: "certificacion" }, error: null },
+    phaseUpdate = { error: null },
     auditInsert = { data: null, error: null },
   } = opts;
 
-  const insertFieldsSeen: unknown[] = [];
+  const updateFieldsSeen: unknown[] = [];
   const auditInsertsSeen: unknown[] = [];
 
+  // La action hace dos SELECT sobre companies (score y luego phase) con la
+  // misma forma de cadena; se distinguen por orden de llamada.
+  let companiesSelectCall = 0;
   const companiesTable = {
-    select: () => ({
-      eq: () => ({ maybeSingle: () => Promise.resolve(companyScore) }),
-    }),
-  };
-
-  let assessmentsSelectCall = 0;
-  const assessmentsTable = {
     select: () => {
-      assessmentsSelectCall += 1;
-      const isOpenRecertCheck = assessmentsSelectCall % 2 === 1;
-      const chainObj = {
-        eq: () => chainObj,
-        order: () => chainObj,
-        limit: () => chainObj,
-        maybeSingle: () =>
-          Promise.resolve(isOpenRecertCheck ? openRecert : latestCycle),
-      };
-      return chainObj;
-    },
-    insert: (fields: unknown) => {
-      insertFieldsSeen.push(fields);
+      companiesSelectCall += 1;
+      const result = companiesSelectCall === 1 ? companyScore : companyPhase;
       return {
-        select: () => ({ single: () => Promise.resolve(assessmentInsert) }),
+        eq: () => ({ maybeSingle: () => Promise.resolve(result) }),
       };
+    },
+    update: (fields: unknown) => {
+      updateFieldsSeen.push(fields);
+      return { eq: () => Promise.resolve(phaseUpdate) };
     },
   };
 
@@ -127,11 +113,10 @@ function fakeAdminClient(opts: AdminOpts = {}) {
   return {
     from: vi.fn((table: string) => {
       if (table === "companies") return companiesTable;
-      if (table === "assessments") return assessmentsTable;
       if (table === "audit_log") return auditTable;
       throw new Error(`tabla no mockeada en el test (admin): ${table}`);
     }),
-    _insertFieldsSeen: insertFieldsSeen,
+    _updateFieldsSeen: updateFieldsSeen,
     _auditInsertsSeen: auditInsertsSeen,
   };
 }
@@ -182,20 +167,20 @@ describe("requestRecertification", () => {
     expect(createAdminClient).not.toHaveBeenCalled();
   });
 
-  it("ya hay un ciclo client_recert abierto devuelve already_open", async () => {
+  it("empresa ya en fase revalidacion devuelve already_open", async () => {
     const session = fakeSessionClient();
     vi.mocked(createClient).mockResolvedValue(session as never);
     const admin = fakeAdminClient({
-      openRecert: { data: { id: ASSESSMENT_ID }, error: null },
+      companyPhase: { data: { phase: "revalidacion" }, error: null },
     });
     vi.mocked(createAdminClient).mockReturnValue(admin as never);
 
     const result = await requestRecertification(RECERT_CONSENT_VERSION);
     expect(result).toEqual({ ok: false, error: "already_open" });
-    expect(admin._insertFieldsSeen).toHaveLength(0);
+    expect(admin._updateFieldsSeen).toHaveLength(0);
   });
 
-  it("happy path score bajo: abre ciclo client_recert + audita + gate self_service_pending", async () => {
+  it("happy path score bajo: fija fase revalidacion + audita + gate self_service_pending", async () => {
     const session = fakeSessionClient();
     vi.mocked(createClient).mockResolvedValue(session as never);
     const admin = fakeAdminClient({
@@ -210,14 +195,7 @@ describe("requestRecertification", () => {
     expect(JSON.stringify(result)).not.toContain("20");
     expect(JSON.stringify(result)).not.toContain("score");
 
-    expect(admin._insertFieldsSeen).toEqual([
-      {
-        company_id: COMPANY_ID,
-        cycle: 2,
-        status: "open",
-        origin: "client_recert",
-      },
-    ]);
+    expect(admin._updateFieldsSeen).toEqual([{ phase: "revalidacion" }]);
 
     expect(admin._auditInsertsSeen).toEqual([
       expect.objectContaining({
@@ -230,7 +208,6 @@ describe("requestRecertification", () => {
         action: "recert.requested",
         detail: {
           company_id: COMPANY_ID,
-          assessment_id: ASSESSMENT_ID,
           gate: "self_service_pending",
         },
       }),

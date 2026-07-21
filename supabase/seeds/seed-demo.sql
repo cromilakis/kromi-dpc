@@ -48,139 +48,49 @@ on conflict (id) do update set
   contact = excluded.contact,
   notes = excluded.notes;
 
--- Un ciclo de evaluación por empresa
-insert into public.assessments (company_id, cycle, status, started_at, completed_at) values
-  ('20000000-0000-4000-8000-000000000001', 1, 'in_review', '2026-05-02', null),
-  ('20000000-0000-4000-8000-000000000002', 1, 'in_review', '2026-05-20', null),
-  ('20000000-0000-4000-8000-000000000003', 1, 'open',      '2026-06-19', null),
-  ('20000000-0000-4000-8000-000000000004', 1, 'closed',    '2026-03-26', '2026-06-20'),
-  ('20000000-0000-4000-8000-000000000005', 1, 'open',      '2026-06-23', null),
-  ('20000000-0000-4000-8000-000000000006', 1, 'in_review', '2026-05-29', null)
-on conflict (company_id, cycle) do update set
-  status = excluded.status,
-  started_at = excluded.started_at,
-  completed_at = excluded.completed_at;
-
 -- ----------------------------------------------------------------------------
--- Coherencia narrativa (revisión adversarial):
---   * Clínica Andes tiene certificado 'active' emitido el 2026-06-28: su
---     evaluación no puede quedar con 9 controles non_compliant (perfil crudo
---     del prototipo). Decisión: perfil mayormente compliant (18 compliant /
---     5 partial / 0 non_compliant); los 5 'partial' corresponden 1:1 a los
---     ítems aún abiertos del plan de adecuación (biometría DPC-SEN-001,
---     incidentes DPC-INC-001/002, RAT DPC-INV-001, retención DPC-FIN-002).
---   * El perfil de gap del prototipo (4 cumple / 10 parcial / 9 no cumple) se
---     conserva íntegro pero se traslada a Aurora Pay, que está en fase
---     'propuesta' (gap analysis terminado, sin certificado): ahí sí es
---     narrativamente coherente.
---   * Nexo tiene certificado activo revalidado el 2026-06-20 con ciclo
---     cerrado: una evaluación toda 'pending' era incoherente. Decisión:
---     21 compliant / 2 partial (observaciones menores de la revalidación:
---     simulacro anual DPC-INC-002 y salvaguardas DPC-EIA-002).
+-- Diagnósticos del MODELO NUEVO (sub-proyecto #8: reemplaza a los seeds de
+-- assessments/assessment_controls). Coherencia narrativa:
+--   * Clínica Andes tiene certificado 'active': diagnóstico con todas sus
+--     brechas resueltas (elegible bajo la regla "cero brechas abiertas").
+--   * Aurora Pay está en 'propuesta': diagnóstico con brechas abiertas.
+--   * Nexo (certificado revalidado): diagnóstico limpio de 2 brechas resueltas.
+--   * Tienda Norte: recién diagnosticada, brechas abiertas.
 -- ----------------------------------------------------------------------------
 
--- Clínica Andes Salud: 18 compliant / 5 partial (certificado emitido)
-insert into public.assessment_controls (assessment_id, control_id, status, evaluated_at)
-select a.id, c.id, v.status::public.control_result, '2026-06-25'::timestamptz
-from (values
-  ('DPC-LIC-001', 'compliant'),
-  ('DPC-FIN-001', 'compliant'),
-  ('DPC-FIN-002', 'partial'),
-  ('DPC-PRO-001', 'compliant'),
-  ('DPC-CAL-001', 'compliant'),
-  ('DPC-RES-001', 'compliant'),
-  ('DPC-RES-002', 'compliant'),
-  ('DPC-RES-003', 'compliant'),
-  ('DPC-RES-004', 'compliant'),
-  ('DPC-SEG-001', 'compliant'),
-  ('DPC-SEG-002', 'compliant'),
-  ('DPC-TRA-001', 'compliant'),
-  ('DPC-CON-001', 'compliant'),
-  ('DPC-INV-001', 'partial'),
-  ('DPC-INV-002', 'compliant'),
-  ('DPC-DER-001', 'compliant'),
-  ('DPC-SEN-001', 'partial'),
-  ('DPC-TER-001', 'compliant'),
-  ('DPC-TER-002', 'compliant'),
-  ('DPC-INC-001', 'partial'),
-  ('DPC-INC-002', 'partial'),
-  ('DPC-EIA-001', 'compliant'),
-  ('DPC-EIA-002', 'compliant')
-) as v(code, status)
-join public.controls c on c.code = v.code
-cross join lateral (
-  select id from public.assessments
-  where company_id = '20000000-0000-4000-8000-000000000001' and cycle = 1
-) a
-on conflict (assessment_id, control_id) do update set
-  status = excluded.status,
-  evaluated_at = excluded.evaluated_at;
+insert into public.company_diagnoses (id, company_id, source, answers, risk_level, total_breaches, status, created_at) values
+  ('30000000-0000-4000-8000-000000000001', '20000000-0000-4000-8000-000000000001', 'consultant_assisted', '{}'::jsonb, 'alto',    4, 'active', '2026-05-02'),
+  ('30000000-0000-4000-8000-000000000002', '20000000-0000-4000-8000-000000000002', 'self_service',        '{}'::jsonb, 'critico', 5, 'active', '2026-05-20'),
+  ('30000000-0000-4000-8000-000000000004', '20000000-0000-4000-8000-000000000004', 'consultant_assisted', '{}'::jsonb, 'medio',   2, 'active', '2026-03-26'),
+  ('30000000-0000-4000-8000-000000000003', '20000000-0000-4000-8000-000000000003', 'self_service',        '{}'::jsonb, 'alto',    3, 'active', '2026-06-19')
+on conflict (id) do update set
+  risk_level = excluded.risk_level,
+  total_breaches = excluded.total_breaches,
+  status = excluded.status;
 
--- Aurora Pay: perfil de gap del prototipo (4 cumple / 10 parcial / 9 no)
-insert into public.assessment_controls (assessment_id, control_id, status, evaluated_at)
-select a.id, c.id, v.status::public.control_result, '2026-06-15'::timestamptz
-from (values
-  ('DPC-RES-001', 'partial'),
-  ('DPC-RES-002', 'compliant'),
-  ('DPC-RES-003', 'compliant'),
-  ('DPC-RES-004', 'non_compliant'),
-  ('DPC-INV-001', 'partial'),
-  ('DPC-INV-002', 'non_compliant'),
-  ('DPC-LIC-001', 'partial'),
-  ('DPC-DER-001', 'compliant'),
-  ('DPC-SEN-001', 'non_compliant'),
-  ('DPC-SEG-001', 'partial'),
-  ('DPC-SEG-002', 'compliant'),
-  ('DPC-TER-001', 'partial'),
-  ('DPC-TER-002', 'non_compliant'),
-  ('DPC-INC-001', 'partial'),
-  ('DPC-INC-002', 'non_compliant'),
-  ('DPC-FIN-001', 'partial'),
-  ('DPC-FIN-002', 'non_compliant'),
-  ('DPC-PRO-001', 'non_compliant'),
-  ('DPC-CAL-001', 'partial'),
-  ('DPC-TRA-001', 'partial'),
-  ('DPC-CON-001', 'partial'),
-  ('DPC-EIA-001', 'non_compliant'),
-  ('DPC-EIA-002', 'non_compliant')
-) as v(code, status)
-join public.controls c on c.code = v.code
-cross join lateral (
-  select id from public.assessments
-  where company_id = '20000000-0000-4000-8000-000000000002' and cycle = 1
-) a
-on conflict (assessment_id, control_id) do update set
-  status = excluded.status,
-  evaluated_at = excluded.evaluated_at;
-
--- Nexo Servicios B2B: 21 compliant / 2 partial (certificado revalidado)
-insert into public.assessment_controls (assessment_id, control_id, status, evaluated_at)
-select a.id, c.id,
-  case when c.code in ('DPC-INC-002', 'DPC-EIA-002')
-       then 'partial'::public.control_result
-       else 'compliant'::public.control_result end,
-  '2026-06-18'::timestamptz
-from public.controls c
-cross join lateral (
-  select id from public.assessments
-  where company_id = '20000000-0000-4000-8000-000000000004' and cycle = 1
-) a
-on conflict (assessment_id, control_id) do update set
-  status = excluded.status,
-  evaluated_at = excluded.evaluated_at;
-
--- Empresas aún en diagnóstico o propuesta temprana: los 23 controles 'pending'
-insert into public.assessment_controls (assessment_id, control_id, status)
-select a.id, c.id, 'pending'
-from public.assessments a
-cross join public.controls c
-where a.cycle = 1
-  and a.company_id in (
-    '20000000-0000-4000-8000-000000000003',
-    '20000000-0000-4000-8000-000000000005',
-    '20000000-0000-4000-8000-000000000006'
-  )
-on conflict (assessment_id, control_id) do nothing;
+insert into public.diagnosis_breaches
+  (id, diagnosis_id, breach_code, area, area_label, severity, articles, fine_min_utm, fine_max_utm, description, dimension, resolution_status, resolved_at) values
+  -- Clínica Andes: 4 brechas, todas resueltas (certificada)
+  ('31000000-0000-4000-8000-000000000001', '30000000-0000-4000-8000-000000000001', 'B-SAL-001', 'SAL', 'Datos de salud',                 'critico', array['Ley 20.584 Arts. 12-15','Dto. 41/2013 MINSAL'], 10000, 20000, 'Fichas clínicas sin control de acceso por perfiles.', 9, 'resolved', '2026-06-20'),
+  ('31000000-0000-4000-8000-000000000002', '30000000-0000-4000-8000-000000000001', 'B-BIO-001', 'BIO', 'Datos biométricos',              'alto',    array['Art. 16 ter'],                                   2000, 10000, 'Control de asistencia biométrico sin información ni alternativa.', 9, 'resolved', '2026-06-22'),
+  ('31000000-0000-4000-8000-000000000003', '30000000-0000-4000-8000-000000000001', 'B-SEG-003', 'SEG', 'Seguridad de la información',    'alto',    array['Art. 14 sexies'],                                2000, 10000, 'Sin protocolo de respuesta ante vulneraciones.', 6, 'resolved', '2026-06-24'),
+  ('31000000-0000-4000-8000-000000000004', '30000000-0000-4000-8000-000000000001', 'B-CON-001', 'CON', 'Conservación y eliminación de datos', 'medio', array['Art. 3° letra c)'],                          500,  5000,  'Datos conservados sin plazos de retención definidos.', 2, 'resolved', '2026-06-25'),
+  -- Aurora Pay: 5 brechas abiertas (fintech en propuesta)
+  ('31000000-0000-4000-8000-000000000011', '30000000-0000-4000-8000-000000000002', 'B-LEG-002', 'LEG', 'Consentimiento y base de licitud', 'critico', array['Art. 16','Art. 16 bis'],                       5000, 20000, 'Datos financieros sensibles sin consentimiento expreso documentado.', 3, 'open', null),
+  ('31000000-0000-4000-8000-000000000012', '30000000-0000-4000-8000-000000000002', 'B-SEG-001', 'SEG', 'Seguridad de la información',    'critico', array['Art. 14 quinquies'],                             5000, 20000, 'Planillas con datos de deudores sin cifrado ni control de acceso.', 6, 'open', null),
+  ('31000000-0000-4000-8000-000000000013', '30000000-0000-4000-8000-000000000002', 'B-TER-002', 'TER', 'Proveedores y encargados',       'alto',    array['Art. 14 ter letra h)','Art. 15'],                2000, 10000, 'Datos en servidores extranjeros sin garantías contractuales.', 7, 'open', null),
+  ('31000000-0000-4000-8000-000000000014', '30000000-0000-4000-8000-000000000002', 'B-EIA-001', 'EIA', 'Decisiones automatizadas y evaluación de impacto', 'alto', array['Art. 8° bis'],                     2000, 10000, 'Scoring crediticio automatizado sin información ni revisión humana.', 8, 'open', null),
+  ('31000000-0000-4000-8000-000000000015', '30000000-0000-4000-8000-000000000002', 'B-INC-001', 'INC', 'Incidentes de seguridad',        'alto',    array['Art. 14 sexies'],                                2000, 10000, 'Incidentes pasados sin registro ni notificación.', 6, 'open', null),
+  -- Nexo Servicios B2B: 2 brechas resueltas (revalidada)
+  ('31000000-0000-4000-8000-000000000041', '30000000-0000-4000-8000-000000000004', 'B-CAP-001', 'CAP', 'Capacitación del personal',      'medio',   array['Art. 3° letra e)'],                              500,  5000,  'Personal sin capacitación en protección de datos.', 10, 'resolved', '2026-06-10'),
+  ('31000000-0000-4000-8000-000000000042', '30000000-0000-4000-8000-000000000004', 'B-CON-002', 'TER', 'Proveedores y encargados',       'critico', array['Art. 15 bis','Art. 154 bis Código del Trabajo'], 5000, 20000, 'Estudio contable trata datos de trabajadores sin contrato de encargo.', 7, 'resolved', '2026-06-12'),
+  -- Tienda Norte: 3 brechas abiertas (recién diagnosticada)
+  ('31000000-0000-4000-8000-000000000031', '30000000-0000-4000-8000-000000000003', 'B-GOB-001', 'GOB', 'Gobernanza y transparencia',     'alto',    array['Art. 14 ter (12 literales)'],                    2000, 10000, 'Sin política de privacidad publicada.', 4, 'open', null),
+  ('31000000-0000-4000-8000-000000000032', '30000000-0000-4000-8000-000000000003', 'B-LEG-001', 'LEG', 'Consentimiento y base de licitud', 'alto',  array['Art. 12','Art. 8° letra b)'],                    2000, 10000, 'Marketing por WhatsApp sin consentimiento previo.', 3, 'open', null),
+  ('31000000-0000-4000-8000-000000000033', '30000000-0000-4000-8000-000000000003', 'B-CCT-001', 'CCT', 'Videovigilancia',                'medio',   array['DFL 3/2025'],                                    500,  5000,  'Cámaras sin aviso visible ni plazo de retención definido.', 9, 'open', null)
+on conflict (id) do update set
+  resolution_status = excluded.resolution_status,
+  resolved_at = excluded.resolved_at;
 
 -- ----------------------------------------------------------------------------
 -- Riesgos identificados por empresa (subconjuntos del catálogo, reproduciendo

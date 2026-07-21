@@ -81,7 +81,7 @@ export default async function EvidencesPage({
     supabase
       .from("evidences")
       .select(
-        "id, name, version, status, storage_path, created_at, control_id, controls ( id, code, name ), profiles ( full_name )",
+        "id, name, version, status, storage_path, created_at, control_id, controls ( id, code, name ), diagnosis_breaches ( breach_code, area_label ), profiles ( full_name )",
       )
       .eq("company_id", id)
       .order("created_at", { ascending: false }),
@@ -224,6 +224,11 @@ export default async function EvidencesPage({
                   <TableCell>
                     {row.controls ? (
                       <span title={row.controls.name}>{row.controls.code}</span>
+                    ) : row.diagnosis_breaches ? (
+                      /* Evidencia por brecha (sub-proyecto #7). */
+                      <span title={row.diagnosis_breaches.area_label}>
+                        {row.diagnosis_breaches.breach_code}
+                      </span>
                     ) : (
                       <span className="text-metal">{t("table.none")}</span>
                     )}

@@ -4,7 +4,7 @@
 --
 -- Prueba que:
 --   * el cliente de la empresa A ve SOLO datos de A (0 de B) en
---     company_client_view / assessments / assessment_controls / certificates
+--     company_client_view / company_diagnoses / diagnosis_breaches / certificates
 --     / evidences;
 --   * la vista company_client_view NUNCA expone complexity_score/notes/factors;
 --   * el cliente no tiene acceso a companies (base), audit_log ni
@@ -74,20 +74,19 @@ values
   ('44444444-4444-4444-4444-444444444444', '22222222-2222-2222-2222-222222222222', 'active')
 on conflict (user_id) do update set company_id = excluded.company_id, status = 'active';
 
--- Un assessment por empresa.
-insert into public.assessments (id, company_id, cycle, status)
+-- Un diagnóstico activo por empresa (modelo nuevo, #8).
+insert into public.company_diagnoses (id, company_id, source, answers, risk_level, total_breaches, status)
 values
-  ('55555555-5555-5555-5555-555555555555', '11111111-1111-1111-1111-111111111111', 1, 'open'),
-  ('66666666-6666-6666-6666-666666666666', '22222222-2222-2222-2222-222222222222', 1, 'open')
+  ('55555555-5555-5555-5555-555555555555', '11111111-1111-1111-1111-111111111111', 'self_service', '{}'::jsonb, 'alto', 1, 'active'),
+  ('66666666-6666-6666-6666-666666666666', '22222222-2222-2222-2222-222222222222', 'self_service', '{}'::jsonb, 'alto', 1, 'active')
 on conflict (id) do nothing;
 
--- assessment_controls por empresa (mismo control del catálogo, deterministico
--- por sort: sirve solo para probar el join a assessments, no el contenido).
-insert into public.assessment_controls (assessment_id, control_id, status)
+-- Una brecha por diagnóstico (sirve para probar el aislamiento por empresa).
+insert into public.diagnosis_breaches (id, diagnosis_id, breach_code, area, area_label, severity, description, dimension)
 values
-  ('55555555-5555-5555-5555-555555555555', (select id from public.controls order by sort limit 1), 'pending'),
-  ('66666666-6666-6666-6666-666666666666', (select id from public.controls order by sort limit 1), 'pending')
-on conflict (assessment_id, control_id) do nothing;
+  ('55555555-5555-5555-5555-666666666666', '55555555-5555-5555-5555-555555555555', 'B-GOB-001', 'GOB', 'Gobernanza y transparencia', 'alto', 'Sin política de privacidad.', 4),
+  ('66666666-6666-6666-6666-555555555555', '66666666-6666-6666-6666-666666666666', 'B-GOB-001', 'GOB', 'Gobernanza y transparencia', 'alto', 'Sin política de privacidad.', 4)
+on conflict (id) do nothing;
 
 -- Certificado por empresa.
 insert into public.certificates (id, company_id, code, status, valid_until, sha256_hash)
@@ -101,11 +100,6 @@ insert into public.evidences (id, company_id, control_id, name, status)
 values
   ('77777777-7777-7777-7777-777777777777', '11111111-1111-1111-1111-111111111111', (select id from public.controls order by sort limit 1), 'Evidencia A', 'missing'),
   ('88888888-8888-8888-8888-888888888888', '22222222-2222-2222-2222-222222222222', (select id from public.controls order by sort limit 1), 'Evidencia B', 'missing')
-on conflict (id) do nothing;
-
--- interview_session de B (para probar que uA no la ve).
-insert into public.interview_sessions (id, company_id, assessment_id, mode, status)
-values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '22222222-2222-2222-2222-222222222222', '66666666-6666-6666-6666-666666666666', 'assisted', 'draft')
 on conflict (id) do nothing;
 
 -- audit_log: al menos una fila, para probar que el cliente no ve NADA de audit_log.
@@ -131,17 +125,17 @@ begin
   select id into v_id from public.company_client_view limit 1;
   assert v_id = '11111111-1111-1111-1111-111111111111', format('uA: company_client_view devolvió la empresa %s, esperada A', v_id);
 
-  -- assessments: solo A.
-  select count(*) into v_count from public.assessments;
-  assert v_count = 1, format('uA: assessments visibles = %s, esperado 1 (solo A)', v_count);
-  select count(*) into v_count from public.assessments where company_id = '22222222-2222-2222-2222-222222222222';
-  assert v_count = 0, format('uA: assessments de B visibles = %s, esperado 0', v_count);
+  -- company_diagnoses: solo A.
+  select count(*) into v_count from public.company_diagnoses;
+  assert v_count = 1, format('uA: company_diagnoses visibles = %s, esperado 1 (solo A)', v_count);
+  select count(*) into v_count from public.company_diagnoses where company_id = '22222222-2222-2222-2222-222222222222';
+  assert v_count = 0, format('uA: company_diagnoses de B visibles = %s, esperado 0', v_count);
 
-  -- assessment_controls: solo el de A.
-  select count(*) into v_count from public.assessment_controls;
-  assert v_count = 1, format('uA: assessment_controls visibles = %s, esperado 1 (solo A)', v_count);
-  select count(*) into v_count from public.assessment_controls where assessment_id = '66666666-6666-6666-6666-666666666666';
-  assert v_count = 0, format('uA: assessment_controls de B visibles = %s, esperado 0', v_count);
+  -- diagnosis_breaches: solo la de A.
+  select count(*) into v_count from public.diagnosis_breaches;
+  assert v_count = 1, format('uA: diagnosis_breaches visibles = %s, esperado 1 (solo A)', v_count);
+  select count(*) into v_count from public.diagnosis_breaches where diagnosis_id = '66666666-6666-6666-6666-666666666666';
+  assert v_count = 0, format('uA: diagnosis_breaches de B visibles = %s, esperado 0', v_count);
 
   -- certificates: solo A.
   select count(*) into v_count from public.certificates;
@@ -162,10 +156,6 @@ begin
   -- audit_log: 0 filas.
   select count(*) into v_count from public.audit_log;
   assert v_count = 0, format('uA: audit_log visibles = %s, esperado 0', v_count);
-
-  -- interview_sessions: 0 filas (ni siquiera las de su propia empresa: Fase 0 no da acceso).
-  select count(*) into v_count from public.interview_sessions;
-  assert v_count = 0, format('uA: interview_sessions visibles = %s, esperado 0', v_count);
 
   raise notice 'OK: aislamiento de uA (empresa A) verificado';
 end $$;
@@ -209,8 +199,8 @@ begin
   select id into v_id from public.company_client_view limit 1;
   assert v_id = '22222222-2222-2222-2222-222222222222', format('uB: company_client_view devolvió la empresa %s, esperada B', v_id);
 
-  select count(*) into v_count from public.assessments where company_id = '11111111-1111-1111-1111-111111111111';
-  assert v_count = 0, format('uB: assessments de A visibles = %s, esperado 0', v_count);
+  select count(*) into v_count from public.company_diagnoses where company_id = '11111111-1111-1111-1111-111111111111';
+  assert v_count = 0, format('uB: company_diagnoses de A visibles = %s, esperado 0', v_count);
 
   select count(*) into v_count from public.certificates where company_id = '11111111-1111-1111-1111-111111111111';
   assert v_count = 0, format('uB: certificates de A visibles = %s, esperado 0', v_count);

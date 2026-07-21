@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui";
 import {
-  checklistProgress,
+  diagnosisProgress,
   companyInitials,
   PHASE_BADGE_VARIANT,
   progressFillClass,
@@ -42,41 +42,35 @@ export default async function DashboardPage() {
   const tShell = await getTranslations("app.shell");
 
   const supabase = await createClient();
-  // Embed acotado: SOLO la evaluación ABIERTA de ciclo mayor por empresa
-  // (order + limit en el recurso embebido) — sin esto viajaban los controles
-  // de TODOS los ciclos para descartarse en JS. El criterio coincide con el
-  // stat "controles evaluados en evaluaciones abiertas".
+  // Modelo nuevo (#8): el avance por empresa es brechas resueltas del
+  // diagnóstico ACTIVO (embed acotado por status + created_at + limit).
   const { data: companies, error } = await supabase
     .from("companies")
     .select(
-      "id, name, phase, size_tier, sectors ( name ), assessments ( cycle, assessment_controls ( status ) ), company_risks ( id )",
+      "id, name, phase, size_tier, sectors ( name ), company_diagnoses ( status, diagnosis_breaches ( resolution_status ) ), company_risks ( id )",
     )
-    .eq("assessments.status", "open")
+    .eq("company_diagnoses.status", "active")
     .order("created_at", { ascending: false })
-    .order("cycle", { referencedTable: "assessments", ascending: false })
-    .limit(1, { referencedTable: "assessments" });
+    .order("created_at", { referencedTable: "company_diagnoses", ascending: false })
+    .limit(1, { referencedTable: "company_diagnoses" });
 
   if (error) {
     throw new Error(`No fue posible cargar la cartera: ${error.message}`);
   }
 
-  // Avance del checklist por empresa: la evaluación abierta de ciclo mayor
-  // (el reduce queda como defensa por si el embed trae más de una fila).
   const rows = (companies ?? []).map((company) => {
-    const latest = company.assessments.reduce<
-      (typeof company.assessments)[number] | null
-    >((best, assessment) => {
-      return !best || assessment.cycle > best.cycle ? assessment : best;
-    }, null);
-    const progress = checklistProgress(
-      (latest?.assessment_controls ?? []).map((control) => control.status),
+    const active = company.company_diagnoses[0] ?? null;
+    const progress = diagnosisProgress(
+      active
+        ? active.diagnosis_breaches.map((breach) => breach.resolution_status)
+        : null,
     );
     return { company, progress, risksCount: company.company_risks.length };
   });
 
   const totals = rows.reduce(
     (acc, { company, progress }) => {
-      acc.evaluated += progress.evaluated;
+      acc.evaluated += progress.resolved;
       acc.controls += progress.total;
       if (company.phase === "diagnostico") acc.inDiagnosis += 1;
       if (company.phase === "certificacion" || company.phase === "revalidacion") {

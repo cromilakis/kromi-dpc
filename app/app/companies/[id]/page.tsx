@@ -10,7 +10,7 @@ import { ProposalForm } from "@/components/companies/proposal-form";
 import { PageHeader } from "@/components/app/shell";
 import { DownloadReportButton } from "@/components/documents/download-report-button";
 import { Card, ProgressBar, StatusBadge, type StatusBadgeVariant } from "@/components/ui";
-import { checklistProgress, PHASE_BADGE_VARIANT, progressFillClass } from "@/lib/companies/display";
+import { diagnosisProgress, PHASE_BADGE_VARIANT, progressFillClass } from "@/lib/companies/display";
 import { scoreTierOf, type ScoreTier } from "@/lib/companies/scoring.server";
 import { riskSeverity, severityBadgeVariant } from "@/lib/risks/severity";
 import { createClient } from "@/lib/supabase/server";
@@ -27,23 +27,25 @@ import type { Database } from "@/lib/supabase/types";
 
 const companyIdSchema = z.uuid();
 
-type ControlStatus = Database["public"]["Enums"]["control_result"];
+/** Rebanadas de la dona sobre el modelo nuevo (#8): resueltas + abiertas por severidad. */
+type BreachSlice = "resolved" | "critico" | "alto" | "medio" | "bajo";
 
 /** Orden y color (tokens semánticos del prototipo §3.5) de la dona. */
-const DONUT_SEGMENTS: { status: ControlStatus; color: string }[] = [
-  { status: "compliant", color: "#075a39" },
-  { status: "partial", color: "#705500" },
-  { status: "non_compliant", color: "#772322" },
-  { status: "pending", color: "#d3d8df" },
+const DONUT_SEGMENTS: { status: BreachSlice; color: string }[] = [
+  { status: "resolved", color: "#075a39" },
+  { status: "critico", color: "#772322" },
+  { status: "alto", color: "#705500" },
+  { status: "medio", color: "#6f7988" },
+  { status: "bajo", color: "#d3d8df" },
 ];
 
-/** Tinte de las mini-cards por estado (prototipo §1.4.11 "Resumen de controles"). */
-const STATUS_CARD_CLASSES: Record<ControlStatus, string> = {
-  compliant: "border-[#e9f2ec] bg-[#f6faf7] text-success-green",
-  partial: "border-[#f6f0df] bg-[#fbf8ef] text-warning-yellow",
-  non_compliant: "border-[#f6e9e8] bg-[#fbf3f2] text-danger-red",
-  pending: "border-stone bg-[#fbfbfc] text-carbon",
-  not_applicable: "border-stone bg-[#fbfbfc] text-carbon",
+/** Tinte de las mini-cards por estado. */
+const STATUS_CARD_CLASSES: Record<BreachSlice, string> = {
+  resolved: "border-[#e9f2ec] bg-[#f6faf7] text-success-green",
+  critico: "border-[#f6e9e8] bg-[#fbf3f2] text-danger-red",
+  alto: "border-[#f6f0df] bg-[#fbf8ef] text-warning-yellow",
+  medio: "border-stone bg-[#fbfbfc] text-carbon",
+  bajo: "border-stone bg-[#fbfbfc] text-carbon",
 };
 
 /** Tramo del score → variante semántica (tierColor del prototipo §3.5). */
@@ -74,14 +76,14 @@ const AUDIT_ACTION_KEYS: Record<string, string> = {
   "certificate.updated": "certificateUpdated",
 };
 
-/** Dona SVG server-rendered (sin JS): un arco por estado del checklist. */
+/** Dona SVG server-rendered (sin JS): un arco por estado de las brechas. */
 function StatusDonut({
   counts,
   centerPct,
   centerLabel,
   ariaLabel,
 }: {
-  counts: Record<ControlStatus, number>;
+  counts: Record<BreachSlice, number>;
   centerPct: number;
   centerLabel: string;
   ariaLabel: string;
@@ -94,7 +96,7 @@ function StatusDonut({
   );
   // Fracción y offset acumulado de cada arco (sin reasignaciones en render).
   const arcs = DONUT_SEGMENTS.map((segment, index) => {
-    const fractionOf = (status: ControlStatus) =>
+    const fractionOf = (status: BreachSlice) =>
       total > 0 ? counts[status] / total : 0;
     return {
       ...segment,
@@ -183,10 +185,11 @@ export default async function CompanySummaryPage({
         .eq("id", id)
         .maybeSingle(),
       supabase
-        .from("assessments")
-        .select("id, cycle, status, origin, assessment_controls ( status )")
+        .from("company_diagnoses")
+        .select("id, source, status, diagnosis_breaches ( severity, resolution_status )")
         .eq("company_id", id)
-        .order("cycle", { ascending: false })
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
       supabase
@@ -235,25 +238,27 @@ export default async function CompanySummaryPage({
   const isConsultant =
     profileResult.data?.role === "consultant" || profileResult.data?.role === "admin";
 
-  const assessment = assessmentResult.data;
-  // Los controles "No aplica" (fuera de alcance por aplicabilidad) se excluyen
-  // del avance y del conteo: el progreso se mide sobre lo aplicable.
-  const statuses = (assessment?.assessment_controls ?? [])
-    .map((control) => control.status)
-    .filter((status) => status !== "not_applicable");
-  const progress = checklistProgress(statuses);
-  const counts: Record<ControlStatus, number> = {
-    pending: 0,
-    compliant: 0,
-    partial: 0,
-    non_compliant: 0,
-    not_applicable: 0,
+  const diagnosis = assessmentResult.data;
+  // Modelo nuevo (#8): avance = brechas resueltas del diagnóstico activo; la
+  // dona reparte resueltas + abiertas por severidad.
+  const breaches = diagnosis?.diagnosis_breaches ?? [];
+  const progress = diagnosisProgress(
+    diagnosis ? breaches.map((breach) => breach.resolution_status) : null,
+  );
+  const counts: Record<BreachSlice, number> = {
+    resolved: 0,
+    critico: 0,
+    alto: 0,
+    medio: 0,
+    bajo: 0,
   };
-  for (const status of statuses) counts[status] += 1;
-  const compliantPct =
-    progress.total > 0
-      ? Math.round((counts.compliant / progress.total) * 100)
-      : 0;
+  for (const breach of breaches) {
+    if (breach.resolution_status === "resolved") {
+      counts.resolved += 1;
+    } else if (breach.severity in counts) {
+      counts[breach.severity as BreachSlice] += 1;
+    }
+  }
 
   // Riesgos ordenados por severidad (impacto × probabilidad) descendente.
   const topRisks = [...(risksResult.data ?? [])]
@@ -263,10 +268,9 @@ export default async function CompanySummaryPage({
 
   const auditEntries = auditResult.data ?? [];
 
-  // Aviso para el consultor: el ciclo abierto más reciente lo abrió el
-  // cliente desde el portal (Fase 4, `assessments.origin`), no el equipo.
-  const isClientRecertRequested =
-    assessment?.status === "open" && assessment?.origin === "client_recert";
+  // Aviso para el consultor: el cliente pidió recertificación desde el portal
+  // (la action de recert deja la empresa en fase 'revalidacion', #8).
+  const isClientRecertRequested = company.phase === "revalidacion";
 
   const scoreTier =
     company.complexity_score !== null
@@ -395,7 +399,7 @@ export default async function CompanySummaryPage({
           />
           <p className="text-caption leading-caption tracking-caption text-carbon">
             {t("detail.stats.progressSub", {
-              evaluated: progress.evaluated,
+              evaluated: progress.resolved,
               total: progress.total,
             })}
           </p>
@@ -426,15 +430,15 @@ export default async function CompanySummaryPage({
             <div className="flex items-center justify-between gap-12 border-b border-ash bg-[#fbfbfc] px-[18px] py-[14px]">
               <h2 className="text-[13px] font-semibold text-ink">
                 {t("detail.checklist.title")}
-                {assessment ? (
+                {diagnosis ? (
                   <span className="ml-8 font-medium text-carbon">
-                    {t("detail.checklist.cycle", { cycle: assessment.cycle })}
+                    {t(`detail.checklist.sourceLabels.${diagnosis.source}`)}
                   </span>
                 ) : null}
               </h2>
-              {assessment ? (
+              {diagnosis ? (
                 <Link
-                  href={`/app/companies/${company.id}/checklist`}
+                  href={`/app/companies/${company.id}/certification`}
                   className="text-caption font-medium text-carbon transition-colors hover:text-ink"
                 >
                   {t("detail.checklist.open")}
@@ -445,7 +449,7 @@ export default async function CompanySummaryPage({
               <div className="flex flex-wrap items-center gap-24 p-20">
                 <StatusDonut
                   counts={counts}
-                  centerPct={compliantPct}
+                  centerPct={progress.pct}
                   centerLabel={t("detail.checklist.centerLabel")}
                   ariaLabel={t("detail.checklist.donutLabel")}
                 />

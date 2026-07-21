@@ -118,54 +118,30 @@ export async function requestRecertification(
     const tier = scoreTierOf(companyScore?.complexity_score ?? 0);
     const gate = recertGate(tier);
 
-    // Idempotencia: ya hay un ciclo de recert abierto para esta empresa.
-    const { data: openRecert, error: openRecertError } = await admin
-      .from("assessments")
-      .select("id")
-      .eq("company_id", companyId)
-      .eq("status", "open")
-      .eq("origin", "client_recert")
-      .limit(1)
+    // Modelo nuevo (#8): la recertificación ya no abre un assessment. La
+    // solicitud deja la empresa en fase 'revalidacion' (visible en la ficha y
+    // los listados del consultor), quien aplica un nuevo diagnóstico asistido
+    // y emite/revalida el certificado con la elegibilidad del modelo nuevo.
+    // Idempotencia: si la empresa ya está en 'revalidacion', ya fue pedida.
+    const { data: companyPhase, error: phaseReadError } = await admin
+      .from("companies")
+      .select("phase")
+      .eq("id", companyId)
       .maybeSingle();
-    if (openRecertError) {
-      console.error(
-        "[recert] chequeo de ciclo client_recert abierto falló:",
-        openRecertError.message,
-      );
+    if (phaseReadError) {
+      console.error("[recert] lectura de fase falló:", phaseReadError.message);
       return { ok: false, error: "unavailable" };
     }
-    if (openRecert) return { ok: false, error: "already_open" };
-
-    // Nuevo ciclo = max(cycle) de la empresa + 1 (mismo criterio que
-    // createDiagnosisSession en lib/actions/interview.ts).
-    const { data: latest, error: latestError } = await admin
-      .from("assessments")
-      .select("cycle")
-      .eq("company_id", companyId)
-      .order("cycle", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (latestError) {
-      console.error("[recert] lectura de último ciclo falló:", latestError.message);
-      return { ok: false, error: "unavailable" };
+    if (companyPhase?.phase === "revalidacion") {
+      return { ok: false, error: "already_open" };
     }
-    const nextCycle = (latest?.cycle ?? 0) + 1;
 
-    const { data: assessment, error: insertError } = await admin
-      .from("assessments")
-      .insert({
-        company_id: companyId,
-        cycle: nextCycle,
-        status: "open",
-        origin: "client_recert",
-      })
-      .select("id")
-      .single();
-    if (insertError || !assessment) {
-      console.error(
-        "[recert] insert de nuevo ciclo client_recert falló:",
-        insertError?.message,
-      );
+    const { error: phaseError } = await admin
+      .from("companies")
+      .update({ phase: "revalidacion" })
+      .eq("id", companyId);
+    if (phaseError) {
+      console.error("[recert] update de fase a revalidacion falló:", phaseError.message);
       return { ok: false, error: "unavailable" };
     }
 
@@ -186,9 +162,9 @@ export async function requestRecertification(
     const { error: requestAuditError } = await admin.from("audit_log").insert({
       actor_id: user.id,
       action: "recert.requested",
-      entity: "assessments",
-      entity_id: assessment.id,
-      detail: { company_id: companyId, assessment_id: assessment.id, gate },
+      entity: "companies",
+      entity_id: companyId,
+      detail: { company_id: companyId, gate },
     });
     if (requestAuditError) {
       console.error(

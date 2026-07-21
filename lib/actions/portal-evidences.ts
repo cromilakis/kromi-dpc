@@ -67,7 +67,11 @@ async function getAuthenticatedClientCompanyId(
 }
 
 /**
- * Sube una evidencia del cliente para un control aplicable de SU empresa.
+ * Sube una evidencia del cliente para un control del catálogo de SU empresa.
+ * DEPRECADA en #8 (la UI por control se removió; la subida del portal es por
+ * brecha en lib/actions/portal-breach-evidences.ts). Se conserva porque el
+ * catálogo `controls` sigue vigente como referencia del marco y la action es
+ * correcta; retirar junto con la limpieza final de evidencias por control.
  * FormData esperado: `controlId` (uuid), `evidenceName` (1..200), `file`.
  *
  * El `controlId` se valida contra el catálogo compartido (`controls`,

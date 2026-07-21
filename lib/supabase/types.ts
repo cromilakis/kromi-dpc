@@ -34,108 +34,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      assessment_controls: {
-        Row: {
-          assessment_id: string
-          control_id: string
-          created_at: string
-          evaluated_at: string | null
-          findings: string | null
-          id: string
-          notes: string | null
-          status: Database["public"]["Enums"]["control_result"]
-          updated_at: string
-        }
-        Insert: {
-          assessment_id: string
-          control_id: string
-          created_at?: string
-          evaluated_at?: string | null
-          findings?: string | null
-          id?: string
-          notes?: string | null
-          status?: Database["public"]["Enums"]["control_result"]
-          updated_at?: string
-        }
-        Update: {
-          assessment_id?: string
-          control_id?: string
-          created_at?: string
-          evaluated_at?: string | null
-          findings?: string | null
-          id?: string
-          notes?: string | null
-          status?: Database["public"]["Enums"]["control_result"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "assessment_controls_assessment_id_fkey"
-            columns: ["assessment_id"]
-            isOneToOne: false
-            referencedRelation: "assessments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assessment_controls_control_id_fkey"
-            columns: ["control_id"]
-            isOneToOne: false
-            referencedRelation: "controls"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      assessments: {
-        Row: {
-          company_id: string
-          completed_at: string | null
-          created_at: string
-          cycle: number
-          id: string
-          origin: string
-          started_at: string
-          status: Database["public"]["Enums"]["assessment_status"]
-          updated_at: string
-        }
-        Insert: {
-          company_id: string
-          completed_at?: string | null
-          created_at?: string
-          cycle?: number
-          id?: string
-          origin?: string
-          started_at?: string
-          status?: Database["public"]["Enums"]["assessment_status"]
-          updated_at?: string
-        }
-        Update: {
-          company_id?: string
-          completed_at?: string | null
-          created_at?: string
-          cycle?: number
-          id?: string
-          origin?: string
-          started_at?: string
-          status?: Database["public"]["Enums"]["assessment_status"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "assessments_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assessments_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "company_client_view"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       audit_log: {
         Row: {
           action: string
@@ -680,82 +578,6 @@ export type Database = {
           },
         ]
       }
-      interview_sessions: {
-        Row: {
-          ai_extraction: Json | null
-          answers: Json
-          assessment_id: string | null
-          company_id: string
-          id: string
-          listening_consent_at: string | null
-          mode: Database["public"]["Enums"]["interview_mode"]
-          progress: number
-          respondent: Json
-          reviewed_at: string | null
-          started_at: string
-          status: Database["public"]["Enums"]["interview_status"]
-          submitted_at: string | null
-          transcript: string | null
-          updated_at: string
-        }
-        Insert: {
-          ai_extraction?: Json | null
-          answers?: Json
-          assessment_id?: string | null
-          company_id: string
-          id?: string
-          listening_consent_at?: string | null
-          mode?: Database["public"]["Enums"]["interview_mode"]
-          progress?: number
-          respondent?: Json
-          reviewed_at?: string | null
-          started_at?: string
-          status?: Database["public"]["Enums"]["interview_status"]
-          submitted_at?: string | null
-          transcript?: string | null
-          updated_at?: string
-        }
-        Update: {
-          ai_extraction?: Json | null
-          answers?: Json
-          assessment_id?: string | null
-          company_id?: string
-          id?: string
-          listening_consent_at?: string | null
-          mode?: Database["public"]["Enums"]["interview_mode"]
-          progress?: number
-          respondent?: Json
-          reviewed_at?: string | null
-          started_at?: string
-          status?: Database["public"]["Enums"]["interview_status"]
-          submitted_at?: string | null
-          transcript?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "interview_sessions_assessment_id_fkey"
-            columns: ["assessment_id"]
-            isOneToOne: false
-            referencedRelation: "assessments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "interview_sessions_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "interview_sessions_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "company_client_view"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       payments: {
         Row: {
           amount_clp: number | null
@@ -810,97 +632,6 @@ export type Database = {
             columns: ["proposal_id"]
             isOneToOne: false
             referencedRelation: "proposals"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      processing_activities: {
-        Row: {
-          area: string
-          company_id: string
-          created_at: string
-          data_categories: string[]
-          data_subjects: string[]
-          id: string
-          intl_countries: string[]
-          intl_transfer: boolean
-          is_sensitive: boolean
-          legal_basis: string
-          name: string
-          notes: string | null
-          processors: string[]
-          purpose: string
-          recipients: string[]
-          retention: string
-          security_measures: string[]
-          source: string
-          source_session_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          area: string
-          company_id: string
-          created_at?: string
-          data_categories?: string[]
-          data_subjects?: string[]
-          id?: string
-          intl_countries?: string[]
-          intl_transfer?: boolean
-          is_sensitive?: boolean
-          legal_basis?: string
-          name: string
-          notes?: string | null
-          processors?: string[]
-          purpose?: string
-          recipients?: string[]
-          retention?: string
-          security_measures?: string[]
-          source?: string
-          source_session_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          area?: string
-          company_id?: string
-          created_at?: string
-          data_categories?: string[]
-          data_subjects?: string[]
-          id?: string
-          intl_countries?: string[]
-          intl_transfer?: boolean
-          is_sensitive?: boolean
-          legal_basis?: string
-          name?: string
-          notes?: string | null
-          processors?: string[]
-          purpose?: string
-          recipients?: string[]
-          retention?: string
-          security_measures?: string[]
-          source?: string
-          source_session_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "processing_activities_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "processing_activities_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "company_client_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "processing_activities_source_session_id_fkey"
-            columns: ["source_session_id"]
-            isOneToOne: false
-            referencedRelation: "interview_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -1202,64 +933,6 @@ export type Database = {
           },
         ]
       }
-      share_links: {
-        Row: {
-          company_id: string
-          created_at: string
-          created_by: string | null
-          expires_at: string | null
-          id: string
-          kind: Database["public"]["Enums"]["share_kind"]
-          revoked_at: string | null
-          target_id: string
-          token_hash: string
-        }
-        Insert: {
-          company_id: string
-          created_at?: string
-          created_by?: string | null
-          expires_at?: string | null
-          id?: string
-          kind: Database["public"]["Enums"]["share_kind"]
-          revoked_at?: string | null
-          target_id: string
-          token_hash: string
-        }
-        Update: {
-          company_id?: string
-          created_at?: string
-          created_by?: string | null
-          expires_at?: string | null
-          id?: string
-          kind?: Database["public"]["Enums"]["share_kind"]
-          revoked_at?: string | null
-          target_id?: string
-          token_hash?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "share_links_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "share_links_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "company_client_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "share_links_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
       solution_catalog: {
         Row: {
           control_id: string | null
@@ -1388,7 +1061,6 @@ export type Database = {
       }
     }
     Enums: {
-      assessment_status: "open" | "in_review" | "closed"
       certificate_status: "active" | "expired" | "revoked"
       company_phase:
         | "diagnostico"
@@ -1396,12 +1068,6 @@ export type Database = {
         | "certificacion"
         | "revalidacion"
       company_size_tier: "micro" | "small" | "enterprise"
-      control_result:
-        | "pending"
-        | "compliant"
-        | "partial"
-        | "non_compliant"
-        | "not_applicable"
       domain_kind: "principle" | "complementary"
       evidence_status: "validated" | "partial" | "missing" | "rejected"
       interview_mode: "assisted" | "self"
@@ -1542,7 +1208,6 @@ export const Constants = {
   },
   public: {
     Enums: {
-      assessment_status: ["open", "in_review", "closed"],
       certificate_status: ["active", "expired", "revoked"],
       company_phase: [
         "diagnostico",
@@ -1551,13 +1216,6 @@ export const Constants = {
         "revalidacion",
       ],
       company_size_tier: ["micro", "small", "enterprise"],
-      control_result: [
-        "pending",
-        "compliant",
-        "partial",
-        "non_compliant",
-        "not_applicable",
-      ],
       domain_kind: ["principle", "complementary"],
       evidence_status: ["validated", "partial", "missing", "rejected"],
       interview_mode: ["assisted", "self"],

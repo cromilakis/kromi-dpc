@@ -78,8 +78,8 @@ export function AppSidebar({
   const items: NavItem[] = inCompany
     ? [
         { key: "summary", href: `/app/companies/${companyId}`, label: t("nav.summary"), icon: "summary" },
-        { key: "diagnosis", href: `/app/companies/${companyId}/diagnosis`, label: t("nav.diagnosis"), icon: "diagnosis" },
-        { key: "checklist", href: `/app/companies/${companyId}/checklist`, label: t("nav.checklist"), icon: "checklist" },
+        // El módulo de entrevista por control (diagnosis) y el checklist se
+        // removieron en #8: el diagnóstico vive en el modelo persistido.
         { key: "risks", href: `/app/companies/${companyId}/risks`, label: t("nav.risks"), icon: "risks" },
         { key: "solutions", href: `/app/companies/${companyId}/solutions`, label: t("nav.solutions"), icon: "solutions" },
         { key: "plan", href: `/app/companies/${companyId}/plan`, label: t("nav.plan"), icon: "plan" },

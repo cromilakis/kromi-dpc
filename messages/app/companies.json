@@ -13,7 +13,7 @@
         "inDiagnosisSub": "levantamiento en curso",
         "certified": "Certificadas",
         "certifiedSub": "en certificación o revalidación",
-        "controlsEvaluated": "Controles evaluados",
+        "controlsEvaluated": "Brechas resueltas",
         "controlsEvaluatedSub": "de {total} en evaluaciones abiertas"
       },
       "portfolio": {
@@ -272,24 +272,28 @@
           "scoreInternal": "Uso interno del equipo",
           "scoreMissing": "Sin calcular",
           "progress": "Avance del checklist",
-          "progressSub": "{evaluated} de {total} controles evaluados",
+          "progressSub": "{evaluated} de {total} brechas resueltas",
           "risks": "Riesgos identificados",
           "risksSub": "asignados desde el catálogo"
         },
         "checklist": {
-          "title": "Checklist por estado",
-          "cycle": "Ciclo {cycle}",
-          "donutLabel": "Distribución de los controles por estado",
-          "centerLabel": "cumple",
+          "title": "Brechas del diagnóstico",
+          "sourceLabels": {
+            "self_service": "Autodiagnóstico",
+            "consultant_assisted": "Diagnóstico asistido"
+          },
+          "donutLabel": "Distribución de las brechas por estado y severidad",
+          "centerLabel": "resueltas",
           "statuses": {
-            "compliant": "Cumple",
-            "partial": "Parcial",
-            "non_compliant": "No cumple",
-            "pending": "Pendiente"
+            "resolved": "Resueltas",
+            "critico": "Críticas abiertas",
+            "alto": "Altas abiertas",
+            "medio": "Medias abiertas",
+            "bajo": "Leves abiertas"
           },
           "statusPct": "{pct}%",
-          "open": "Abrir checklist →",
-          "empty": "Esta empresa no tiene una evaluación creada. El ciclo 1 se genera al registrar la empresa; revisar la carga de datos."
+          "open": "Ver certificación →",
+          "empty": "Esta empresa no tiene un diagnóstico activo. Aplica el diagnóstico asistido para levantar sus brechas."
         },
         "risks": {
           "title": "Riesgos principales",

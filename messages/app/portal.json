@@ -103,7 +103,7 @@
       },
       "progress": {
         "title": "Avance de cumplimiento",
-        "summary": "{evaluated}/{total} controles evaluados",
+        "summary": "{evaluated}/{total} brechas resueltas",
         "note": "El avance se mide sobre los controles aplicables a tu empresa."
       },
       "proposal": {

@@ -9,19 +9,14 @@ import type { Database, Json } from "@/lib/supabase/types";
 /**
  * Núcleo reutilizable del alta de empresa (extraído de `createCompany`,
  * `lib/actions/companies.ts`): inserta la empresa con su Complexity Score
- * calculado SOLO EN SERVIDOR, crea la evaluación ciclo 1 con
- * assessment_controls 'pending' para todos los controles aplicables al rubro
- * (sector_scope null = transversal, o que incluya el sector).
+ * calculado SOLO EN SERVIDOR. Desde el sub-proyecto #8 el alta NO crea
+ * evaluaciones: el cumplimiento vive en el diagnóstico persistido
+ * (company_diagnoses), que se puebla con la encuesta (self-service o
+ * asistida del consultor).
  *
  * Acepta cliente autenticado (consultor, RLS) o admin (service-role, flujo
  * de aprovisionamiento post-pago): quien llama decide el cliente y hace las
  * cosas que dependen de la sesión (audit_log con actor, redirect).
- *
- * Sin transacciones (supabase-js no las expone): el alta es una secuencia
- * empresa → evaluación ciclo 1 → controles pending. Si un paso intermedio
- * falla se loggea y se devuelve "unavailable"; la empresa puede quedar
- * creada sin evaluación (el detalle tolera ese estado) y un reintento con el
- * mismo RUT devuelve "rutTaken".
  */
 
 /** Código de violación de unicidad de Postgres (companies.rut unique). */
@@ -43,12 +38,11 @@ export type ProvisionCompanyResult =
       companyId: string;
       complexityScore: number;
       scoreTier: ScoreTier;
-      controlsSeeded: number;
     }
   | { ok: false; error: "rutTaken" | "validation" | "unavailable" };
 
-/** Inserta empresa + evaluación ciclo 1 + assessment_controls pending. Acepta
- *  cliente autenticado (consultor, RLS) o admin (service-role). */
+/** Inserta la empresa (sin evaluación: modelo nuevo, #8). Acepta cliente
+ *  autenticado (consultor, RLS) o admin (service-role). */
 export async function provisionCompany(
   client: SupabaseClient<Database>,
   params: ProvisionCompanyParams,
@@ -100,56 +94,10 @@ export async function provisionCompany(
     return { ok: false, error: "unavailable" };
   }
 
-  // Controles aplicables al rubro: transversales (sector_scope null) + los
-  // de la vertical del sector. sector.code viene de la base (no del cliente).
-  const { data: controls, error: controlsError } = await client
-    .from("controls")
-    .select("id")
-    .or(`sector_scope.is.null,sector_scope.cs.{${sector.code}}`);
-
-  if (controlsError || !controls) {
-    console.error(
-      "[companies] lectura de controles falló:",
-      controlsError?.message,
-    );
-    return { ok: false, error: "unavailable" };
-  }
-
-  const { data: assessment, error: assessmentError } = await client
-    .from("assessments")
-    .insert({ company_id: company.id, cycle: 1 })
-    .select("id")
-    .single();
-  if (assessmentError || !assessment) {
-    console.error(
-      "[companies] insert de evaluación falló:",
-      assessmentError?.message,
-    );
-    return { ok: false, error: "unavailable" };
-  }
-
-  if (controls.length > 0) {
-    const { error: seedError } = await client.from("assessment_controls").insert(
-      controls.map((control) => ({
-        assessment_id: assessment.id,
-        control_id: control.id,
-        // status 'pending' por default de la columna.
-      })),
-    );
-    if (seedError) {
-      console.error(
-        "[companies] seed de assessment_controls falló:",
-        seedError.message,
-      );
-      return { ok: false, error: "unavailable" };
-    }
-  }
-
   return {
     ok: true,
     companyId: company.id,
     complexityScore: score.score,
     scoreTier: score.scoreTier,
-    controlsSeeded: controls.length,
   };
 }

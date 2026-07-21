@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import { checklistProgress } from "@/lib/companies/display";
+import { diagnosisProgress } from "@/lib/companies/display";
 import type { PreliminaryPanorama } from "@/lib/self-assessment/panorama";
 import type { Database } from "@/lib/supabase/types";
 
@@ -41,7 +41,7 @@ export interface ClientDashboardProposal {
 export interface ClientDashboard {
   company: ClientDashboardCompany | null;
   cert: ClientDashboardCertificate | null;
-  progress: { evaluated: number; total: number; pct: number };
+  progress: { resolved: number; total: number; pct: number };
   /** La propuesta más reciente que ya dejó de ser 'draft' (spec fase 2, tarea
    * 3): el consultor la "publica" (status 'sent') al crearla, así que el
    * cliente nunca ve borradores. `null` si aún no hay ninguna publicada. */
@@ -58,7 +58,7 @@ export interface ClientDashboard {
   panorama: PreliminaryPanorama | null;
 }
 
-const EMPTY_PROGRESS = { evaluated: 0, total: 0, pct: 0 };
+const EMPTY_PROGRESS = { resolved: 0, total: 0, pct: 0 };
 
 export async function loadClientDashboard(): Promise<ClientDashboard> {
   try {
@@ -76,21 +76,24 @@ export async function loadClientDashboard(): Promise<ClientDashboard> {
       .limit(1)
       .maybeSingle();
 
-    const { data: assessment } = await supabase
-      .from("assessments")
+    // Modelo nuevo (#8): avance = brechas resueltas del diagnóstico activo
+    // (RLS del cliente acota a su empresa).
+    const { data: diagnosis } = await supabase
+      .from("company_diagnoses")
       .select("id")
-      .order("cycle", { ascending: false })
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
 
     let progress = EMPTY_PROGRESS;
-    if (assessment) {
+    if (diagnosis) {
       const { data: rows } = await supabase
-        .from("assessment_controls")
-        .select("status")
-        .eq("assessment_id", assessment.id);
+        .from("diagnosis_breaches")
+        .select("resolution_status")
+        .eq("diagnosis_id", diagnosis.id);
 
-      progress = checklistProgress((rows ?? []).map((row) => row.status));
+      progress = diagnosisProgress((rows ?? []).map((row) => row.resolution_status));
     }
 
     const { data: proposalRow } = await supabase

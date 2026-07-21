@@ -33,20 +33,21 @@ export function companyInitials(name: string): string {
 }
 
 /**
- * Avance del checklist a partir de los estados de assessment_controls del
- * ciclo vigente: evaluado = todo lo que ya no está 'pending'. Los controles
- * 'not_applicable' (fuera de alcance por aplicabilidad) se excluyen del
- * denominador aquí, de forma central, para que panel, listado y resumen midan
- * el avance sobre lo aplicable de manera consistente.
+ * Avance de cumplimiento sobre el MODELO NUEVO (sub-proyecto #8): brechas
+ * resueltas / brechas totales del diagnóstico activo. Centralizado para que
+ * panel, listado, resumen y portal midan el avance igual. Un diagnóstico sin
+ * brechas es 100% (diagnóstico limpio).
  */
-export function checklistProgress(statuses: readonly string[]): {
-  evaluated: number;
+export function diagnosisProgress(resolutionStatuses: readonly string[] | null): {
+  resolved: number;
   total: number;
   pct: number;
 } {
-  const applicable = statuses.filter((status) => status !== "not_applicable");
-  const total = applicable.length;
-  const evaluated = applicable.filter((status) => status !== "pending").length;
-  const pct = total > 0 ? Math.round((evaluated / total) * 100) : 0;
-  return { evaluated, total, pct };
+  // null = la empresa aún no tiene diagnóstico activo → avance 0.
+  if (resolutionStatuses === null) return { resolved: 0, total: 0, pct: 0 };
+  const total = resolutionStatuses.length;
+  const resolved = resolutionStatuses.filter((status) => status === "resolved").length;
+  // Diagnóstico limpio (0 brechas) = 100%.
+  const pct = total > 0 ? Math.round((resolved / total) * 100) : 100;
+  return { resolved, total, pct };
 }

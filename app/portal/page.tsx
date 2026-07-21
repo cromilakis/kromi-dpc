@@ -2,13 +2,11 @@ import { getTranslations } from "next-intl/server";
 import { DownloadReportButton } from "@/components/documents/download-report-button";
 import { Card, ProgressBar, StatusBadge, type StatusBadgeVariant } from "@/components/ui";
 import { ProposalCard } from "@/components/portal/proposal-card";
-import { EvidenceSection } from "@/components/portal/evidence-section";
 import { RecertCard } from "@/components/portal/recert-card";
 import { ServiceStatus } from "@/components/portal/service-status";
 import { progressFillClass } from "@/lib/companies/display";
 import { certificateStanding, type CertStanding } from "@/lib/portal/certificate-status";
 import { loadClientDashboard } from "@/lib/portal/load-dashboard.server";
-import { loadClientEvidences } from "@/lib/portal/load-evidences.server";
 import { portalServiceState } from "@/lib/portal/service-state";
 
 /**
@@ -43,13 +41,11 @@ export default async function PortalPage({
 }) {
   const [
     { company, cert, progress, proposal, servicePaidAt, clientReadyAt, panorama },
-    evidenceSlots,
     t,
     tHome,
     params,
   ] = await Promise.all([
     loadClientDashboard(),
-    loadClientEvidences(),
     getTranslations("portal.dashboard"),
     getTranslations("portal.home"),
     searchParams,
@@ -134,7 +130,7 @@ export default async function PortalPage({
                 fillClassName={progressFillClass(progress.pct)}
               />
               <p className="text-caption leading-caption tracking-caption text-carbon">
-                {t("progress.summary", { evaluated: progress.evaluated, total: progress.total })}
+                {t("progress.summary", { evaluated: progress.resolved, total: progress.total })}
               </p>
               <p className="text-caption leading-caption tracking-caption text-carbon">
                 {t("progress.note")}
@@ -149,10 +145,8 @@ export default async function PortalPage({
               <ProposalCard proposal={proposal} />
             </div>
           ) : null}
-
-          <div className="mt-16">
-            <EvidenceSection slots={evidenceSlots} />
-          </div>
+          {/* Las evidencias viven ahora por brecha en /portal/evaluaciones/[id]
+              (sub-proyecto #7); la sección por control se removió en #8. */}
         </>
       )}
     </div>
