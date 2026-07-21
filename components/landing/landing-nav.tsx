@@ -8,7 +8,7 @@ import { WhatsAppButton } from "./whatsapp-button";
 /**
  * NAV sticky de la landing (prototipo isLanding §NAV): fondo blanco
  * translúcido con blur, borde Stone, 64px de alto. A la derecha, los anchors
- * de sección (solo desktop) + un CTA "Cotizar" primario SIEMPRE visible
+ * de sección (solo desktop) + un CTA "Reservar evaluación" primario SIEMPRE visible
  * (también en móvil) que abre WhatsApp con el mensaje de cotización — camino
  * de conversión persistente durante todo el scroll (cambio 2026-07-04).
  * Excepción de marca del lockup logo+tagline: serif Newsreader 17px medium
@@ -47,7 +47,7 @@ export async function LandingNav() {
             ))}
           </nav>
           <WhatsAppButton
-            message={tWhatsApp("quoteMessage")}
+            message={tWhatsApp("assistedMessage")}
             className="ml-[6px] px-[14px] py-[8px] max-sm:ml-0"
           >
             {t("cta")}

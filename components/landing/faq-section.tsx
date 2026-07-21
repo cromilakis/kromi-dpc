@@ -28,7 +28,7 @@ export async function FaqSection() {
                 {t(`items.${item}.q`)}
                 <ChevronDownIcon className="shrink-0 text-carbon transition-transform duration-200 group-open:rotate-180" />
               </summary>
-              <p className="px-20 pb-[18px] text-body-sm leading-[1.6] text-carbon">
+              <p className="max-w-[70ch] px-20 pb-[18px] text-body-sm leading-[1.6] text-carbon">
                 {t(`items.${item}.a`)}
               </p>
             </details>

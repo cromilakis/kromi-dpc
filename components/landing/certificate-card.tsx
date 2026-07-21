@@ -95,7 +95,7 @@ export function CertificateCard({
               <span>{issued}</span>
               <span>{status}</span>
             </div>
-            <p className="truncate font-mono text-[11px] tracking-[0.5px] text-white/40">
+            <p className="truncate font-mono text-caption tracking-[0.5px] text-white/55">
               {hash}
             </p>
           </div>

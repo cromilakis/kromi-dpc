@@ -18,26 +18,26 @@
   },
   "landing": {
     "nav": {
-      "domains": "Dominios",
-      "cycle": "Ciclo de servicio",
-      "model": "Modelo",
-      "certification": "Certificación",
-      "cta": "Cotizar",
+      "risk": "El riesgo",
+      "domains": "El estándar (14 dominios)",
+      "cycle": "El proceso",
+      "certification": "Tu certificación",
+      "cta": "Reservar evaluación",
       "menu": "Abrir menú"
     },
     "hero": {
       "lawBadge": "Ley 21.719",
-      "lawNotice": "vigente desde el 1 de diciembre de 2026",
-      "title": "Protección de datos personales, certificada",
+      "lawNotice": "rige desde el 1 de diciembre de 2026",
+      "title": "El estándar completo de protección de datos en tus manos",
       "subtitle": "Cumple la Ley 21.719 y cada normativa de protección de datos de tu rubro, de principio a fin, con un certificado que lo respalda.",
       "quoteLabel": "Empieza tu evaluación",
-      "ctaSelfAssessment": "Autoevaluación",
+      "ctaSelfAssessment": "Evalúa tu empresa gratis",
       "ctaSeparator": "o",
-      "ctaWhatsApp": "Evaluación asistida"
+      "ctaWhatsApp": "Reservar evaluación"
     },
     "stakes": {
       "title": "Qué establece la Ley 21.719",
-      "note": "Vigente desde el 1 de diciembre de 2026",
+      "note": "Rige desde el 1 de diciembre de 2026",
       "supportLead": "Cumplir es un proceso abordable.",
       "support": "Revisamos tus procesos y ponemos al día el cumplimiento de la ley y de la normativa de tu rubro, paso a paso.",
       "items": {
@@ -57,41 +57,48 @@
           "clp": "hasta ≈ $1.360M"
         }
       },
-      "example": {
-        "label": "Un caso cotidiano",
-        "quote": "Un almacén guarda los números de WhatsApp de sus clientes y les envía promociones, sin haberles informado para qué usa sus datos ni haber pedido su consentimiento.",
-        "configuresPrefix": "Esto configura una",
-        "severityPill": "falta leve",
-        "supportNote": "Situaciones así son más comunes de lo que parece, y tienen solución: las identificamos y corregimos a tiempo."
-      },
-      "reflect": {
-        "lead": "La mayoría de las empresas tiene aspectos por mejorar. Lo importante es revisarlos a tiempo y con apoyo.",
-        "question": "¿Quieres saber cómo está tu empresa hoy?",
-        "cta": "Conversa con un especialista"
+      "everyday": {
+        "label": "¿Alguna te suena?",
+        "items": [
+          "¿Envías promociones o recordatorios al WhatsApp o correo de tus clientes sin haberles pedido consentimiento?",
+          "¿Guardas los datos de tus clientes en planillas Excel o en un Drive de cuenta personal (Gmail)?",
+          "¿Recibes carnets, contratos u otros documentos personales de tus clientes por WhatsApp?",
+          "¿Tienes cámaras de seguridad sin un letrero que avise ni claridad sobre quién puede ver las grabaciones?",
+          "¿Tus trabajadores o clientes marcan asistencia o acceden usando su huella digital o su rostro?",
+          "Si un cliente te pidiera borrar todos sus datos hoy, ¿sabrías dónde están y cómo eliminarlos por completo?"
+        ],
+        "closeLead": "Situaciones así de cotidianas pueden constituir infracciones bajo la nueva ley,",
+        "closeSupport": "y todas tienen solución si se corrigen a tiempo.",
+        "question": "Averigua gratis cómo está tu empresa hoy.",
+        "ctaSelfAssessment": "Evalúa tu empresa gratis"
       }
     },
     "domains": {
       "eyebrow": "Arquitectura del marco de trabajo",
-      "title": "Un estándar completo de protección de datos.",
+      "title": "Los 14 dominios del estándar DPC.",
       "description": "Catorce dominios forman la malla que resguarda tu información: ocho principios de la Ley 21.719 y seis dominios complementarios. Elige uno para explorarlo.",
+      "groups": {
+        "principles": "Principios de la Ley 21.719",
+        "operational": "Obligaciones operativas"
+      },
       "mesh": {
-        "phrase": "La información bien resguardada es la base de un negocio que perdura.",
+        "phrase": "Cada dominio queda documentado en tu expediente de cumplimiento.",
         "emptyPrompt": "Elige un dominio",
         "domains": [
-          { "label": "Licitud y Lealtad", "title": "Licitud y Lealtad", "desc": "Tratar los datos solo cuando existe una base legal y el consentimiento de la persona." },
-          { "label": "Finalidad", "title": "Finalidad", "desc": "Recolectar los datos para un fin específico y no destinarlos a otros usos." },
-          { "label": "Proporcionalidad", "title": "Proporcionalidad", "desc": "Solicitar únicamente los datos necesarios para el fin declarado." },
-          { "label": "Calidad", "title": "Calidad", "desc": "Mantener los datos exactos y actualizados, con corrección de errores." },
-          { "label": "Responsabilidad", "title": "Responsabilidad", "desc": "Demostrar el cumplimiento con evidencia y gobernanza documentada." },
-          { "label": "Seguridad", "title": "Seguridad", "desc": "Proteger los datos frente a accesos indebidos, pérdidas y filtraciones." },
-          { "label": "Transparencia", "title": "Transparencia", "desc": "Informar a cada persona, de forma clara, cómo se tratan sus datos." },
-          { "label": "Confidencialidad", "title": "Confidencialidad", "desc": "Resguardar el secreto de los datos, incluso finalizada la relación." },
-          { "label": "Inventario y RAT", "title": "Inventario y Registro de Actividades de Tratamiento", "desc": "Identificar qué datos posee la organización, dónde están y con qué finalidad." },
-          { "label": "Derechos ARCOP", "title": "Derechos ARCOP", "desc": "Habilitar a las personas a ejercer sus derechos sobre sus datos: Acceso, Rectificación, Cancelación, Oposición y Portabilidad." },
-          { "label": "Datos sensibles", "title": "Datos sensibles", "desc": "Aplicar protección reforzada a datos sensibles como salud, menores o biometría." },
-          { "label": "Encargados", "title": "Encargados y Transferencias", "desc": "Supervisar a los proveedores externos que tratan datos por la organización." },
-          { "label": "Incidentes", "title": "Incidentes y Brechas", "desc": "Contar con un plan para responder y notificar oportunamente una filtración." },
-          { "label": "EIPD", "title": "Evaluación de Impacto en la Protección de Datos (EIPD)", "desc": "Evaluar los riesgos antes de tratamientos sensibles o decisiones automatizadas." }
+          { "label": "Licitud y Lealtad", "title": "Licitud y Lealtad", "desc": "Base jurídica sólida. Aseguramos que cada dato recolectado tenga justificación legal frente a la normativa, eliminando el riesgo de fiscalización." },
+          { "label": "Finalidad", "title": "Finalidad", "desc": "Control del uso. Garantizamos que la información se utilice estrictamente para el propósito original informado al titular, previniendo sanciones." },
+          { "label": "Proporcionalidad", "title": "Proporcionalidad", "desc": "Minimización de exposición. Auditamos tus flujos para capturar solo la información necesaria. Menor volumen de datos = menor riesgo." },
+          { "label": "Calidad", "title": "Calidad", "desc": "Integridad de la base. Controles para mantener la exactitud y vigencia de la información, evitando decisiones sobre datos erróneos." },
+          { "label": "Responsabilidad", "title": "Responsabilidad", "desc": "Demostración de cumplimiento. Estructuramos las evidencias para que, ante cualquier requerimiento, puedas demostrar tu diligencia proactivamente." },
+          { "label": "Seguridad", "title": "Seguridad", "desc": "Medidas técnicas y organizativas. Controles robustos de ciberseguridad para blindar bases de datos contra accesos no autorizados o fugas." },
+          { "label": "Transparencia", "title": "Transparencia", "desc": "Deber de información oportuna. Redactamos avisos de privacidad claros, accesibles y con validez jurídica." },
+          { "label": "Confidencialidad", "title": "Confidencialidad", "desc": "Control estricto de accesos. La información solo está disponible para personal autorizado, bajo acuerdos de confidencialidad (NDA) vinculantes." },
+          { "label": "Inventario y RAT", "title": "Inventario y RAT", "expansion": "(Registro de Actividades de Tratamiento)", "desc": "Trazabilidad total. Mapeamos el ciclo de vida de los datos: qué entra, dónde se almacena y quién lo procesa." },
+          { "label": "Derechos ARCOP", "title": "Derechos ARCOP", "expansion": "(Acceso, Rectificación, Cancelación, Oposición y Portabilidad)", "desc": "Gestión de titulares. Habilitamos canales legales para responder eficientemente a los clientes." },
+          { "label": "Datos Sensibles", "title": "Datos Sensibles", "desc": "Protección reforzada. Estándares de máxima exigencia para información crítica (salud, biometría), donde las multas son gravísimas." },
+          { "label": "Encargados", "title": "Encargados", "desc": "Gestión de riesgo de terceros. Auditamos y regulamos a tus proveedores tecnológicos (CRM, agencias) para asegurar que cumplan tu estándar." },
+          { "label": "Incidentes", "title": "Incidentes", "desc": "Protocolo de contingencia. Plan de acción inmediato: contención de la brecha y procedimiento legal para notificar en los plazos exigidos." },
+          { "label": "EIPD", "title": "EIPD", "expansion": "(Evaluación de Impacto en la Protección de Datos)", "desc": "Gestión preventiva. Analizamos nuevos proyectos o software para mitigar riesgos antes de producción." }
         ]
       },
       "items": {
@@ -168,13 +175,13 @@
       }
     },
     "agencies": {
-      "label": "Diseñado sobre el ecosistema regulatorio chileno",
+      "label": "Diseñado sobre la normativa legal vigente en Chile",
       "items": {
         "apdp": "APDP",
         "anci": "ANCI",
         "sernac": "SERNAC",
         "cmf": "CMF",
-        "dt": "Dirección del Trabajo",
+        "dt": "DT",
         "subtel": "SUBTEL"
       }
     },
@@ -265,7 +272,7 @@
           "incidents": "Plan de respuesta ante incidentes",
           "inventory": "Inventario y mapeo de flujos de datos",
           "evidence": "Evidencias por control, versionadas",
-          "certificate": "Certificado privado DPC con hash de verificación"
+          "certificate": "Certificado digital DPC infalsificable"
         },
         "certTitle": "Certificación privada DPC",
         "certNote": "Verificable en línea"
@@ -274,22 +281,21 @@
     "trust": {
       "standard": {
         "title": "Estándar estructurado y trazable",
-        "text": "14 dominios alineados a los principios de la Ley 21.719 y su ecosistema regulatorio, con un certificado privado verificable por hash."
+        "text": "14 dominios alineados a los principios de la Ley 21.719 y la normativa legal vigente, con un certificado digital infalsificable."
       },
       "dogfooding": {
         "title": "Nuestros procesos, bajo la misma rigurosidad",
         "text": "La información de nuestros propios clientes se resguarda bajo los mismos 14 dominios que rigen nuestro estándar, asegurando la calidad del proceso y de los resultados."
       },
       "confidentiality": {
-        "title": "Confidencialidad por diseño",
+        "title": "Tus datos seguros desde el día uno",
         "text": "Accedemos solo a la evidencia necesaria para evaluar. Los datos de la organización permanecen bajo su control, con acuerdo de confidencialidad y contrato de encargo."
       }
     },
     "ctaBand": {
       "title": "Empieza hoy tu camino al cumplimiento.",
       "subtitle": "La Ley 21.719 rige desde el 1 de diciembre de 2026. Llega preparado, con tu cumplimiento en orden.",
-      "ctaWhatsApp": "Cotiza tu certificación",
-      "ctaSelfAssessment": "Autoevaluación"
+      "ctaWhatsApp": "Reservar evaluación"
     },
     "support": {
       "title": "Un consultor asignado en cada fase.",
@@ -333,6 +339,7 @@
       "description": "Cada organización parte de un valor base accesible y acorde a su tamaño. Ese valor puede ajustarse tras el diagnóstico según la complejidad real de sus tratamientos y la presencia de datos sensibles.",
       "from": "Desde",
       "vat": "+ IVA",
+      "clpApprox": "≈ {amount} + IVA",
       "baseNote": "valor base referencial",
       "launchEyebrow": "Precio de lanzamiento · 20% de descuento para las primeras empresas",
       "tiers": {
@@ -345,14 +352,14 @@
           "price": "25 UF"
         },
         "enterprise": {
-          "name": "Enterprise",
+          "name": "Mediana o grande",
           "price": "Desde 60 UF",
           "note": "Bajo cotización, según el alcance del diagnóstico"
         }
       },
       "disclaimer": "El precio final se confirma tras el diagnóstico, según la complejidad real de los tratamientos. Descuento de lanzamiento del 20% para las primeras empresas, por tiempo limitado.",
-      "ctaSelfAssessment": "Autoevaluación",
-      "ctaWhatsApp": "Cotiza tu certificación"
+      "ctaSelfAssessment": "Evalúa tu empresa gratis",
+      "ctaWhatsApp": "Reservar evaluación"
     },
     "faq": {
       "title": "Resolvemos tus dudas.",
@@ -367,7 +374,7 @@
         },
         "cost": {
           "q": "¿Cuánto cuesta la certificación?",
-          "a": "Cada organización parte de un valor base según su tamaño —desde 10 UF microempresa y 25 UF pequeña empresa— que se ajusta tras el diagnóstico según la complejidad real. Las organizaciones grandes se cotizan a la medida."
+          "a": "Cada organización parte de un valor base según su tamaño: 10 UF microempresa y 25 UF pequeña empresa que, con el descuento de lanzamiento del 20%, hoy quedan en 8 UF (≈ $327.000) y 20 UF (≈ $817.000). Ese valor se ajusta tras el diagnóstico según la complejidad real; las organizaciones medianas y grandes se cotizan a la medida."
         },
         "skills": {
           "q": "¿Necesito conocimientos técnicos o legales?",
@@ -375,34 +382,33 @@
         },
         "deliverable": {
           "q": "¿Qué obtengo al finalizar?",
-          "a": "Un expediente de cumplimiento completo —inventario, políticas, procedimientos y evidencias por control— junto con el certificado privado DPC, verificable en línea."
+          "a": "Un expediente de cumplimiento completo —inventario, políticas, procedimientos y evidencias por control— junto con el certificado digital DPC, infalsificable y verificable en línea."
         }
       }
     },
     "whatsapp": {
       "infoMessage": "Hola, quiero información sobre la certificación de protección de datos",
       "quoteMessage": "Hola, quiero cotizar la certificación de protección de datos para mi organización",
-      "assistedMessage": "Hola, quiero agendar una reunión para una evaluación asistida de cumplimiento de la Ley 21.719 con un consultor",
-      "verifyMessage": "Hola, quiero verificar si mi negocio cumple con la protección de datos personales"
+      "assistedMessage": "Hola, quiero reservar una evaluación de cumplimiento de la Ley 21.719 con un consultor"
     },
     "footer": {
       "brandName": "Data Protection Compliance",
-      "brandDescription": "Estándar privado de cumplimiento estructurado para la Ley N° 21.719 y su ecosistema regulatorio en Chile.",
+      "brandDescription": "Estándar privado de cumplimiento estructurado para la Ley N° 21.719 y la normativa legal vigente en Chile.",
       "columns": {
         "framework": {
           "title": "Marco de trabajo",
           "links": {
             "domains": "Los 14 dominios",
-            "taxonomy": "Taxonomía de controles",
+            "taxonomy": "Lista de medidas de seguridad",
             "risks": "Catálogo de riesgos",
-            "verticals": "Verticales sectoriales"
+            "verticals": "Soluciones específicas para tu rubro"
           }
         },
         "platform": {
           "title": "Plataforma",
           "links": {
             "consultantPanel": "Panel del consultor",
-            "complexityScore": "Complexity Score",
+            "complexityScore": "Nivel de riesgo de tu empresa",
             "evidence": "Repositorio de evidencias",
             "certification": "Certificación DPC"
           }

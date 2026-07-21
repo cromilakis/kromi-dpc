@@ -4,10 +4,13 @@ import { DomainsMesh, type MeshDomain } from "./domains-mesh";
 
 /**
  * Los 14 dominios (prototipo isLanding §DOMINIOS, anchor #dominios): heading +
- * "malla de seguridad" interactiva (WebGL) — la lista de dominios a un lado y
- * una malla de energía que envuelve un núcleo de información al otro. Al elegir
- * un dominio, su color tiñe la escena. Los textos salen de i18n
- * (landing.domains.mesh); el detalle legal completo vive en la plataforma interna.
+ * "malla de seguridad" interactiva (WebGL) visible de inmediato. La carga
+ * pesada igual es diferida: el canvas 3D solo monta cuando la sección entra en
+ * viewport (IntersectionObserver dentro de DomainsMesh), que cumple el objetivo
+ * de lazy-load de la spec UX 2026-07-20 sin esconder el contenido tras un clic
+ * (el gate "Aprender más" se probó y se descartó: ocultaba el estándar y
+ * desestabilizaba la altura de la página bajo el smooth-scroll).
+ * Textos en i18n (landing.domains.mesh).
  */
 export async function DomainsSection() {
   const t = await getTranslations("landing.domains");
@@ -28,6 +31,7 @@ export async function DomainsSection() {
 
       <DomainsMesh
         domains={domains}
+        groupLabels={[t("groups.principles"), t("groups.operational")]}
         phrase={t("mesh.phrase")}
         emptyPrompt={t("mesh.emptyPrompt")}
       />

@@ -307,6 +307,10 @@ export const SCREENING_NODES: ScreeningNode[] = [
         label: "Sí, manejamos datos de clientes/pacientes/usuarios",
       },
       {
+        value: "ambos",
+        label: "Ambos: de clientes y también internos (empleados, proveedores)",
+      },
+      {
         value: "no",
         label: "No, solo manejamos datos internos (empleados, proveedores)",
         nextNodeId: "S-005",

@@ -57,7 +57,9 @@ export async function Hero() {
           {/* Dos modalidades de evaluación: la asistida (agendar reunión con el
               consultor por WhatsApp) es el CTA primario —objetivo de negocio—; la
               autoevaluación gratis queda como alternativa secundaria. */}
-          <div className="flex flex-wrap items-center justify-center gap-[10px]">
+          {/* En móvil los CTAs se apilan en columna con el "o" centrado (antes
+              quedaba huérfano a la derecha del botón primario en 390px). */}
+          <div className="flex flex-wrap items-center justify-center gap-[10px] max-sm:flex-col">
             <WhatsAppButton
               message={t("whatsapp.assistedMessage")}
               className="px-[22px] py-[13px] text-body"

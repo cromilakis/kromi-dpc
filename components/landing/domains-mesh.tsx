@@ -13,9 +13,13 @@ import * as THREE from "three";
 
 /**
  * Malla de seguridad de los 14 dominios (sección DOMINIOS de la landing): a la
- * izquierda la lista de dominios; a la derecha una malla de energía (WebGL) que
- * envuelve un núcleo de información. Al elegir un dominio, su color tiñe la luz
- * interior, la cúpula, los nodos (40% encendidos) y sus conexiones/lásers.
+ * izquierda la lista de dominios; a la derecha una malla (WebGL) que envuelve
+ * un núcleo de información. La escena es monocroma sobre fondo claro #fbfbfc
+ * (regla de marca "color solo semántico", alineación 2026-07-20: se retiró la
+ * card negra y los 14 colores decorativos): grises neutros del sistema en
+ * reposo y un único acento —Action Blue, el color de interacción— que enciende
+ * la luz interior, la cúpula, los nodos (40%) y sus conexiones al seleccionar
+ * un dominio. Blending normal (no aditivo): sobre blanco lo aditivo desaparece.
  *
  * Textos por props (i18n desde el server component). Colores y geometría son
  * decisiones visuales y viven aquí. Respeta prefers-reduced-motion (fallback
@@ -25,29 +29,17 @@ import * as THREE from "three";
 export interface MeshDomain {
   label: string;
   title: string;
+  /** Expansión de la sigla (RAT/ARCOP/EIPD): visible en desktop, oculta en móvil. */
+  expansion?: string;
   desc: string;
 }
 
 const MODEL_URL = "/models/ipad-pro.glb";
 
-// Un color por dominio (mismo orden i18n): tinte de luz interior, nodos y aristas.
-const DOMAIN_COLORS = [
-  "#6ea8ff",
-  "#5fd0c4",
-  "#8ad66a",
-  "#d8c85f",
-  "#e0975a",
-  "#e0655f",
-  "#e06fae",
-  "#b070e0",
-  "#7d7be0",
-  "#5fb0e0",
-  "#e05f7a",
-  "#9bd05f",
-  "#e0b25f",
-  "#5fd0a0",
-];
-const IDLE_GLOW = "#c7d3ea";
+// Acento semántico único (Action Blue del sistema): tinte de la selección.
+const ACCENT = "#407ff2";
+// Gris neutro del reposo (cúpula, pulsos y halo sin selección).
+const IDLE_GLOW = "#b5bdc9";
 
 const NODE_COUNT = 84;
 const RADIUS = 1.8;
@@ -248,9 +240,9 @@ function Mesh({ active }: { active: number | null }) {
       uActiveMode: { value: 0 },
       uTime: { value: 0 },
       uSize: { value: 2.9 },
-      uIdle: { value: new THREE.Color("#a7bbdd") },
-      uDim: { value: new THREE.Color("#454f66") },
-      uGlow: { value: new THREE.Color("#ffffff") },
+      uIdle: { value: new THREE.Color("#6f7988") },
+      uDim: { value: new THREE.Color("#c9ced6") },
+      uGlow: { value: new THREE.Color(ACCENT) },
     }),
     [],
   );
@@ -272,23 +264,24 @@ function Mesh({ active }: { active: number | null }) {
   );
 
   useEffect(() => {
-    const glowHex = active !== null ? DOMAIN_COLORS[active] : "#ffffff";
+    const glowHex = active !== null ? ACCENT : IDLE_GLOW;
     if (mat.current) {
       mat.current.uniforms.uActiveMode.value = active === null ? 0 : 1;
-      mat.current.uniforms.uGlow.value.set(glowHex);
+      mat.current.uniforms.uGlow.value.set(active !== null ? ACCENT : "#1c1d1f");
     }
     if (shellMat.current) shellMat.current.uniforms.uColor.value.set(glowHex);
     if (pulseMat.current) pulseMat.current.uniforms.uColor.value.set(glowHex);
 
+    // Colores directos (blending normal): sobre fondo claro no se premultiplica
+    // alfa como con el blending aditivo del fondo oscuro anterior.
     const on = aOn;
-    const glow = new THREE.Color(glowHex);
-    const idle = new THREE.Color("#8ea2c6");
-    const dim = new THREE.Color("#333c50");
+    const glow = new THREE.Color(ACCENT);
+    const idle = new THREE.Color("#c9ced6");
+    const dim = new THREE.Color("#e4e7ec");
     pairs.forEach(([i, j], k) => {
       const lit = on[i] === 1 && on[j] === 1;
       const c = lit ? glow : active === null ? idle : dim;
-      const a = lit ? 0.75 : active === null ? 0.2 : 0.08;
-      lineColors.set([c.r * a, c.g * a, c.b * a, c.r * a, c.g * a, c.b * a], k * 6);
+      lineColors.set([c.r, c.g, c.b, c.r, c.g, c.b], k * 6);
     });
     if (lines.current) {
       const attr = lines.current.geometry.getAttribute("color");
@@ -353,7 +346,6 @@ function Mesh({ active }: { active: number | null }) {
           fragmentShader={SHELL_FRAGMENT}
           transparent
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
           side={THREE.FrontSide}
         />
       </mesh>
@@ -365,8 +357,8 @@ function Mesh({ active }: { active: number | null }) {
         <lineBasicMaterial
           vertexColors
           transparent
+          opacity={0.9}
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
           toneMapped={false}
         />
       </lineSegments>
@@ -385,7 +377,6 @@ function Mesh({ active }: { active: number | null }) {
           fragmentShader={PULSE_FRAGMENT}
           transparent
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
         />
       </points>
       <lineSegments ref={beams}>
@@ -396,7 +387,6 @@ function Mesh({ active }: { active: number | null }) {
           ref={beamMat}
           transparent
           opacity={0}
-          blending={THREE.AdditiveBlending}
           depthWrite={false}
           toneMapped={false}
         />
@@ -428,7 +418,7 @@ function InteriorGlow({ active }: { active: number | null }) {
   const mesh = useRef<THREE.Mesh>(null);
   const mat = useRef<THREE.MeshBasicMaterial>(null);
   const target = useMemo(
-    () => new THREE.Color(active !== null ? DOMAIN_COLORS[active] : IDLE_GLOW),
+    () => new THREE.Color(active !== null ? ACCENT : IDLE_GLOW),
     [active],
   );
   useFrame((state) => {
@@ -456,7 +446,6 @@ function InteriorGlow({ active }: { active: number | null }) {
         transparent
         opacity={0.26}
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
         toneMapped={false}
       />
     </mesh>
@@ -492,7 +481,7 @@ useGLTF.preload(MODEL_URL);
 function CenterLight({ active }: { active: number | null }) {
   const light = useRef<THREE.PointLight>(null);
   const target = useMemo(
-    () => new THREE.Color(active !== null ? DOMAIN_COLORS[active] : "#dfe8f7"),
+    () => new THREE.Color(active !== null ? ACCENT : "#e6e8ec"),
     [active],
   );
   useFrame((state) => {
@@ -507,10 +496,13 @@ function CenterLight({ active }: { active: number | null }) {
 
 export function DomainsMesh({
   domains,
+  groupLabels,
   phrase,
   emptyPrompt,
 }: {
   domains: MeshDomain[];
+  /** Labels de agrupación 8+6: [antes del dominio 01, antes del 09]. */
+  groupLabels: [string, string];
   phrase: string;
   emptyPrompt: string;
 }) {
@@ -536,16 +528,37 @@ export function DomainsMesh({
 
   return (
     <div className="grid gap-16 lg:grid-cols-[minmax(0,280px)_1fr]">
-      <ul className="flex flex-col gap-4">
+      {/* En móvil/tablet la lista pasa de 14 botones apilados a chips con
+          scroll horizontal: el contenido de la malla queda a un gesto de
+          distancia en vez de a 14 filas (ajuste móvil 2026-07-20). */}
+      <ul className="flex flex-col gap-4 max-lg:flex-row max-lg:items-center max-lg:overflow-x-auto max-lg:pb-8">
         {domains.map((domain, i) => {
           const on = active === i;
-          return (
-            <li key={domain.label}>
+          // Agrupación 8+6 prometida por el copy: label antes de los principios
+          // (01) y antes de las obligaciones operativas (09). Ítem propio de la
+          // lista: caption-fila en columna (desktop) y caption-inline en la
+          // fila con scroll (móvil/tablet).
+          const groupLabel =
+            i === 0 ? groupLabels[0] : i === 8 ? groupLabels[1] : null;
+          return [
+            groupLabel && (
+              <li
+                key={groupLabel}
+                aria-hidden
+                className={
+                  "text-caption font-semibold text-carbon max-lg:shrink-0 max-lg:whitespace-nowrap " +
+                  (i === 8 ? "mt-16 max-lg:ml-12 max-lg:mt-0" : "")
+                }
+              >
+                {groupLabel}
+              </li>
+            ),
+            <li key={domain.label} className="max-lg:shrink-0">
               <button
                 type="button"
                 onClick={() => setActive(on ? null : i)}
                 className={
-                  "flex w-full items-center gap-8 rounded-buttons border px-12 py-8 text-left text-body-sm transition-colors " +
+                  "flex w-full items-center gap-8 rounded-buttons border px-12 py-8 text-left text-body-sm transition-colors max-lg:whitespace-nowrap " +
                   (on
                     ? "border-ink bg-ink text-white"
                     : "border-stone bg-white text-carbon hover:border-carbon")
@@ -556,17 +569,17 @@ export function DomainsMesh({
                 </span>
                 <span className="font-medium">{domain.label}</span>
               </button>
-            </li>
-          );
+            </li>,
+          ];
         })}
       </ul>
 
       <div
         ref={wrap}
-        className="relative min-h-[560px] overflow-hidden rounded-cards bg-ink"
+        className="relative min-h-[560px] overflow-hidden rounded-cards border border-stone bg-[#fbfbfc]"
       >
         {reduced ? (
-          <div className="flex h-full min-h-[560px] items-center justify-center text-caption text-white/40">
+          <div className="flex h-full min-h-[560px] items-center justify-center text-caption text-carbon">
             {emptyPrompt}
           </div>
         ) : inView ? (
@@ -575,12 +588,12 @@ export function DomainsMesh({
             dpr={[1, 2]}
             gl={{ alpha: true }}
           >
-            <hemisphereLight args={["#cdd8ef", "#0e1116", 0.5]} />
+            <hemisphereLight args={["#d9dce1", "#101113", 0.5]} />
             <directionalLight position={[5, 6, 5]} intensity={1.1} />
-            <directionalLight position={[-6, 3, -6]} intensity={1.3} color="#aec0e6" />
+            <directionalLight position={[-6, 3, -6]} intensity={1.3} color="#c8ccd3" />
             <Environment resolution={256}>
               <Lightformer intensity={2} position={[0, 3, 2]} scale={[7, 3, 1]} color="#ffffff" />
-              <Lightformer intensity={1.2} position={[-3, -1, -1]} scale={[4, 4, 1]} color="#9db4d8" />
+              <Lightformer intensity={1.2} position={[-3, -1, -1]} scale={[4, 4, 1]} color="#b5bac2" />
             </Environment>
             <InteriorGlow active={active} />
             <CenterLight active={active} />
@@ -598,35 +611,42 @@ export function DomainsMesh({
             />
           </Canvas>
         ) : (
-          <div className="flex h-full min-h-[560px] items-center justify-center text-caption text-white/50">
+          <div className="flex h-full min-h-[560px] items-center justify-center text-caption text-lead">
             …
           </div>
         )}
 
         {/* Dominio seleccionado: título + subrayado de color + descripción */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-ink/85 to-transparent p-24 max-sm:p-16">
+        <div className="pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-[#fbfbfc]/95 to-transparent p-24 max-sm:p-16">
           {active !== null ? (
             <>
-              <h3 className="font-serif text-[24px] font-medium leading-[1.15] tracking-[-0.4px] text-white max-sm:text-[19px]">
+              <h3 className="font-serif text-[24px] font-medium leading-[1.15] tracking-[-0.4px] text-ink max-sm:text-[19px]">
                 {domains[active].title}
               </h3>
               <span
                 aria-hidden
                 className="mt-2 block h-[3px] w-40 rounded-full"
-                style={{ backgroundColor: DOMAIN_COLORS[active] }}
+                style={{ backgroundColor: ACCENT }}
               />
-              <p className="mt-4 max-w-[72ch] text-body-sm leading-[1.5] text-white/70">
+              <p className="mt-4 max-w-[72ch] text-body-sm leading-[1.5] text-carbon">
+                {/* Expansión de la sigla (RAT/ARCOP/EIPD): visible en desktop,
+                    oculta en móvil para no romper el diseño de la esfera. */}
+                {domains[active].expansion && (
+                  <span className="max-sm:hidden">
+                    {domains[active].expansion}{" "}
+                  </span>
+                )}
                 {domains[active].desc}
               </p>
             </>
           ) : (
-            <h3 className="font-serif text-[26px] font-medium tracking-[-0.4px] text-white/80">
+            <h3 className="font-serif text-[26px] font-medium tracking-[-0.4px] text-carbon">
               {emptyPrompt}
             </h3>
           )}
         </div>
 
-        <p className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent px-24 pb-20 pt-24 text-center text-caption leading-[1.5] text-white/55 max-sm:px-16">
+        <p className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#fbfbfc]/90 to-transparent px-24 pb-20 pt-24 text-center text-caption leading-[1.5] text-carbon max-sm:px-16">
           {phrase}
         </p>
       </div>

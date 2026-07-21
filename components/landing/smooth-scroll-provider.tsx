@@ -59,7 +59,9 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
             y: 0,
             duration: 0.7,
             ease: "power3.out",
-            scrollTrigger: { trigger: section, start: "top 85%" },
+            // once: el reveal es de una sola vía; nunca vuelve a ocultar la
+            // sección aunque el trigger se re-evalúe tras cambios de layout.
+            scrollTrigger: { trigger: section, start: "top 85%", once: true },
           },
         );
       });
@@ -107,7 +109,24 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
 
     ScrollTrigger.refresh();
 
+    // La altura de la página cambia después del primer refresh (canvas WebGL
+    // que monta on-viewport, fuentes, imágenes): si los start de los triggers
+    // quedan obsoletos, las secciones con reveal permanecen en autoAlpha:0 y
+    // se ve un "bloque blanco" (bug 2026-07-20). Re-medimos ante cualquier
+    // cambio de tamaño del body, coalescido a un refresh por frame.
+    let refreshQueued = false;
+    const ro = new ResizeObserver(() => {
+      if (refreshQueued) return;
+      refreshQueued = true;
+      requestAnimationFrame(() => {
+        refreshQueued = false;
+        ScrollTrigger.refresh();
+      });
+    });
+    ro.observe(document.body);
+
     return () => {
+      ro.disconnect();
       document.removeEventListener("click", onAnchorClick);
       ctx.revert(); // restaura estilos y mata los ScrollTriggers del contexto
       gsap.ticker.remove(raf);

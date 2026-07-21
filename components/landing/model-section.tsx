@@ -24,7 +24,7 @@ export async function ModelSection() {
         <div className="grid grid-cols-1 gap-16 md:grid-cols-2">
           <div className="rounded-xl border border-stone bg-white p-28">
             <div className="mb-[14px] flex items-center gap-[10px]">
-              <span className="rounded-[6px] bg-ash px-[10px] py-4 text-[11px] font-semibold text-carbon">
+              <span className="rounded-[6px] bg-ash px-[10px] py-4 text-caption font-semibold text-carbon">
                 {t("initial.chip")}
               </span>
             </div>
@@ -37,7 +37,7 @@ export async function ModelSection() {
           </div>
           <div className="rounded-xl border border-stone bg-white p-28">
             <div className="mb-[14px] flex items-center gap-[10px]">
-              <span className="rounded-[6px] bg-ash px-[10px] py-4 text-[11px] font-semibold text-carbon">
+              <span className="rounded-[6px] bg-ash px-[10px] py-4 text-caption font-semibold text-carbon">
                 {t("recurring.chip")}
               </span>
             </div>

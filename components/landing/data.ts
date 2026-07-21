@@ -86,11 +86,15 @@ export const AGENCIES = [
   "subtel",
 ] as const;
 
-/** Anchors de la navegación de la landing (landing.nav). */
+/**
+ * Anchors de la navegación de la landing (landing.nav). Orden narrativo del
+ * "paseo de información" (spec UX 2026-07-20): riesgo → estándar → proceso →
+ * certificación, cerrando en el CTA "Reservar evaluación".
+ */
 export const NAV_LINKS = [
+  { key: "risk", href: "#riesgo" },
   { key: "domains", href: "#dominios" },
   { key: "cycle", href: "#ciclo" },
-  { key: "model", href: "#modelo" },
   { key: "certification", href: "#certificacion" },
 ] as const;
 

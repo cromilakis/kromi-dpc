@@ -3,9 +3,11 @@ import { getTranslations } from "next-intl/server";
 import { SectionHeading, buttonClasses, cn } from "@/components/ui";
 import {
   BASE_UF,
+  formatClp,
   formatUf,
   launchPriceUf,
   listPriceUf,
+  UF_CLP,
 } from "@/lib/self-assessment/pricing";
 import { PRICING_TIERS } from "./data";
 import { DocumentIcon } from "./icons";
@@ -14,8 +16,9 @@ import { WhatsAppButton } from "./whatsapp-button";
 /**
  * La inversión + CTA final (prototipo isLanding §CTA, anchor #certificacion):
  * precios base con ancla honesta "desde" (10 UF micro / 25 UF pequeña /
- * enterprise desde 60 UF, bajo cotización) y capa de lanzamiento: precio
- * "normal" tachado (+30%) y precio de lanzamiento con 50% de descuento.
+ * enterprise desde 60 UF, bajo cotización) y capa de lanzamiento: precio de
+ * lista tachado y precio de lanzamiento con el 20% de descuento
+ * (lib/self-assessment/pricing es la fuente de los cálculos).
  * Disclaimer legal (RFC §14) y CTAs de cierre. La card Enterprise va invertida.
  */
 export async function PricingSection() {
@@ -44,6 +47,13 @@ export async function PricingSection() {
         {PRICING_TIERS.map((tier) => {
           const launch = formatUf(launchPriceUf(BASE_UF[tier.key]));
           const normal = formatUf(listPriceUf(BASE_UF[tier.key]));
+          // Traducción a pesos (P1 critique 2026-07-20): la página convierte
+          // las multas a CLP pero no convertía los precios; el dueño de pyme
+          // debía saber el valor de la UF justo en la decisión de compra.
+          // Redondeado al millar con "≈", misma convención que stakes.
+          const clpApprox = formatClp(
+            Math.round((launchPriceUf(BASE_UF[tier.key]) * UF_CLP) / 1000) * 1000,
+          );
           return (
             <div
               key={tier.key}
@@ -78,22 +88,27 @@ export async function PricingSection() {
                     tier.inverted ? "text-white" : "text-ink",
                   )}
                 >
-                  {launch} UF
+                  {/* Enterprise va bajo cotización: mostrar un descuento
+                      tachado sobre un precio no-fijo debilita ambos (P3
+                      critique 2026-07-20) — solo el valor base "desde". */}
+                  {tier.hasBasePrice ? launch : normal} UF
                 </span>
-                <span
-                  className={cn(
-                    "text-body-sm line-through",
-                    tier.inverted ? "text-lead" : "text-carbon",
-                  )}
-                >
-                  {normal} UF
-                </span>
+                {tier.hasBasePrice && (
+                  <span className="text-body-sm text-carbon line-through">
+                    {normal} UF
+                  </span>
+                )}
                 {tier.hasBasePrice && (
                   <span className="font-sans text-body-sm text-carbon">
                     {t("vat")}
                   </span>
                 )}
               </div>
+              {tier.hasBasePrice && (
+                <div className="mt-[2px] text-caption font-medium text-carbon">
+                  {t("clpApprox", { amount: clpApprox })}
+                </div>
+              )}
               <div
                 className={cn(
                   "mt-[2px] text-caption",
@@ -112,9 +127,9 @@ export async function PricingSection() {
         <p className="max-w-[520px] text-[13px] leading-[1.5] text-carbon">
           {t("disclaimer")}
         </p>
-        {/* Mismo orden que el hero: Cotizar (primario) → Autoevaluación. */}
+        {/* Mismo orden que el hero: Reservar evaluación (primario) → Autoevaluación. */}
         <div className="flex flex-wrap items-center gap-[10px]">
-          <WhatsAppButton message={tWhatsApp("quoteMessage")}>
+          <WhatsAppButton message={tWhatsApp("assistedMessage")}>
             {t("ctaWhatsApp")}
           </WhatsAppButton>
           <Link
