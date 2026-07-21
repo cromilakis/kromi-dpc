@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { DownloadReportButton } from "@/components/documents/download-report-button";
+import { CitationChip } from "@/components/legal/citation-chip";
 import { BreachEvidence } from "@/components/portal/breach-evidence";
 import { BreachResolution } from "@/components/portal/breach-resolution";
 import { cn } from "@/components/ui";
@@ -120,12 +121,11 @@ export default async function EvaluationDetailPage({
                   {t("articlesLabel")}
                 </p>
                 <ul className="mt-4 flex flex-wrap gap-8">
+                  {/* Citas navegables (2026-07-21): resumen + link al texto
+                      oficial en Ley Chile, en vez de texto muerto. */}
                   {breach.articles.map((article) => (
-                    <li
-                      key={article}
-                      className="rounded-tags bg-ash px-8 py-[2px] text-caption font-medium text-carbon"
-                    >
-                      {article}
+                    <li key={article}>
+                      <CitationChip reference={article} />
                     </li>
                   ))}
                 </ul>

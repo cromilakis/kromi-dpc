@@ -5,6 +5,10 @@
     "tagline": "Protección Certificada",
     "skipToContent": "Saltar al contenido principal",
     "opensInNewWindow": "(se abre en una ventana nueva)",
+    "citation": {
+      "officialText": "Ver texto oficial",
+      "disclaimer": "Resumen referencial"
+    },
     "downloadReport": {
       "label": "Descargar informe",
       "downloading": "Generando informe…",
