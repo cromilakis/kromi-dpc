@@ -1,7 +1,9 @@
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PortalNav } from "@/components/portal/portal-nav";
+import { Logo } from "@/components/ui";
 import { signOut } from "@/lib/actions/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -42,10 +44,11 @@ export default async function PortalLayout({
     .maybeSingle();
   if (!company) redirect("/login");
 
-  const [locale, messages, t] = await Promise.all([
+  const [locale, messages, t, tCommon] = await Promise.all([
     getLocale(),
     getMessages(),
     getTranslations("portal.shell"),
+    getTranslations("common"),
   ]);
 
   return (
@@ -61,28 +64,58 @@ export default async function PortalLayout({
       }}
     >
       <div className="flex min-h-screen flex-col bg-white">
-        <header className="flex h-[56px] shrink-0 items-center justify-between border-b border-stone bg-[#fbfbfc] px-24">
-          <div className="flex items-center gap-24">
-            <span className="text-[15px] font-semibold text-ink">
-              {company.name}
-            </span>
-            <PortalNav />
+        {/* Header con la identidad de marca (mismo lockup que la landing):
+            el portal debe sentirse continuación del sitio que vendió el
+            servicio, no otra aplicación (feedback 2026-07-21). */}
+        <header className="sticky top-0 z-50 border-b border-stone bg-white/85 backdrop-blur-[12px]">
+          <div className="mx-auto flex h-[64px] w-full max-w-[1160px] items-center justify-between gap-16 px-24 max-sm:px-16">
+            <div className="flex min-w-0 items-center gap-16">
+              <Link href="/portal" className="flex shrink-0 items-center gap-[10px]">
+                <Logo
+                  alt={`${tCommon("appName")} — ${tCommon("appFullName")}`}
+                  height={40}
+                />
+                {/* Excepción de marca del lockup (serif 15px, .kromi/design.md). */}
+                <span className="font-serif text-[15px] font-medium tracking-[-0.2px] text-ink max-md:hidden">
+                  {tCommon("tagline")}
+                </span>
+              </Link>
+              <span aria-hidden className="h-[22px] w-px shrink-0 bg-stone max-sm:hidden" />
+              <span className="truncate text-[14px] font-semibold text-ink max-sm:hidden">
+                {company.name}
+              </span>
+            </div>
+            <div className="flex items-center gap-12">
+              <PortalNav />
+              <form action={signOut}>
+                <button
+                  type="submit"
+                  className="cursor-pointer rounded-buttons border border-stone bg-white px-12 py-8 text-[13px] font-medium text-carbon transition-colors hover:bg-ash hover:text-ink"
+                >
+                  {t("signOut")}
+                </button>
+              </form>
+            </div>
           </div>
-          <form action={signOut}>
-            <button
-              type="submit"
-              className="cursor-pointer rounded-buttons border border-stone bg-white px-12 py-8 text-[13px] font-medium text-carbon transition-colors hover:bg-ash hover:text-ink"
-            >
-              {t("signOut")}
-            </button>
-          </form>
         </header>
         {/* id="main": destino del skip-link del root layout. */}
         <main id="main" className="flex-1">
-          <div className="mx-auto w-full max-w-[1160px] px-32 pb-80 pt-32">
+          <div className="mx-auto w-full max-w-[1160px] px-32 pb-80 pt-32 max-sm:px-16">
             {children}
           </div>
         </main>
+        {/* Footer sobrio de marca: cierra el shell como el sitio público. */}
+        <footer className="border-t border-stone bg-[#fbfbfc]">
+          <div className="mx-auto flex w-full max-w-[1160px] flex-wrap items-center justify-between gap-12 px-24 py-20 max-sm:px-16">
+            <div className="flex items-center gap-[10px]">
+              <Logo alt="" height={28} />
+              <span className="text-caption text-carbon">
+                {t("footerBrand")}
+              </span>
+            </div>
+            <p className="text-caption text-metal">{t("footerLegal")}</p>
+          </div>
+        </footer>
       </div>
     </NextIntlClientProvider>
   );

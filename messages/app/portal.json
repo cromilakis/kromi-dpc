@@ -5,15 +5,50 @@
     },
     "shell": {
       "brand": "DPC · Portal del cliente",
-      "signOut": "Cerrar sesión"
+      "signOut": "Cerrar sesión",
+      "footerBrand": "DPC · Data Protection Compliance",
+      "footerLegal": "Estándar privado de cumplimiento para la Ley 21.719. Tu información se trata bajo confidencialidad y contrato de encargo."
     },
     "nav": {
       "label": "Navegación del portal",
       "home": "Inicio",
-      "evaluations": "Evaluaciones"
+      "evaluations": "Mi diagnóstico",
+      "documents": "Documentos"
+    },
+    "documents": {
+      "title": "Documentos",
+      "description": "Los documentos de tu diagnóstico y la biblioteca de documentos tipo para ejecutar tus mitigaciones.",
+      "download": "Descargar PDF",
+      "locked": {
+        "title": "Completa tu pago para acceder a tus documentos",
+        "body": "Los documentos del diagnóstico y la biblioteca de documentos tipo estarán disponibles apenas se confirme el pago.",
+        "cta": "Ir a mi portal"
+      },
+      "reports": {
+        "title": "Documentos de tu diagnóstico",
+        "hint": "Se generan al momento con la información vigente de tu empresa.",
+        "items": {
+          "report": {
+            "title": "Informe de diagnóstico",
+            "summary": "El resumen ejecutivo de tu diagnóstico: nivel de riesgo y detalle de brechas."
+          },
+          "mitigation": {
+            "title": "Plan de mitigación",
+            "summary": "Para cada brecha, los pasos sugeridos y los documentos tipo disponibles."
+          },
+          "dossier": {
+            "title": "Catastro de cumplimiento",
+            "summary": "El expediente que respalda tu certificación: resoluciones y evidencias por brecha."
+          }
+        }
+      },
+      "templates": {
+        "title": "Documentos tipo de mitigación",
+        "hint": "Cada documento se descarga personalizado con los datos de tu empresa; los espacios en blanco se completan al firmar. Son borradores estándar: revísalos frente a tu operación antes de usarlos."
+      }
     },
     "evaluations": {
-      "title": "Evaluaciones",
+      "title": "Mi diagnóstico",
       "description": "Detalle de las brechas de cumplimiento detectadas en tu diagnóstico.",
       "locked": {
         "title": "Completa tu pago para ver tus evaluaciones",
@@ -157,16 +192,34 @@
       }
     },
     "paidNotice": {
-      "title": "Estamos confirmando tu pago…",
-      "description": "Recibimos tu pago en Stripe; puede tardar unos segundos en reflejarse aquí. Actualiza la página en un momento."
+      "title": "Recibimos tu pago",
+      "description": "Tu pago quedó registrado en Stripe. Estamos activando tu servicio; toma solo unos segundos.",
+      "refreshing": "Esta página se actualizará sola en un momento."
     },
     "service": {
       "pendingTitle": "Completa tu pago para comenzar",
-      "pendingBody": "Recibimos tu registro, pero tu pago aún está pendiente. Completa el pago para que nuestro equipo prepare tu diagnóstico completo, propuesta y certificación.",
+      "pendingBody": "Recibimos tu registro, pero tu pago aún está pendiente. Completa el pago para desbloquear tu diagnóstico completo, el plan de mitigación y los documentos tipo.",
       "payButton": "Completar pago",
       "paying": "Redirigiendo a Stripe…",
-      "preparingTitle": "Pago recibido — estamos preparando tu diagnóstico",
-      "preparingBody": "Ya confirmamos tu pago. Nuestro equipo está preparando tu diagnóstico completo, propuesta de mitigación y certificación; te avisaremos cuando esté listo.",
+      "preparingTitle": "Pago confirmado — tu servicio está activo",
+      "preparingBody": "Tu diagnóstico completo, el plan de mitigación y la biblioteca de documentos ya están disponibles. En paralelo, un consultor está revisando tu caso para acompañarte en la mitigación.",
+      "ctaEvaluations": "Ver mi diagnóstico",
+      "ctaDocuments": "Ver mis documentos",
+      "nextTitle": "Qué sigue",
+      "next": {
+        "review": {
+          "title": "Revisa tus brechas y descarga tu informe",
+          "text": "En «Mi diagnóstico» está cada brecha detectada: por qué es un riesgo, qué dice la ley y cómo se mitiga."
+        },
+        "mitigation": {
+          "title": "Ejecuta las mitigaciones con los documentos tipo",
+          "text": "Cada brecha trae pasos concretos y documentos listos para personalizar y firmar. Sube la evidencia de lo que vayas resolviendo y marca cada brecha como resuelta."
+        },
+        "certification": {
+          "title": "Certificación DPC",
+          "text": "Cuando todas las brechas estén resueltas y validadas por tu consultor, emitimos tu certificado privado verificable en línea."
+        }
+      },
       "panoramaTitle": "Panorama preliminar",
       "payErrors": {
         "unauthorized": "Tu sesión no tiene una empresa asociada.",

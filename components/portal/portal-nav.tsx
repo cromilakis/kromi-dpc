@@ -8,6 +8,7 @@ import { cn } from "@/components/ui";
 const ITEMS = [
   { href: "/portal", key: "home", exact: true },
   { href: "/portal/evaluaciones", key: "evaluations", exact: false },
+  { href: "/portal/documentos", key: "documents", exact: false },
 ] as const;
 
 export function PortalNav() {
