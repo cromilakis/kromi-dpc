@@ -88,11 +88,11 @@ const STYLES = `
   }
   .cover > * { position: relative; }
   .wordmark { display: flex; align-items: center; gap: 16px; }
-  .wordmark .mark { font-weight: 800; font-size: 32px; letter-spacing: -1.5px; color: #fff; }
-  .wordmark .div { width: 1px; height: 34px; background: rgba(255,255,255,.28); }
+  .wordmark .mark { font-weight: 800; font-size: 40px; letter-spacing: -1.5px; color: #fff; }
+  .wordmark .div { width: 1px; height: 42px; background: rgba(255,255,255,.28); }
   .wordmark .namewrap { display: inline-flex; flex-direction: column; }
-  .wordmark .kromi { font-size: 22px; color: #fff; line-height: 1; }
-  .wordmark .pc { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  .wordmark .kromi { font-size: 26px; color: #fff; line-height: 1; }
+  .wordmark .pc { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
                   color: rgba(255,255,255,.55); margin-top: 4px; }
   .cover-mid { margin: 88px 0 auto; }
   .cover-eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
@@ -101,11 +101,12 @@ const STYLES = `
                  color: #fff; margin-top: 18px; font-weight: 500; max-width: 16ch; }
   .cover-sub { font-size: 13px; letter-spacing: .5px; text-transform: uppercase;
                color: rgba(255,255,255,.6); font-weight: 600; margin-top: 20px; }
+  .cover-sub-bottom { margin-top: auto; margin-bottom: 18px; }
   .cover-company { margin-top: 30px; font-size: 15px; color: rgba(255,255,255,.85); }
   .cover-company span { display: block; font-size: 10px; letter-spacing: 1px;
                         text-transform: uppercase; color: rgba(255,255,255,.5);
                         margin-bottom: 4px; }
-  .cover-company strong { color: #fff; font-weight: 600; font-size: 18px; }
+  .cover-company strong { color: #fff; font-weight: 600; font-size: 24px; }
   .cover-foot { display: flex; justify-content: space-between; align-items: flex-end;
                 border-top: 1px solid rgba(255,255,255,.14); padding-top: 18px; }
   .cover-foot .stat { font-size: 12px; color: rgba(255,255,255,.8); }
@@ -115,7 +116,7 @@ const STYLES = `
   /* ---------- Header de marca (índice / presentación / brechas) ---------- */
   .hd { display: flex; align-items: center; justify-content: space-between;
         border-bottom: 1px solid #e6e6e8; padding-bottom: 12px; margin-bottom: 30px; }
-  .hd img { height: 22px; width: auto; }
+  .hd img { height: 28px; width: auto; }
   .hd .tag-r { font-size: 10px; letter-spacing: .4px; text-transform: uppercase;
                color: #6b6f76; font-weight: 600; }
   .page-h { font-size: 24px; letter-spacing: -.4px; color: #1c1d1f; font-weight: 500; }
@@ -193,9 +194,9 @@ function coverPage(d: DiagnosisPdfData): string {
     <div class="cover-mid">
       <p class="cover-eyebrow">Informe de autoevaluación</p>
       <h1 class="serif cover-title">Diagnóstico de protección de datos</h1>
-      <p class="cover-sub">Ley 21.719 · Kromi Privacy Center</p>
       ${company}
     </div>
+    <p class="cover-sub cover-sub-bottom">Ley 21.719 · Kromi Privacy Center</p>
     <div class="cover-foot">
       <div class="stat">
         <strong>${d.totalBreaches}</strong> brechas detectadas &nbsp;·&nbsp;
@@ -229,7 +230,7 @@ function indexPages(d: DiagnosisPdfData, firstBreachPage: number): string {
     html += `
     <section class="page">
       ${header(d.logoDataUri, label)}
-      <h2 class="serif page-h">${p === 0 ? "Contenido" : "Contenido (continuación)"}</h2>
+      ${p === 0 ? '<h2 class="serif page-h">Contenido</h2>' : ""}
       <ol class="toc">${rows}</ol>
     </section>`;
   }
