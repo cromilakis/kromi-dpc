@@ -45,8 +45,16 @@ export interface BreachDescriptor {
 export interface ScreeningAnswerOption {
   /** Valor que el usuario selecciona (ej. "si", "no", "parcialmente"). */
   value: string;
-  /** Etiqueta visible. */
+  /** Etiqueta visible (título principal, pocas palabras). */
   label: string;
+  /** Subtítulo opcional con ejemplos (se muestra más pequeño bajo el label). */
+  sublabel?: string;
+  /**
+   * Si es true, al seleccionar esta opción aparece un input de texto libre
+   * OBLIGATORIO dentro de su panel (p. ej. "Otro rubro"). El valor se guarda en
+   * el mismo mapa de texto libre que `allowCustom`.
+   */
+  custom?: boolean;
   /**
    * Ramas de deep-dive que se activan al seleccionar esta respuesta.
    * Cada string es un `DeepDiveBranch.id`.
@@ -99,6 +107,10 @@ export interface ScreeningNode {
 export interface DeepDiveQuestionOption {
   value: string;
   label: string;
+  /** Subtítulo opcional con ejemplos (se muestra más pequeño bajo el label). */
+  sublabel?: string;
+  /** Si es true, al seleccionarla aparece un input de texto libre obligatorio. */
+  custom?: boolean;
   /** Brecha disparada al seleccionar esta respuesta. */
   breach?: BreachDescriptor;
 }

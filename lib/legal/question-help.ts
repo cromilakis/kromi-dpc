@@ -9,6 +9,50 @@
  * profundización. Si una pregunta no tiene entrada, la UI simplemente no
  * muestra la línea.
  */
+/**
+ * QUESTION_LAW — referencia legal (ley y, cuando corresponde, artículo) que se
+ * muestra en el eyebrow de cada pregunta, para que el usuario sepa a qué norma
+ * está asociada. Clave = id del nodo de screening (`S-0xx`) o id de la rama de
+ * profundización (`DD-xxx`). Si no hay entrada, la UI muestra "Ley 21.719".
+ *
+ * ⚠️ TODO-LEGAL (mismo gate que breach-mitigation.ts / breach-content.ts): los
+ * artículos citados vienen del marco de la Ley 21.719 usado por el motor; deben
+ * ser verificados por el abogado antes de producción. Ante duda se deja solo la
+ * ley, sin artículo.
+ */
+export const QUESTION_LAW: Record<string, string> = {
+  // Screening
+  "S-004": "Ley 21.719 · Art. 16",
+  "S-005": "Ley 21.719 · Art. 15 bis",
+  "S-006": "Ley 21.719 · Art. 14 quinquies",
+  "S-007": "Ley 21.719 · Art. 14 quinquies",
+  "S-008": "Ley 21.719 · Art. 14 ter",
+  "S-009": "Ley 21.719 · Consentimiento",
+  "S-010": "Ley 21.719 · Videovigilancia",
+  "S-012": "Ley 21.719 · Transferencia internacional",
+  "S-014": "Ley 21.719 · Derechos ARCOP",
+  "S-015": "Ley 21.719 · Art. 14 ter",
+  "S-016": "Ley 21.719 · Registro de tratamientos",
+  "S-017": "Ley 21.719 · Art. 14 ter",
+  "S-018": "Ley 21.719 · Derechos ARCOP",
+  "S-019": "Ley 21.719 · Art. 14 sexies",
+  "S-021": "Ley 21.719 · Art. 15 bis",
+  // Profundización (por rama)
+  "DD-SALUD": "Ley 20.584 · Ley 21.719",
+  "DD-SENSIBLE": "Ley 21.719 · Art. 16",
+  "DD-SEGURIDAD-SOFTWARE": "Ley 21.719 · Art. 14 quinquies",
+  "DD-PROVEEDORES": "Ley 21.719 · Art. 15 bis",
+  "DD-ENCARGADO": "Ley 21.719 · Art. 15 bis",
+  "DD-WEB": "Ley 21.719 · Art. 14 ter",
+  "DD-CCTV": "Ley 21.719 · Videovigilancia",
+  "DD-BIOMETRIA": "Ley 21.719 · Art. 16 ter",
+  "DD-TRANSFER": "Ley 21.719 · Transferencia internacional",
+  "DD-MARKETING": "Ley 21.719 · Consentimiento",
+  "DD-INCIDENTES": "Ley 21.719 · Art. 14 sexies",
+  "DD-AUTOMATIZADAS": "Ley 21.719 · Art. 8° bis",
+  "DD-LABORAL": "Ley 21.719 · Art. 154 bis Código del Trabajo",
+};
+
 export const QUESTION_HELP: Record<string, string> = {
   // Screening (las 22 preguntas base que ve todo el mundo). Descripciones muy
   // breves: qué define esta pregunta en el diagnóstico.

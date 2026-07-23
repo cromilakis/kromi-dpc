@@ -14,6 +14,10 @@ const isGitHubPages = process.env.GITHUB_PAGES === "1";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
+  // El logo (fs) debe viajar en el bundle de la función que genera el PDF.
+  outputFileTracingIncludes: {
+    "/self-assessment/informe": ["./public/kpc-logo.png"],
+  },
   ...(isGitHubPages
     ? {
         output: "export" as const,

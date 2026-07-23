@@ -34,7 +34,10 @@ export { DEEP_DIVE_BRANCHES } from "./deep-dive-branches";
 
 export { INFERENCE_RULES } from "./inference-rules";
 
-export { QUESTION_HELP } from "./question-help";
+export { QUESTION_HELP, QUESTION_LAW } from "./question-help";
+
+export { getCitation, normalizeArticleRef } from "./citations";
+export type { LegalCitation } from "./citations";
 
 export { getBreachMitigation, BREACH_MITIGATION } from "./breach-mitigation";
 export type {

@@ -4,9 +4,11 @@
 # en la fase Connect). Ver next.config.ts (GITHUB_PAGES=1).
 name: pages
 
+# DESACTIVADO en push (2026-07-23): la app ahora requiere servidor (ruta
+# /self-assessment/informe genera el PDF con Chromium), incompatible con el
+# export estático de GitHub Pages. El destino de producción es Vercel. Queda
+# solo el disparo manual como referencia histórica.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

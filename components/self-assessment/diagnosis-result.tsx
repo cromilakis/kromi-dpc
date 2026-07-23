@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/components/ui";
 import {
@@ -48,29 +48,19 @@ export interface DiagnosisResultPanelProps {
 
 /**
  * Resultado de la autoevaluación: diagnóstico (áreas + riesgo) + la PROPUESTA
- * DE MITIGACIÓN completa por brecha (objetivo, acciones, prioridad, esfuerzo y
- * plazo). Todo gratis, sin registro. El cliente puede aplicarla por su cuenta
- * o pedir apoyo para implementarla vía WhatsApp (sin hablar de dinero acá: la
- * estimación ocurre en la conversación).
+ * DE MITIGACIÓN por brecha (meta de cierre + acciones concretas). No se muestran
+ * prioridad/esfuerzo/plazo: no se pueden determinar de forma genérica. Todo
+ * gratis, sin registro. La estimación ocurre en la conversación por WhatsApp.
  */
 export function DiagnosisResultPanel({ result }: DiagnosisResultPanelProps) {
   const t = useTranslations("diagnosis.result");
   const tLabel = useTranslations("diagnosis.severity.label");
   const tWa = useTranslations("diagnosis.whatsapp");
-  const sectionRef = useRef<HTMLElement>(null);
+  const [companyName, setCompanyName] = useState("");
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState(false);
 
   const hasBreaches = result.totalBreaches > 0;
-
-  // Descargar = imprimir a PDF. Se abren todos los acordeones para que ninguna
-  // brecha quede oculta en el PDF; el chrome y los CTA se ocultan con print:hidden.
-  function handleDownload() {
-    sectionRef.current
-      ?.querySelectorAll("details")
-      .forEach((d) => {
-        d.open = true;
-      });
-    window.print();
-  }
 
   // Brechas únicas (por id) con su plan, ordenadas por severidad (crítico→bajo).
   const breaches = useMemo<BreachWithPlan[]>(() => {
@@ -99,8 +89,54 @@ export function DiagnosisResultPanel({ result }: DiagnosisResultPanelProps) {
     }),
   );
 
+  // Descarga real del PDF: se envía el resultado (con etiquetas ya traducidas)
+  // a la ruta de servidor que lo renderiza con Chromium y se baja el blob.
+  async function handleDownload() {
+    setDownloadError(false);
+    setDownloading(true);
+    try {
+      const payload = {
+        companyName: companyName.trim() || undefined,
+        riskLabel: RISK_LEVEL_LABELS[result.riskLevel],
+        totalBreaches: result.totalBreaches,
+        breaches: breaches.map((b) => ({
+          description: b.description,
+          severity: b.severity,
+          severityLabel: tLabel(b.severity),
+          objective: b.plan?.objective ?? t("noPlan"),
+          actions: b.plan
+            ? b.plan.actions.map((a) => ({
+                title: a.title,
+                detail: a.detail,
+                evidence: a.evidence,
+              }))
+            : [],
+        })),
+      };
+      const res = await fetch("/self-assessment/informe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "diagnostico-kpc.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setDownloadError(true);
+    } finally {
+      setDownloading(false);
+    }
+  }
+
   return (
-    <section ref={sectionRef} className="mx-auto w-full max-w-[720px] space-y-32">
+    <section className="mx-auto w-full max-w-[720px] space-y-32 pt-[48px] max-sm:pt-[32px]">
       {/* Encabezado — sereno, centrado en las brechas y el camino a resolverlas */}
       <header aria-live="polite">
         <h2 className="text-balance font-serif text-heading-sm font-medium leading-[1.15] tracking-[-0.5px] text-ink">
@@ -113,49 +149,64 @@ export function DiagnosisResultPanel({ result }: DiagnosisResultPanelProps) {
         </p>
 
         {hasBreaches && (
-          <div className="mt-24">
-            <p className="mb-8 text-caption font-medium text-metal">
-              {t("exposureLabel")}
-            </p>
-            <div className="flex items-center gap-10">
-              <div className="flex gap-[3px]" aria-hidden="true">
-                {LEVEL_ORDER.map((lvl, i) => (
-                  <span
-                    key={lvl}
-                    className={cn(
-                      "h-[6px] w-[26px] rounded-full",
-                      i <= levelIndex ? levelStyle.fill : "bg-stone",
-                    )}
-                  />
-                ))}
+          <div className="mt-24 flex flex-wrap items-end justify-between gap-x-24 gap-y-16">
+            <div>
+              <p className="mb-8 text-caption font-medium text-metal">
+                {t("exposureLabel")}
+              </p>
+              <div className="flex items-center gap-10">
+                <div className="flex gap-[3px]" aria-hidden="true">
+                  {LEVEL_ORDER.map((lvl, i) => (
+                    <span
+                      key={lvl}
+                      className={cn(
+                        "h-[6px] w-[26px] rounded-full",
+                        i <= levelIndex ? levelStyle.fill : "bg-stone",
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className={cn("text-body-sm font-semibold", levelStyle.text)}>
+                  {RISK_LEVEL_LABELS[result.riskLevel]}
+                </span>
               </div>
-              <span className={cn("text-body-sm font-semibold", levelStyle.text)}>
-                {RISK_LEVEL_LABELS[result.riskLevel]}
-              </span>
+            </div>
+            <div className="flex flex-col items-end gap-8">
+              <input
+                type="text"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                placeholder={t("companyPlaceholder")}
+                aria-label={t("companyLabel")}
+                maxLength={120}
+                className="w-[240px] rounded-buttons border border-slate bg-white px-12 py-[7px] text-body-sm text-ink placeholder:text-metal focus:border-carbon focus:outline-none max-sm:w-full"
+              />
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={downloading}
+                className="inline-flex items-center gap-8 rounded-buttons border border-slate bg-white px-16 py-[9px] text-body-sm font-medium text-ink transition-colors hover:bg-ash disabled:opacity-60"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path
+                    d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {downloading ? t("downloading") : t("download")}
+              </button>
+              {downloadError && (
+                <span role="alert" className="text-caption text-danger-red">
+                  {t("downloadError")}
+                </span>
+              )}
             </div>
           </div>
         )}
       </header>
-
-      {/* Descargar = imprimir a PDF (oculto en el propio PDF). */}
-      <div className="flex justify-end print:hidden">
-        <button
-          type="button"
-          onClick={handleDownload}
-          className="inline-flex items-center gap-8 rounded-buttons border border-slate bg-white px-16 py-[9px] text-body-sm font-medium text-ink transition-colors hover:bg-ash"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path
-              d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {t("download")}
-        </button>
-      </div>
 
       {/* Propuesta de mitigación: una brecha por acordeón, con su plan. */}
       {hasBreaches && (
@@ -170,8 +221,8 @@ export function DiagnosisResultPanel({ result }: DiagnosisResultPanelProps) {
             {breaches.map((breach) => (
               <li key={breach.id}>
                 <details className="group rounded-cards border border-stone bg-white [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer items-start justify-between gap-16 px-20 py-16 max-sm:px-16">
-                    <span className="text-body-sm font-medium leading-[1.4] text-ink">
+                  <summary className="flex cursor-pointer items-center justify-between gap-12 px-16 py-[11px]">
+                    <span className="line-clamp-2 text-body-sm font-medium leading-[1.35] text-ink group-open:line-clamp-none">
                       {breach.description}
                     </span>
                     <span className="flex shrink-0 items-center gap-10">
@@ -211,28 +262,6 @@ export function DiagnosisResultPanel({ result }: DiagnosisResultPanelProps) {
                       <p className="mt-4 text-body-sm leading-[1.5] text-carbon">
                         {breach.plan.objective}
                       </p>
-
-                      {/* Metadatos de gestión */}
-                      <div className="mt-12 flex flex-wrap gap-x-20 gap-y-6 text-caption text-metal">
-                        <span>
-                          {t("priorityLabel")}:{" "}
-                          <strong className="font-semibold text-carbon">
-                            {t(`priorityValues.${breach.plan.priority}`)}
-                          </strong>
-                        </span>
-                        <span>
-                          {t("effortLabel")}:{" "}
-                          <strong className="font-semibold text-carbon">
-                            {t(`effortValues.${breach.plan.effort}`)}
-                          </strong>
-                        </span>
-                        <span>
-                          {t("timeframeLabel")}:{" "}
-                          <strong className="font-semibold text-carbon">
-                            {t("weeks", { weeks: breach.plan.estimatedWeeks })}
-                          </strong>
-                        </span>
-                      </div>
 
                       {/* Acciones concretas */}
                       <p className="mt-16 text-caption font-semibold uppercase tracking-[0.4px] text-carbon">

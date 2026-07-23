@@ -30,19 +30,27 @@ export default async function SelfAssessmentPage() {
         logoAlt={`${tCommon("appName")} — ${tCommon("appFullName")}`}
         backLabel={t("topbar.backToSite")}
       />
-      <main
-        id="main"
-        className="mx-auto w-full max-w-[1080px] flex-1 px-32 pb-80 pt-[56px] max-sm:px-16 max-sm:pt-32"
-      >
-        <header className="mb-40 text-center max-sm:mb-28">
-          <h1 className="mx-auto max-w-[720px] font-serif text-[40px] font-medium leading-[1.1] tracking-[-0.7px] text-ink max-sm:text-[30px]">
+      {/* Banda superior oscura con patrón de puntos sutil: da profundidad y
+          hace que el formulario "flote" por encima (sube con margen negativo). */}
+      <div className="relative overflow-hidden bg-ink">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:22px_22px]"
+        />
+        <header className="relative z-10 mx-auto w-full max-w-[1080px] px-32 pb-[104px] pt-[56px] text-center max-sm:px-16 max-sm:pb-[88px] max-sm:pt-40">
+          <h1 className="mx-auto max-w-[720px] font-serif text-[40px] font-medium leading-[1.1] tracking-[-0.7px] text-white max-sm:text-[30px]">
             {tDiag("splash.title")}
           </h1>
-          <p className="mx-auto mt-16 max-w-[600px] text-[17px] leading-[1.5] text-metal">
+          <p className="mx-auto mt-16 max-w-[600px] text-[17px] leading-[1.5] text-white/65">
             {tDiag("splash.subtitle")}
           </p>
         </header>
+      </div>
 
+      <main
+        id="main"
+        className="relative z-10 mx-auto w-full max-w-[1080px] flex-1 px-32 pb-80 max-sm:px-16"
+      >
         <NextIntlClientProvider
           locale={locale}
           messages={{

@@ -29,12 +29,26 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
         answers: [
           {
             value: "salud",
-            label: "Datos de salud (diagnósticos, fichas clínicas, tratamientos)",
+            label: "Datos de salud",
+            sublabel: "Diagnósticos, fichas clínicas, tratamientos",
             breach: B["B-SAL-001"],
           },
-          { value: "biometricos", label: "Datos biométricos (huella, rostro, voz)" },
-          { value: "financieros", label: "Datos financieros o crediticios" },
-          { value: "menores", label: "Datos de niños, niñas o adolescentes (menores de 18)", breach: B["B-MEN-001"] },
+          {
+            value: "biometricos",
+            label: "Datos biométricos",
+            sublabel: "Huella, rostro, voz",
+          },
+          {
+            value: "financieros",
+            label: "Datos financieros",
+            sublabel: "Tarjetas, cuentas, scoring crediticio",
+          },
+          {
+            value: "menores",
+            label: "Datos de menores",
+            sublabel: "Niños, niñas y adolescentes (menores de 18)",
+            breach: B["B-MEN-001"],
+          },
           {
             value: "sindicales",
             label: "Afiliación sindical, política o gremial",
@@ -75,6 +89,11 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
           {
             value: "solo_autorizado",
             label: "Solo la persona que atiende directamente al titular",
+          },
+          {
+            value: "algunos_por_funcion",
+            label: "Algunas personas del equipo",
+            sublabel: "Según su función o rol",
           },
           {
             value: "todo_equipo",
@@ -133,11 +152,13 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
         answers: [
           {
             value: "min_15_años",
-            label: "15 años o más, o de forma permanente",
+            label: "15 años o más",
+            sublabel: "O de forma permanente",
           },
           {
             value: "menos_15",
-            label: "No tenemos un plazo definido, podría ser menos de 15 años",
+            label: "No tenemos un plazo definido",
+            sublabel: "Podría ser menos de 15 años",
             breach: {
               ...B["B-CON-001"],
               description:
@@ -157,7 +178,8 @@ export const DEEP_DIVE_BRANCHES: DeepDiveBranch[] = [
           },
           {
             value: "mas_tiempo",
-            label: "No tenemos un procedimiento definido, podría ser más de 5 días hábiles",
+            label: "No tenemos un procedimiento definido",
+            sublabel: "Podría ser más de 5 días hábiles",
             breach: {
               ...B["B-DER-001"],
               description:
