@@ -22,17 +22,13 @@ export async function LandingNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-stone bg-white/85 backdrop-blur-[12px]">
       <div className="mx-auto flex h-[64px] w-full max-w-[1180px] items-center justify-between px-32 max-sm:px-16">
-        <Link href="/" className="flex items-center gap-[10px]">
-          {/* Texto accesible del logo: appName + appFullName (D10). */}
+        <Link href="/" className="flex items-center">
+          {/* Logo lockup KPC | Kromi Privacy Center (el alt lleva appName + appFullName). */}
           <Logo
             alt={`${tCommon("appName")} — ${tCommon("appFullName")}`}
-            height={44}
+            height={30}
             priority
           />
-          {/* Tagline oculto en móvil para dejar espacio al CTA de cotizar. */}
-          <span className="font-serif text-[17px] font-medium tracking-[-0.2px] text-ink max-sm:hidden">
-            {tCommon("tagline")}
-          </span>
         </Link>
         <div className="flex items-center gap-[6px]">
           <nav className="hidden items-center gap-[2px] md:flex">

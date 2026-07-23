@@ -20,10 +20,10 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "DPC — Data Protection Compliance",
+  title: "KPC — Kromi Privacy Center",
   // Tono tercera persona/impersonal (init.md/RFC §16): sin tuteo en el copy.
   description:
-    "DPC acompaña a las organizaciones en la evaluación, el diagnóstico y la certificación del cumplimiento de la Ley 21.719.",
+    "KPC acompaña a las organizaciones en la evaluación, el diagnóstico y la certificación del cumplimiento de la Ley 21.719.",
 };
 
 export default async function RootLayout({

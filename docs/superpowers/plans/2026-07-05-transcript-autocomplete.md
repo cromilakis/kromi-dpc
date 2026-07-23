@@ -272,7 +272,7 @@ comment on column public.interview_sessions.ai_extraction is
   'Salida validada del LLM (ExtractionResult): rat[], compliance[], unassigned[]. Auditable; no es el expediente.';
 ```
 
-- [ ] **Step 2: Aplicar en local** — `docker exec -i supabase_db_kromi-dpc psql -U postgres -d postgres < supabase/migrations/20260705150000_diagnosis_transcript.sql` y verificar columnas (`\d interview_sessions`).
+- [ ] **Step 2: Aplicar en local** — `docker exec -i supabase_db_kromi-kpc psql -U postgres -d postgres < supabase/migrations/20260705150000_diagnosis_transcript.sql` y verificar columnas (`\d interview_sessions`).
 
 - [ ] **Step 3: Regenerar tipos** — `pnpm supabase gen types typescript --local > lib/supabase/types.ts` (o el comando del repo; verificar que aparecen `transcript` y `ai_extraction`).
 
@@ -380,7 +380,7 @@ Wiring en `DiagnosisManager`:
 **Files:**
 - Modify: `messages/app/diagnosis.json`
 
-Solo copy (sin cambios de lógica): `actions.materialize` → "Aplicar diagnóstico"; `actions.materializing` → "Aplicando…"; `actions.materialized` → "Se generó el RAT y se actualizó el checklist DPC."; revisar `status.reviewed` → "Aplicado". Verificar que no queden textos que digan "materializar" en la UI (`grep -ri materializ messages/`).
+Solo copy (sin cambios de lógica): `actions.materialize` → "Aplicar diagnóstico"; `actions.materializing` → "Aplicando…"; `actions.materialized` → "Se generó el RAT y se actualizó el checklist KPC."; revisar `status.reviewed` → "Aplicado". Verificar que no queden textos que digan "materializar" en la UI (`grep -ri materializ messages/`).
 
 - [ ] **Step 1: Editar las claves i18n.**
 - [ ] **Step 2: build** → OK; revisar en la UI que el botón dice "Aplicar diagnóstico".

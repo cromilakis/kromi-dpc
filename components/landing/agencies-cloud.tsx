@@ -25,9 +25,6 @@ export async function AgenciesCloud() {
           </li>
         ))}
       </ul>
-      <p className="mx-auto mt-24 max-w-[560px] text-caption leading-[1.5] text-carbon">
-        {t("disclaimer")}
-      </p>
     </section>
   );
 }

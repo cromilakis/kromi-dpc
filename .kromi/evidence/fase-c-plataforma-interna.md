@@ -35,8 +35,8 @@
   server-side, path por empresa, versionado por nombre), descarga solo por URL firmada
   (60s) tras verificación de sesión, validación de estado con regla "sin archivo no se
   valida"; elegibilidad de certificación server-side (≥80% compliant y cero non_compliant
-  en DPC-SEG/DPC-INC, parámetros documentados), emisión con código aleatorio
-  (DPC-XXX-YYYY-######), sha256 y vigencia 12 meses; revalidación y revocación con
+  en KPC-SEG/KPC-INC, parámetros documentados), emisión con código aleatorio
+  (KPC-XXX-YYYY-######), sha256 y vigencia 12 meses; revalidación y revocación con
   confirmación accesible (alertdialog con foco gestionado) — todo auditado.
 
 ## Cómo se probó
@@ -44,7 +44,7 @@
   **tests 91/91** ✓ · build ✓ (15 rutas: 11 dinámicas del área interna + middleware).
 - **Runtime smoke** (Supabase local + dev server): `/` 200 · `/app` anon → 307 a
   `/login?next=/app` · `/app/empresas` anon → 307 · `/login` 200 ·
-  `/verificar/DPC-CA-2026-X7K4QZ` (código del seed) 200. Consultor demo creado con
+  `/verificar/KPC-CA-2026-X7K4QZ` (código del seed) 200. Consultor demo creado con
   `pnpm seed:consultant`.
 - **Revisión adversarial (4 lentes + fixer):** seguridad/authz, calidad de código,
   diseño+a11y, runtime. 34 hallazgos → 11 accionables, todos corregidos (ninguno falso

@@ -66,10 +66,10 @@ comment on column public.remediation_items.origin is
 -- Orden conversacional del guion/cola (abierta -> específica). Pendiente de
 -- validación consultor/abogado (mismo estatus que interview_questions).
 update public.domains set sort = v.sort from (values
-  ('DPC-FIN', 1), ('DPC-INV', 2), ('DPC-LIC', 3), ('DPC-PRO', 4),
-  ('DPC-CAL', 5), ('DPC-TRA', 6), ('DPC-DER', 7), ('DPC-SEG', 8),
-  ('DPC-CON', 9), ('DPC-RES', 10), ('DPC-TER', 11), ('DPC-SEN', 12),
-  ('DPC-INC', 13), ('DPC-EIA', 14)
+  ('KPC-FIN', 1), ('KPC-INV', 2), ('KPC-LIC', 3), ('KPC-PRO', 4),
+  ('KPC-CAL', 5), ('KPC-TRA', 6), ('KPC-DER', 7), ('KPC-SEG', 8),
+  ('KPC-CON', 9), ('KPC-RES', 10), ('KPC-TER', 11), ('KPC-SEN', 12),
+  ('KPC-INC', 13), ('KPC-EIA', 14)
 ) as v(code, sort) where public.domains.code = v.code;
 ```
 
@@ -151,7 +151,7 @@ import {
 } from "@/lib/llm/propose-remediation";
 
 const gaps: RemediationGap[] = [
-  { controlCode: "DPC-CAL-001", controlName: "Calidad", criterionIndex: 0,
+  { controlCode: "KPC-CAL-001", controlName: "Calidad", criterionIndex: 0,
     criterion: "¿Existe procedimiento de actualización?", gapType: "partial" },
 ];
 
@@ -160,7 +160,7 @@ describe("buildProposalPrompt", () => {
     const msgs = buildProposalPrompt(gaps);
     expect(msgs[0].role).toBe("system");
     expect(msgs[1].role).toBe("user");
-    expect(msgs[1].content).toContain("DPC-CAL-001");
+    expect(msgs[1].content).toContain("KPC-CAL-001");
     expect(msgs[1].content).toContain("procedimiento de actualización");
   });
 });
@@ -168,7 +168,7 @@ describe("buildProposalPrompt", () => {
 describe("sanitizeProposal", () => {
   it("acepta un item válido que calza con un gap", () => {
     const out = sanitizeProposal({ items: [{
-      controlCode: "DPC-CAL-001", criterionIndex: 0, gapType: "partial",
+      controlCode: "KPC-CAL-001", criterionIndex: 0, gapType: "partial",
       action: "Definir procedimiento de actualización y rectificación.",
       priority: "media", effort: "medio", suggestedDueWeeks: 4,
       rationale: "El criterio de actualización está parcial.",
@@ -179,7 +179,7 @@ describe("sanitizeProposal", () => {
 
   it("descarta un item con action vacía (cero asunciones)", () => {
     const out = sanitizeProposal({ items: [{
-      controlCode: "DPC-CAL-001", criterionIndex: 0, gapType: "partial",
+      controlCode: "KPC-CAL-001", criterionIndex: 0, gapType: "partial",
       action: "   ", priority: "media", effort: "medio", suggestedDueWeeks: 4,
       rationale: "x",
     }] }, gaps);
@@ -188,7 +188,7 @@ describe("sanitizeProposal", () => {
 
   it("descarta un item que no corresponde a ningún gap enviado", () => {
     const out = sanitizeProposal({ items: [{
-      controlCode: "DPC-XXX-999", criterionIndex: 3, gapType: "no",
+      controlCode: "KPC-XXX-999", criterionIndex: 3, gapType: "no",
       action: "Algo inventado.", priority: "alta", effort: "alto",
       suggestedDueWeeks: 2, rationale: "x",
     }] }, gaps);
@@ -197,7 +197,7 @@ describe("sanitizeProposal", () => {
 
   it("normaliza priority/effort fuera de enum a undefined-descartado o default seguro", () => {
     const out = sanitizeProposal({ items: [{
-      controlCode: "DPC-CAL-001", criterionIndex: 0, gapType: "partial",
+      controlCode: "KPC-CAL-001", criterionIndex: 0, gapType: "partial",
       action: "Acción válida.", priority: "URGENTE", effort: "medio",
       suggestedDueWeeks: 4, rationale: "x",
     }] }, gaps);
@@ -334,27 +334,27 @@ import { describe, it, expect } from "vitest";
 import { buildGaps } from "@/lib/interview/build-gaps";
 
 const controls = [
-  { code: "DPC-CAL-001", name: "Calidad", criteria: ["c0", "c1", "c2", "c3"] },
-  { code: "DPC-CON-001", name: "Confidencialidad", criteria: ["d0", "d1"] },
+  { code: "KPC-CAL-001", name: "Calidad", criteria: ["c0", "c1", "c2", "c3"] },
+  { code: "KPC-CON-001", name: "Confidencialidad", criteria: ["d0", "d1"] },
 ];
 
 describe("buildGaps", () => {
   it("emite gap por criterio no/partial/flagged e ignora yes/unknown/ausente", () => {
     const gaps = buildGaps(
-      { "DPC-CAL-001": ["no", "partial", "yes", "flagged"], "DPC-CON-001": ["yes", "yes"] },
+      { "KPC-CAL-001": ["no", "partial", "yes", "flagged"], "KPC-CON-001": ["yes", "yes"] },
       controls,
     );
     expect(gaps.map((g) => [g.controlCode, g.criterionIndex, g.gapType])).toEqual([
-      ["DPC-CAL-001", 0, "no"],
-      ["DPC-CAL-001", 1, "partial"],
-      ["DPC-CAL-001", 3, "flagged"],
+      ["KPC-CAL-001", 0, "no"],
+      ["KPC-CAL-001", 1, "partial"],
+      ["KPC-CAL-001", 3, "flagged"],
     ]);
     expect(gaps[0].criterion).toBe("c0");
     expect(gaps[0].controlName).toBe("Calidad");
   });
 
   it("sin gaps cuando todo es yes/unknown", () => {
-    expect(buildGaps({ "DPC-CAL-001": ["yes", "unknown"] }, controls)).toEqual([]);
+    expect(buildGaps({ "KPC-CAL-001": ["yes", "unknown"] }, controls)).toEqual([]);
   });
 });
 ```

@@ -1,13 +1,13 @@
 ---
 title: Propuesta de mitigación — Finalidad del tratamiento
 breach: B-LEG-003
-control: DPC-FIN-001
+control: KPC-FIN-001
 ---
 
 # Uso de los datos conforme a la finalidad informada
 
 **Empresa:** {{companyName}} · **RUT:** {{rut}}
-**Preparado por:** DPC — Data Protection Compliance · **Fecha:** {{date}}
+**Preparado por:** KPC — Kromi Privacy Center · **Fecha:** {{date}}
 
 Esta propuesta detalla cómo cerrar la brecha detectada en su diagnóstico sobre
 el uso de los datos para fines distintos de los informados, en qué orden
@@ -101,13 +101,13 @@ Así el titular sabe, desde el primer contacto, a qué se destinan sus datos.
 ## 5. Cómo dar por abordada esta brecha
 
 Cuando su equipo haya ejecutado las tres acciones, marque la brecha como
-**abordada** en el portal. Es un registro para su propio seguimiento: DPC
+**abordada** en el portal. Es un registro para su propio seguimiento: KPC
 entrega el análisis y esta propuesta; la ejecución y el resguardo de la
 evidencia quedan a cargo de su empresa. Conserve los respaldos indicados en
 cada acción para su propio archivo y ante una eventual fiscalización.
 
 ---
 
-*Documento preparado por DPC — Data Protection Compliance como base estándar.
+*Documento preparado por KPC — Kromi Privacy Center como base estándar.
 Su contenido es referencial y debe ajustarse a la operación real de la empresa
 junto al consultor asignado.*

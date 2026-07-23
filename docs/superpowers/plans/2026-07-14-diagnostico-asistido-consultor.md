@@ -569,7 +569,7 @@ Expected: PASS.
 
 - [ ] **Step 3: Verificación de datos**
 
-Run: `docker exec supabase_db_kromi-dpc psql -U postgres -d postgres -c "select source, total_breaches, created_by is not null as by_consultant from public.company_diagnoses order by created_at desc limit 1;"`
+Run: `docker exec supabase_db_kromi-kpc psql -U postgres -d postgres -c "select source, total_breaches, created_by is not null as by_consultant from public.company_diagnoses order by created_at desc limit 1;"`
 Expected: `consultant_assisted | <n> | t`.
 
 - [ ] **Step 4: Commit**

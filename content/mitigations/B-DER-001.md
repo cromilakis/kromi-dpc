@@ -1,13 +1,13 @@
 ---
 title: Propuesta de mitigación — Canal de derechos del titular (ARCOP)
 breach: B-DER-001
-control: DPC-DER-001
+control: KPC-DER-001
 ---
 
 # Canal de derechos del titular (ARCOP)
 
 **Empresa:** {{companyName}} · **RUT:** {{rut}}
-**Preparado por:** DPC — Data Protection Compliance · **Fecha:** {{date}}
+**Preparado por:** KPC — Kromi Privacy Center · **Fecha:** {{date}}
 
 Esta propuesta detalla cómo cerrar la brecha de derechos detectada en su
 diagnóstico, en qué orden y con qué evidencia respaldar cada avance. Es una
@@ -108,7 +108,7 @@ plazo.
 ## 5. Cómo dar por abordada esta brecha
 
 Cuando su equipo haya ejecutado las tres acciones, marque la brecha como
-**abordada** en el portal. Es un registro para su propio seguimiento: DPC
+**abordada** en el portal. Es un registro para su propio seguimiento: KPC
 entrega el análisis y esta propuesta; la ejecución y el resguardo de los
 respaldos quedan a cargo de su empresa. No se suben evidencias al portal ni las
 valida el consultor. Conserve los respaldos indicados en cada acción para su
@@ -116,6 +116,6 @@ propio archivo y ante una eventual fiscalización.
 
 ---
 
-*Documento preparado por DPC — Data Protection Compliance como base estándar.
+*Documento preparado por KPC — Kromi Privacy Center como base estándar.
 Su contenido es referencial y debe ajustarse a la operación real de la empresa
 junto al consultor asignado.*

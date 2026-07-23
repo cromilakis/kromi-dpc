@@ -1,7 +1,7 @@
 {
   "common": {
-    "appName": "DPC",
-    "appFullName": "Data Protection Compliance",
+    "appName": "KPC",
+    "appFullName": "Kromi Privacy Center",
     "tagline": "Adecuación Acompañada",
     "skipToContent": "Saltar al contenido principal",
     "opensInNewWindow": "(se abre en una ventana nueva)",
@@ -41,8 +41,8 @@
     "stakes": {
       "title": "Qué establece la Ley 21.719",
       "note": "Rige desde el 1 de diciembre de 2026",
-      "supportLead": "Cumplir es un proceso abordable.",
-      "support": "Revisamos tus procesos y ponemos al día el cumplimiento de la ley y de la normativa de tu rubro, paso a paso.",
+      "supportLead": "Cumplir es abordable.",
+      "support": "No necesitas resolverlo todo de golpe, pero sí saber dónde estás parado.",
       "items": {
         "minor": {
           "severity": "Infracción leve",
@@ -73,35 +73,35 @@
         "closeLead": "Situaciones así de cotidianas pueden constituir infracciones bajo la nueva ley,",
         "closeSupport": "y todas tienen solución si se corrigen a tiempo.",
         "question": "Averigua gratis cómo está tu empresa hoy.",
-        "ctaSelfAssessment": "Evalúa tu empresa gratis"
+        "ctaSelfAssessment": "Haz tu autoevaluación"
       }
     },
     "domains": {
       "eyebrow": "Arquitectura del marco de trabajo",
-      "title": "Los 14 dominios del estándar DPC.",
+      "title": "Los 14 dominios del estándar KPC.",
       "description": "Catorce dominios forman la malla que resguarda tu información: ocho principios de la Ley 21.719 y seis dominios complementarios. Elige uno para explorarlo.",
       "groups": {
         "principles": "Principios de la Ley 21.719",
         "operational": "Obligaciones operativas"
       },
       "mesh": {
-        "phrase": "Cada dominio queda documentado en tu expediente de cumplimiento.",
+        "phrase": "Tu autoevaluación revisa cada uno de estos dominios.",
         "emptyPrompt": "Elige un dominio",
         "domains": [
-          { "label": "Licitud y Lealtad", "title": "Licitud y Lealtad", "desc": "Base jurídica sólida. Aseguramos que cada dato recolectado tenga justificación legal frente a la normativa, eliminando el riesgo de fiscalización." },
-          { "label": "Finalidad", "title": "Finalidad", "desc": "Control del uso. Garantizamos que la información se utilice estrictamente para el propósito original informado al titular, previniendo sanciones." },
-          { "label": "Proporcionalidad", "title": "Proporcionalidad", "desc": "Minimización de exposición. Auditamos tus flujos para capturar solo la información necesaria. Menor volumen de datos = menor riesgo." },
-          { "label": "Calidad", "title": "Calidad", "desc": "Integridad de la base. Controles para mantener la exactitud y vigencia de la información, evitando decisiones sobre datos erróneos." },
-          { "label": "Responsabilidad", "title": "Responsabilidad", "desc": "Demostración de cumplimiento. Estructuramos las evidencias para que, ante cualquier requerimiento, puedas demostrar tu diligencia proactivamente." },
-          { "label": "Seguridad", "title": "Seguridad", "desc": "Medidas técnicas y organizativas. Controles robustos de ciberseguridad para blindar bases de datos contra accesos no autorizados o fugas." },
-          { "label": "Transparencia", "title": "Transparencia", "desc": "Deber de información oportuna. Redactamos avisos de privacidad claros, accesibles y con validez jurídica." },
-          { "label": "Confidencialidad", "title": "Confidencialidad", "desc": "Control estricto de accesos. La información solo está disponible para personal autorizado, bajo acuerdos de confidencialidad (NDA) vinculantes." },
-          { "label": "Inventario y RAT", "title": "Inventario y RAT", "expansion": "(Registro de Actividades de Tratamiento)", "desc": "Trazabilidad total. Mapeamos el ciclo de vida de los datos: qué entra, dónde se almacena y quién lo procesa." },
-          { "label": "Derechos ARCOP", "title": "Derechos ARCOP", "expansion": "(Acceso, Rectificación, Cancelación, Oposición y Portabilidad)", "desc": "Gestión de titulares. Habilitamos canales legales para responder eficientemente a los clientes." },
-          { "label": "Datos Sensibles", "title": "Datos Sensibles", "desc": "Protección reforzada. Estándares de máxima exigencia para información crítica (salud, biometría), donde las multas son gravísimas." },
-          { "label": "Encargados", "title": "Encargados", "desc": "Gestión de riesgo de terceros. Auditamos y regulamos a tus proveedores tecnológicos (CRM, agencias) para asegurar que cumplan tu estándar." },
-          { "label": "Incidentes", "title": "Incidentes", "desc": "Protocolo de contingencia. Plan de acción inmediato: contención de la brecha y procedimiento legal para notificar en los plazos exigidos." },
-          { "label": "EIPD", "title": "EIPD", "expansion": "(Evaluación de Impacto en la Protección de Datos)", "desc": "Gestión preventiva. Analizamos nuevos proyectos o software para mitigar riesgos antes de producción." }
+          { "label": "Licitud y Lealtad", "title": "Licitud y Lealtad", "desc": "Cada dato que tratas necesita una base legal —consentimiento, contrato u otra causa—; sin ella, el tratamiento queda expuesto." },
+          { "label": "Finalidad", "title": "Finalidad", "desc": "Los datos se usan solo para el fin que se informó al recolectarlos, no para otros usos." },
+          { "label": "Proporcionalidad", "title": "Proporcionalidad", "desc": "Pedir solo los datos necesarios para ese fin: menos datos, menos riesgo." },
+          { "label": "Calidad", "title": "Calidad", "desc": "Mantener los datos exactos y actualizados, para no decidir sobre información errónea." },
+          { "label": "Responsabilidad", "title": "Responsabilidad", "desc": "Poder demostrar el cumplimiento con evidencia y gobernanza, no solo afirmarlo." },
+          { "label": "Seguridad", "title": "Seguridad", "desc": "Medidas técnicas y organizativas que protegen los datos de accesos indebidos y fugas." },
+          { "label": "Transparencia", "title": "Transparencia", "desc": "Informar de forma clara a cada persona cómo se tratan sus datos." },
+          { "label": "Confidencialidad", "title": "Confidencialidad", "desc": "El deber de reserva de quienes acceden a los datos, que sigue incluso terminada la relación." },
+          { "label": "Inventario y RAT", "title": "Inventario y RAT", "expansion": "(Registro de Actividades de Tratamiento)", "desc": "Saber qué datos maneja la empresa, dónde están y para qué: el registro de tratamientos." },
+          { "label": "Derechos ARCOP", "title": "Derechos ARCOP", "expansion": "(Acceso, Rectificación, Cancelación, Oposición y Portabilidad)", "desc": "Un canal para que las personas accedan, corrijan o eliminen sus datos dentro de plazo." },
+          { "label": "Datos Sensibles", "title": "Datos Sensibles", "desc": "Protección reforzada para salud, biometría y otras categorías donde las multas son mayores." },
+          { "label": "Encargados", "title": "Encargados", "desc": "Los proveedores que tratan datos por ti (CRM, contador, hosting) deben quedar bajo contrato y control." },
+          { "label": "Incidentes", "title": "Incidentes", "desc": "Un plan para contener una filtración y notificarla en los plazos que exige la ley." },
+          { "label": "EIPD", "title": "EIPD", "expansion": "(Evaluación de Impacto en la Protección de Datos)", "desc": "Evaluar los riesgos de tratamientos de alto riesgo o decisiones automatizadas antes de operarlos." }
         ]
       },
       "items": {
@@ -179,7 +179,6 @@
     },
     "agencies": {
       "label": "El estándar cubre las exigencias de los organismos que regulan el tratamiento de datos en Chile",
-      "disclaimer": "Nombres de sus respectivos titulares. DPC no está afiliada a estos organismos ni cuenta con su respaldo; los citamos porque su normativa forma parte del alcance del estándar.",
       "items": {
         "apdp": "APDP",
         "anci": "ANCI",
@@ -207,24 +206,10 @@
         }
       }
     },
-    "trust": {
-      "standard": {
-        "title": "Estándar estructurado y trazable",
-        "text": "14 dominios alineados a los principios de la Ley 21.719 y a la normativa legal vigente, que ordenan tu diagnóstico y tu propuesta de mitigación control por control."
-      },
-      "dogfooding": {
-        "title": "Nuestros procesos, bajo la misma rigurosidad",
-        "text": "Aplicamos a nuestra propia operación los mismos 14 dominios y controles que exigimos: adoptamos el estándar antes de pedírtelo, para asegurar la calidad del proceso y de los resultados."
-      },
-      "confidentiality": {
-        "title": "Tus datos seguros desde el día uno",
-        "text": "Accedemos solo a la evidencia necesaria para evaluar. Los datos de la organización permanecen bajo su control, con acuerdo de confidencialidad y contrato de encargo."
-      }
-    },
     "ctaBand": {
       "title": "¿Aún no sabes cómo está tu empresa?",
-      "subtitle": "La Ley 21.719 rige desde el 1 de diciembre de 2026. Haz la autoevaluación gratuita y recibe tu diagnóstico y tu propuesta de mitigación al instante.",
-      "cta": "Evalúa tu empresa gratis"
+      "subtitle": "En unos minutos lo sabes: qué te falta y cómo resolverlo, sin costo.",
+      "cta": "Comienza tu autoevaluación"
     },
     "support": {
       "title": "¿Prefieres que te acompañemos a implementarla?",
@@ -279,7 +264,7 @@
       "assistedMessage": "Hola, hice la autoevaluación de la Ley 21.719 y quiero apoyo para implementar la propuesta de mitigación"
     },
     "footer": {
-      "brandName": "Data Protection Compliance",
+      "brandName": "Kromi Privacy Center",
       "brandDescription": "Estándar privado de cumplimiento estructurado para la Ley N° 21.719 y la normativa legal vigente en Chile.",
       "columns": {
         "framework": {
@@ -292,7 +277,7 @@
         "platform": {
           "title": "Empezar",
           "links": {
-            "selfAssessment": "Evalúa tu empresa gratis",
+            "selfAssessment": "Autoevaluación gratis",
             "risk": "El riesgo"
           }
         },
@@ -306,12 +291,12 @@
           }
         }
       },
-      "legalLine": "© 2026 DPC · Estándar privado de cumplimiento para la Ley 21.719."
+      "legalLine": "© 2026 KPC · Estándar privado de cumplimiento para la Ley 21.719."
     }
   },
   "selfAssessment": {
     "meta": {
-      "title": "Diagnóstico de protección de datos — DPC",
+      "title": "Diagnóstico de protección de datos — KPC",
       "description": "Diagnóstico de cumplimiento de la Ley 21.719: detecta brechas en el tratamiento de datos y estima el riesgo de multas. Sin registro, sin compromiso."
     },
     "topbar": {

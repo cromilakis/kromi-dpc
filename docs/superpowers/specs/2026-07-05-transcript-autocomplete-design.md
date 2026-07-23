@@ -143,7 +143,7 @@ label actual es jerga.
 - `messages/app/diagnosis.json`: `actions.materialize` → **"Aplicar
   diagnóstico"**; `actions.materializing` → "Aplicando…"; `actions.materialized`
   → texto que explique el efecto ("Se generó el RAT y se actualizó el checklist
-  DPC."). `status.reviewed` → "Aplicado" (o similar). Sin cambios de lógica.
+  KPC."). `status.reviewed` → "Aplicado" (o similar). Sin cambios de lógica.
 
 ## Seguridad y privacidad
 - `DEEPSEEK_API_KEY` **server-only** (sin `NEXT_PUBLIC`); la llamada ocurre solo

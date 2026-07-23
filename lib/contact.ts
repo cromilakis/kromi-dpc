@@ -5,7 +5,7 @@
  * ahí, fuera del sitio.
  *
  * El número se toma de `NEXT_PUBLIC_WHATSAPP_NUMBER` (formato internacional sin
- * "+", p. ej. 56912345678); si no está definido, cae al número real de DPC.
+ * "+", p. ej. 56912345678); si no está definido, cae al número real de KPC.
  */
 export const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "56945131427";

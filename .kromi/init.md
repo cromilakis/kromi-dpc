@@ -1,4 +1,4 @@
-# Inicialización del proyecto — kromi-dpc
+# Inicialización del proyecto — kromi-kpc
 
 > ## ⚠️ Alcance actual (pivote 2026-07-22) — LEER PRIMERO
 >
@@ -25,12 +25,12 @@ Wizard completado (Momento 1) con contrato funcional derivado de `RFC.md` (v0.4,
 y del prototipo de Claude Design (`design/prototype.dc.html`). Servicios externos pendientes
 de Connect (ver Pendientes).
 
-Respuestas del wizard: `projectName: kromi-dpc` · `target: web` · `appType: personal-data` ·
+Respuestas del wizard: `projectName: kromi-kpc` · `target: web` · `appType: personal-data` ·
 `multiLocale: false`.
 
 ## Resumen del proyecto
 
-**DPC — Data Protection Compliance** (*"Protección Certificada"*): plataforma de gestión de
+**KPC — Kromi Privacy Center** (*"Protección Certificada"*): plataforma de gestión de
 cumplimiento de la Ley N° 21.719 de Protección de Datos Personales (Chile, vigencia plena
 1 de diciembre de 2026). Dos caras:
 
@@ -39,9 +39,9 @@ cumplimiento de la Ley N° 21.719 de Protección de Datos Personales (Chile, vig
   gratuita** que estima tramo y orientación de valor.
 - **Plataforma interna (multi-empresa):** Sistema de Gestión del Cumplimiento para el equipo
   consultor — registro de empresas cliente, clasificación por rubro, Complexity Score,
-  checklist parametrizado por los 14 dominios del Marco DPC, fichas de control con criterios y
+  checklist parametrizado por los 14 dominios del Marco KPC, fichas de control con criterios y
   evidencias, gap analysis y matriz de riesgos, catálogo de soluciones, plan de adecuación,
-  repositorio documental de evidencias, emisión y verificación de certificados privados DPC.
+  repositorio documental de evidencias, emisión y verificación de certificados privados KPC.
   El acceso es discreto (pie de página del sitio público), no un login destacado.
 
 La fuente de detalle es `RFC.md` en la raíz del repo; este archivo es el contrato operativo.
@@ -51,12 +51,12 @@ La fuente de detalle es `RFC.md` en la raíz del repo; este archivo es el contra
 Las organizaciones chilenas llegan a la vigencia de la Ley 21.719 sin visibilidad de sus datos
 (sin RAT), sin protocolos ni evidencia estructurada, y frente a una oferta fragmentada
 (asesoría legal, ciberseguridad e ISO en silos) o de "adecuación exprés" sin trazabilidad.
-DPC entrega una metodología objetiva, repetible, medible y basada en evidencia, con
+KPC entrega una metodología objetiva, repetible, medible y basada en evidencia, con
 acompañamiento humano real, y la plataforma es el núcleo operativo que la hace escalable.
 
 ## Público objetivo
 
-- **Usuarios de la plataforma interna:** el equipo consultor DPC (fundador/líder de producto y
+- **Usuarios de la plataforma interna:** el equipo consultor KPC (fundador/líder de producto y
   abogado especialista; luego consultores adicionales).
 - **Visitantes del sitio público:** empresas chilenas (micro a enterprise) que necesitan
   cumplir la Ley 21.719 — retail/e-commerce, fintech/financiero, salud, servicios B2B,
@@ -67,9 +67,9 @@ acompañamiento humano real, y la plataforma es el núcleo operativo que la hace
 ## Flujo principal
 
 Registro de empresa → selección de rubro (activa leyes complementarias y régimen sectorial) →
-clasificación DPC y Complexity Score → checklist multiregulatorio (14 dominios) →
+clasificación KPC y Complexity Score → checklist multiregulatorio (14 dominios) →
 levantamiento de hallazgos y riesgos (gap analysis) → plan de adecuación → implementación de
-soluciones (cliente) → carga y validación de evidencias → reevaluación → certificación DPC →
+soluciones (cliente) → carga y validación de evidencias → reevaluación → certificación KPC →
 revalidación periódica.
 
 Embudo público: landing → autoevaluación gratuita → orientación de valor → contacto WhatsApp →
@@ -89,8 +89,8 @@ propuesta → servicio pagado.
 
 - **Empresa** (cliente): razón social, RUT, rubro/sector, tamaño (tramo Ley 20.416), factores
   de complejidad, estado del ciclo (diagnóstico → certificada → revalidación).
-- **Dominio** (14, catálogo): 8 por principio (DPC-LIC, FIN, PRO, CAL, RES, SEG, TRA, CON) +
-  6 complementarios (DPC-INV, DER, SEN, TER, INC, EIA).
+- **Dominio** (14, catálogo): 8 por principio (KPC-LIC, FIN, PRO, CAL, RES, SEG, TRA, CON) +
+  6 complementarios (KPC-INV, DER, SEN, TER, INC, EIA).
 - **Control** (catálogo, ficha normalizada): código único, dominio, nombre, objetivo, detalle,
   criterios de verificación, fundamento legal primario y conectado, riesgo mitigado,
   evidencias requeridas, aplicabilidad sectorial.
@@ -129,7 +129,7 @@ marca viven en `public/`.
   plataforma en el footer).
 - `/autoevaluacion` — cuestionario multi-paso gratuito con estimación de tramo y riesgo de no
   certificarse.
-- `/verificar/[codigo]` — verificación pública de certificados DPC.
+- `/verificar/[codigo]` — verificación pública de certificados KPC.
 
 ## Pantallas privadas o administrativas
 
@@ -140,7 +140,7 @@ marca viven en `public/`.
 - `/app/empresas/[id]/plan` — plan de adecuación con seguimiento.
 - `/app/empresas/[id]/evidencias` — repositorio documental con validación.
 - `/app/empresas/[id]/certificado` — emisión/revalidación.
-- `/app/catalogo` — administración del Marco DPC (dominios, controles, riesgos, soluciones).
+- `/app/catalogo` — administración del Marco KPC (dominios, controles, riesgos, soluciones).
 
 (El mapa fino de rutas se valida contra el análisis del prototipo en la implementación.)
 
@@ -188,7 +188,7 @@ Orden por dependencias (fundaciones → datos → features → admin):
 
 | # | spec | type | data_level | depends_on | Alcance |
 |---|------|------|-----------|------------|---------|
-| 1 | `marco-dpc-schema` | internal-crud | business | — | Schema Postgres + seeds: dominios, controles, riesgos, soluciones (catálogos del Marco DPC). |
+| 1 | `marco-dpc-schema` | internal-crud | business | — | Schema Postgres + seeds: dominios, controles, riesgos, soluciones (catálogos del Marco KPC). |
 | 2 | `sitio-publico` | public-site | none | — | Landing según prototipo. |
 | 3 | `autoevaluacion` | public-site | personal | marco-dpc-schema | Cuestionario público multi-paso, estimación de tramo, captura de lead. |
 | 4 | `auth` | auth | personal | — | Login consultores (@supabase/ssr), acceso discreto desde footer. |
@@ -221,12 +221,12 @@ spec 8 = high. `auth` = high por type.
 ## Pendientes
 
 - **Connect (Momento 4, manual):** proyecto Supabase cloud + `vercel link` + Sentry DSN +
-  Resend (si aplica email). GitHub ya conectado (`cromilakis/kromi-dpc`). `/kromi-doctor`
+  Resend (si aplica email). GitHub ya conectado (`cromilakis/kromi-kpc`). `/kromi-doctor`
   debe pasar de `pending` a `ok` en cada grupo.
 - Primera corrida de `supabase init` + `supabase start` locales (requiere Docker Desktop
   iniciado y acuerdo aceptado).
 - Contenido definitivo del catálogo de controles: el RFC define la ficha y ejemplos
-  (DPC-INC-002 y los nuevos v0.4); el catálogo completo por dominio se carga como seed
+  (KPC-INC-002 y los nuevos v0.4); el catálogo completo por dominio se carga como seed
   iterativo con el abogado especialista.
 - Número de WhatsApp real para los CTAs y assets finales de marca.
 - Decidir dominio/hosting del sitio (afecta verificación pública de certificados).

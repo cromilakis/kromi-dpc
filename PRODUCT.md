@@ -15,7 +15,7 @@ el equipo consultor; la landing (foco de este documento) apunta al cliente prosp
 
 ## Product Purpose
 
-DPC es una plataforma de gestión de cumplimiento de la Ley 21.719 (y del ecosistema
+KPC es una plataforma de gestión de cumplimiento de la Ley 21.719 (y del ecosistema
 regulatorio chileno del rubro). La cara pública existe para convertir desde el APOYO, no
 desde la amenaza: transmitir que cumplir es un proceso abordable con acompañamiento
 especializado, ayudar a la empresa a entender en qué situación está y ofrecerle una salida

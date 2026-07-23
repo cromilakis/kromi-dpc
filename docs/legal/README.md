@@ -1,6 +1,6 @@
 # Material de contexto legal — Protección de datos (Ley 21.719)
 
-Esta carpeta contiene el **toolkit legal de referencia** sobre protección de datos personales en Chile (Ley 21.719, vigencia 1 dic 2026). Sirve como **contexto** para el trabajo sobre la aplicación de autodiagnóstico y cumplimiento de `kromi-dpc`: análisis de la ley, ecosistema normativo, encuesta de diagnóstico, catálogo de brechas y mitigaciones, modelo de informe y formatos tipo.
+Esta carpeta contiene el **toolkit legal de referencia** sobre protección de datos personales en Chile (Ley 21.719, vigencia 1 dic 2026). Sirve como **contexto** para el trabajo sobre la aplicación de autodiagnóstico y cumplimiento de `kromi-kpc`: análisis de la ley, ecosistema normativo, encuesta de diagnóstico, catálogo de brechas y mitigaciones, modelo de informe y formatos tipo.
 
 > **Origen:** este material provenía del vault de Obsidian (`kromi-obsidian/proteccion-datos-personales/`). Se consolidó dentro del repo para que la referencia legal viva junto al código que la implementa.
 >

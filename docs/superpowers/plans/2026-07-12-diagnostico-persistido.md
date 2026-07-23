@@ -116,10 +116,10 @@ create policy diagnosis_breaches_client_select on public.diagnosis_breaches
 Run: `supabase db reset`
 Expected: termina "Finished supabase db reset", aplicando `20260713100000_diagnosis_persistence.sql`.
 
-Run: `docker exec supabase_db_kromi-dpc psql -U postgres -d postgres -c "select count(*) from information_schema.tables where table_name in ('company_diagnoses','diagnosis_breaches');"`
+Run: `docker exec supabase_db_kromi-kpc psql -U postgres -d postgres -c "select count(*) from information_schema.tables where table_name in ('company_diagnoses','diagnosis_breaches');"`
 Expected: `2`.
 
-Run: `docker exec supabase_db_kromi-dpc psql -U postgres -d postgres -c "select tablename, policyname from pg_policies where tablename in ('company_diagnoses','diagnosis_breaches') order by 1;"`
+Run: `docker exec supabase_db_kromi-kpc psql -U postgres -d postgres -c "select tablename, policyname from pg_policies where tablename in ('company_diagnoses','diagnosis_breaches') order by 1;"`
 Expected: 2 filas (una policy select por tabla).
 
 - [ ] **Step 3: Tipos a mano en `lib/supabase/types.ts`**

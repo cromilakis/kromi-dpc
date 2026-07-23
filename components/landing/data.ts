@@ -4,7 +4,7 @@
  * Fuente: design/prototype.dc.html (sección isLanding) + prototype-analysis.md §5.
  */
 
-/** Dominio del marco DPC: clave i18n (landing.domains.items) + código canónico. */
+/** Dominio del marco KPC: clave i18n (landing.domains.items) + código canónico. */
 export interface DomainRef {
   key: string;
   code: string;
@@ -12,24 +12,24 @@ export interface DomainRef {
 
 /** 8 dominios alineados a los principios del Art. 3, Ley 21.719. */
 export const PRINCIPLE_DOMAINS: DomainRef[] = [
-  { key: "lic", code: "DPC-LIC" },
-  { key: "fin", code: "DPC-FIN" },
-  { key: "pro", code: "DPC-PRO" },
-  { key: "cal", code: "DPC-CAL" },
-  { key: "res", code: "DPC-RES" },
-  { key: "seg", code: "DPC-SEG" },
-  { key: "tra", code: "DPC-TRA" },
-  { key: "con", code: "DPC-CON" },
+  { key: "lic", code: "KPC-LIC" },
+  { key: "fin", code: "KPC-FIN" },
+  { key: "pro", code: "KPC-PRO" },
+  { key: "cal", code: "KPC-CAL" },
+  { key: "res", code: "KPC-RES" },
+  { key: "seg", code: "KPC-SEG" },
+  { key: "tra", code: "KPC-TRA" },
+  { key: "con", code: "KPC-CON" },
 ];
 
 /** 6 dominios complementarios (obligaciones operativas). */
 export const COMPLEMENTARY_DOMAINS: DomainRef[] = [
-  { key: "inv", code: "DPC-INV" },
-  { key: "der", code: "DPC-DER" },
-  { key: "sen", code: "DPC-SEN" },
-  { key: "ter", code: "DPC-TER" },
-  { key: "inc", code: "DPC-INC" },
-  { key: "eia", code: "DPC-EIA" },
+  { key: "inv", code: "KPC-INV" },
+  { key: "der", code: "KPC-DER" },
+  { key: "sen", code: "KPC-SEN" },
+  { key: "ter", code: "KPC-TER" },
+  { key: "inc", code: "KPC-INC" },
+  { key: "eia", code: "KPC-EIA" },
 ];
 
 /**

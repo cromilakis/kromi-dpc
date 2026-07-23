@@ -3,7 +3,7 @@
  * brecha del catálogo, un plan CONCRETO y trazable — objetivo de cierre,
  * acciones específicas (qué hacer, cómo, y qué evidencia lo respalda),
  * metadatos de gestión (prioridad, esfuerzo, plazo), los documentos tipo que
- * la ejecutan y el control DPC al que queda trazada.
+ * la ejecutan y el control KPC al que queda trazada.
  *
  * Reemplaza el modelo de "pasos" planos: el cliente pagó por un plan de
  * consultoría, no por una lista genérica. La propuesta de mitigación en
@@ -38,7 +38,7 @@ export interface BreachMitigation {
   actions: readonly MitigationAction[];
   /** Documentos tipo que ejecutan la mitigación. */
   templateIds: readonly string[];
-  /** Control del marco DPC al que queda trazada. */
+  /** Control del marco KPC al que queda trazada. */
   controlCode: string;
 }
 
@@ -70,7 +70,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-privacidad"],
-    controlCode: "DPC-TRA-001",
+    controlCode: "KPC-TRA-001",
   },
   "B-GOB-002": {
     objective:
@@ -99,7 +99,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["acta-designacion-responsable"],
-    controlCode: "DPC-RES-001",
+    controlCode: "KPC-RES-001",
   },
   "B-INV-001": {
     objective:
@@ -128,7 +128,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["rat-registro-tratamientos"],
-    controlCode: "DPC-INV-001",
+    controlCode: "KPC-INV-001",
   },
   "B-LEG-001": {
     objective:
@@ -157,7 +157,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["consentimiento-marketing"],
-    controlCode: "DPC-LIC-001",
+    controlCode: "KPC-LIC-001",
   },
   "B-LEG-002": {
     objective:
@@ -186,7 +186,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["consentimiento-datos-sensibles"],
-    controlCode: "DPC-LIC-001",
+    controlCode: "KPC-LIC-001",
   },
   "B-LEG-003": {
     objective:
@@ -215,7 +215,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["consentimiento-marketing", "politica-privacidad"],
-    controlCode: "DPC-FIN-001",
+    controlCode: "KPC-FIN-001",
   },
   "B-SEG-001": {
     objective:
@@ -250,7 +250,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-seguridad-accesos"],
-    controlCode: "DPC-SEG-001",
+    controlCode: "KPC-SEG-001",
   },
   "B-SEG-002": {
     objective:
@@ -279,7 +279,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-seguridad-accesos"],
-    controlCode: "DPC-SEG-002",
+    controlCode: "KPC-SEG-002",
   },
   "B-SEG-003": {
     objective:
@@ -308,7 +308,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["plan-respuesta-incidentes"],
-    controlCode: "DPC-INC-001",
+    controlCode: "KPC-INC-001",
   },
   "B-INC-001": {
     objective:
@@ -337,7 +337,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["plan-respuesta-incidentes"],
-    controlCode: "DPC-INC-002",
+    controlCode: "KPC-INC-002",
   },
   "B-TER-001": {
     objective:
@@ -366,7 +366,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["clausula-encargo"],
-    controlCode: "DPC-TER-001",
+    controlCode: "KPC-TER-001",
   },
   "B-CON-002": {
     objective:
@@ -389,7 +389,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["clausula-encargo"],
-    controlCode: "DPC-TER-001",
+    controlCode: "KPC-TER-001",
   },
   "B-ENC-001": {
     objective:
@@ -418,7 +418,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["clausula-encargo"],
-    controlCode: "DPC-TER-001",
+    controlCode: "KPC-TER-001",
   },
   "B-TER-002": {
     objective:
@@ -447,7 +447,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["clausulas-transferencia-internacional", "politica-privacidad"],
-    controlCode: "DPC-TER-002",
+    controlCode: "KPC-TER-002",
   },
   "B-CES-001": {
     objective:
@@ -476,7 +476,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["acuerdo-cesion-datos"],
-    controlCode: "DPC-LIC-001",
+    controlCode: "KPC-LIC-001",
   },
   "B-DER-001": {
     objective:
@@ -505,7 +505,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["formulario-arco", "politica-privacidad"],
-    controlCode: "DPC-DER-001",
+    controlCode: "KPC-DER-001",
   },
   "B-SAL-001": {
     objective:
@@ -534,7 +534,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-seguridad-accesos", "consentimiento-datos-sensibles"],
-    controlCode: "DPC-SEN-001",
+    controlCode: "KPC-SEN-001",
   },
   "B-MEN-001": {
     objective:
@@ -563,7 +563,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["consentimiento-datos-sensibles"],
-    controlCode: "DPC-SEN-001",
+    controlCode: "KPC-SEN-001",
   },
   "B-BIO-001": {
     objective:
@@ -592,7 +592,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["anexo-biometria"],
-    controlCode: "DPC-SEN-001",
+    controlCode: "KPC-SEN-001",
   },
   "B-CCT-001": {
     objective:
@@ -621,7 +621,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["aviso-videovigilancia"],
-    controlCode: "DPC-SEG-001",
+    controlCode: "KPC-SEG-001",
   },
   "B-CON-001": {
     objective:
@@ -650,7 +650,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-retencion-borrado"],
-    controlCode: "DPC-FIN-002",
+    controlCode: "KPC-FIN-002",
   },
   "B-WEB-001": {
     objective:
@@ -679,7 +679,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-privacidad"],
-    controlCode: "DPC-TRA-001",
+    controlCode: "KPC-TRA-001",
   },
   "B-CAP-001": {
     objective:
@@ -708,7 +708,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["acta-confidencialidad-capacitacion"],
-    controlCode: "DPC-CON-001",
+    controlCode: "KPC-CON-001",
   },
   "B-LAB-001": {
     objective:
@@ -737,7 +737,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-datos-laborales"],
-    controlCode: "DPC-PRO-001",
+    controlCode: "KPC-PRO-001",
   },
   "B-LAB-002": {
     objective:
@@ -766,7 +766,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["politica-datos-laborales"],
-    controlCode: "DPC-CON-001",
+    controlCode: "KPC-CON-001",
   },
   "B-EIA-001": {
     objective:
@@ -795,7 +795,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["pauta-eipd", "politica-privacidad"],
-    controlCode: "DPC-EIA-002",
+    controlCode: "KPC-EIA-002",
   },
   "B-EIA-002": {
     objective:
@@ -824,7 +824,7 @@ export const BREACH_MITIGATION: Record<string, BreachMitigation> = {
       },
     ],
     templateIds: ["pauta-eipd"],
-    controlCode: "DPC-EIA-001",
+    controlCode: "KPC-EIA-001",
   },
 };
 

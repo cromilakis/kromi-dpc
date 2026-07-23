@@ -10,7 +10,7 @@
  *   1. Si el usuario ya tiene membresía → se reutiliza (idempotente).
  *   2. Si existe una empresa con diagnóstico `active` → se une a ella (la más
  *      reciente) y se asegura que esté pagada.
- *   3. Si no hay ninguna → provisiona una empresa mínima "Cliente Demo DPC"
+ *   3. Si no hay ninguna → provisiona una empresa mínima "Cliente Demo KPC"
  *      pagada (el portal quedará sin brechas hasta que se le cargue un
  *      diagnóstico) y lo avisa.
  *
@@ -37,7 +37,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const DEFAULT_EMAIL = "cliente@dpc.local";
 const DEFAULT_PASSWORD = "dpc-local-2026";
-const FALLBACK_COMPANY_NAME = "Cliente Demo DPC";
+const FALLBACK_COMPANY_NAME = "Cliente Demo KPC";
 
 /**
  * Aborta con mensaje. Se lanza (en vez de process.exit) para que Node cierre

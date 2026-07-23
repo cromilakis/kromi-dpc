@@ -1,5 +1,5 @@
 # Demo estática de la cara pública en GitHub Pages
-# (https://cromilakis.github.io/kromi-dpc). La plataforma interna requiere
+# (https://cromilakis.github.io/kromi-kpc). La plataforma interna requiere
 # servidor + Postgres y NO forma parte de esta demo (se despliega en Vercel
 # en la fase Connect). Ver next.config.ts (GITHUB_PAGES=1).
 name: pages

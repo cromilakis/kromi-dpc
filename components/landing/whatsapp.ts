@@ -3,7 +3,7 @@
  * El número sale de NEXT_PUBLIC_WHATSAPP_NUMBER (inlined en build por Next).
  */
 
-// Número real de DPC (fallback si no se define NEXT_PUBLIC_WHATSAPP_NUMBER).
+// Número real de KPC (fallback si no se define NEXT_PUBLIC_WHATSAPP_NUMBER).
 const FALLBACK_WHATSAPP_NUMBER = "56945131427";
 
 /** URL de WhatsApp con mensaje prellenado (los mensajes viven en es.json). */

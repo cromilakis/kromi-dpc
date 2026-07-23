@@ -1,4 +1,4 @@
-# Scroll Motion & WebGL — landing kromi-dpc
+# Scroll Motion & WebGL — landing kromi-kpc
 
 **Fecha:** 2026-07-05 · **Estado:** aprobado, en implementación
 

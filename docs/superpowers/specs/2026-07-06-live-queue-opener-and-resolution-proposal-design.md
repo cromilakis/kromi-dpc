@@ -45,12 +45,12 @@ confirma cada tarea antes de que entre al plan.
   específico. Orden objetivo (menor = primero), marcado como *pendiente de validación
   consultor/abogado* igual que las preguntas:
 
-  1. `DPC-FIN` Finalidad · 2. `DPC-INV` Inventario y RAT · 3. `DPC-LIC` Licitud y Lealtad ·
-  4. `DPC-PRO` Proporcionalidad · 5. `DPC-CAL` Calidad · 6. `DPC-TRA` Transparencia ·
-  7. `DPC-DER` Derechos · 8. `DPC-SEG` Seguridad · 9. `DPC-CON` Confidencialidad ·
-  10. `DPC-RES` Responsabilidad · 11. `DPC-TER` Encargados y Transferencias ·
-  12. `DPC-SEN` Datos Sensibles · 13. `DPC-INC` Incidentes y Brechas ·
-  14. `DPC-EIA` Evaluación de Impacto y Decisiones Automatizadas.
+  1. `KPC-FIN` Finalidad · 2. `KPC-INV` Inventario y RAT · 3. `KPC-LIC` Licitud y Lealtad ·
+  4. `KPC-PRO` Proporcionalidad · 5. `KPC-CAL` Calidad · 6. `KPC-TRA` Transparencia ·
+  7. `KPC-DER` Derechos · 8. `KPC-SEG` Seguridad · 9. `KPC-CON` Confidencialidad ·
+  10. `KPC-RES` Responsabilidad · 11. `KPC-TER` Encargados y Transferencias ·
+  12. `KPC-SEN` Datos Sensibles · 13. `KPC-INC` Incidentes y Brechas ·
+  14. `KPC-EIA` Evaluación de Impacto y Decisiones Automatizadas.
 
 - `buildInterviewGuide` ya ordena por `domainSort`; con la migración el guion sale en este
   orden sin cambiar código de ordenamiento.

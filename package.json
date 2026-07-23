@@ -1,5 +1,5 @@
 {
-  "name": "kromi-dpc",
+  "name": "kromi-kpc",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "test:rls": "docker exec -i supabase_db_kromi-dpc psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - < supabase/tests/client_rls_test.sql",
+    "test:rls": "docker exec -i supabase_db_kromi-kpc psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - < supabase/tests/client_rls_test.sql",
     "typecheck": "tsc --noEmit",
     "seed:consultant": "node scripts/create-consultant.mjs",
     "seed:client": "node scripts/create-client.mjs"

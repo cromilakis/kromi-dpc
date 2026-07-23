@@ -30,9 +30,9 @@ export async function CycleSection() {
           <div
             aria-hidden="true"
             data-cy-rail
-            className="absolute left-[12.5%] right-[12.5%] top-[19px] hidden h-px bg-stone lg:block"
+            className="absolute left-[16.667%] right-[16.667%] top-[19px] hidden h-px bg-stone lg:block"
           />
-          <ol className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
+          <ol className="grid grid-cols-1 gap-y-10 lg:grid-cols-3 lg:gap-x-8">
             {CYCLE_PHASES.map((phase, i) => (
               <li
                 key={phase}

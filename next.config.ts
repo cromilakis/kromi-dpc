@@ -7,7 +7,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 // Build estático para GitHub Pages (demo pública de la cara pública):
-// GITHUB_PAGES=1 activa output:export con basePath /kromi-dpc. El workflow
+// GITHUB_PAGES=1 activa output:export con basePath /kromi-kpc. El workflow
 // .github/workflows/pages.yml excluye antes las rutas con servidor
 // (middleware, /app, /login, /verify) y stubea la server action del lead.
 const isGitHubPages = process.env.GITHUB_PAGES === "1";
@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   ...(isGitHubPages
     ? {
         output: "export" as const,
-        basePath: "/kromi-dpc",
+        basePath: "/kromi-kpc",
         images: { unoptimized: true },
         trailingSlash: true,
       }

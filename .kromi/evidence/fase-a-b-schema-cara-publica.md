@@ -5,7 +5,7 @@
 
 ## Qué se pidió
 
-Implementar la plataforma DPC desde los contratos `.kromi/init.md` (RFC v0.4) y
+Implementar la plataforma KPC desde los contratos `.kromi/init.md` (RFC v0.4) y
 `.kromi/design.md` (Style Reference Attio), con el prototipo `design/prototype.dc.html`
 como referencia de layout. Stack fijo kromi-foundry: Next.js App Router + Supabase
 (Postgres/Auth/Storage) + Zod + next-intl + Vitest/Playwright.
@@ -13,7 +13,7 @@ como referencia de layout. Stack fijo kromi-foundry: Next.js App Router + Supaba
 ## Qué se construyó
 
 ### Schema Postgres (4 migraciones + 2 seeds)
-- `20260702100000_catalog.sql` — catálogos del Marco DPC: sectors (7 rubros con
+- `20260702100000_catalog.sql` — catálogos del Marco KPC: sectors (7 rubros con
   multiplicadores), domains (14), controls (23 fichas completas), risk_catalog (R-001…R-009),
   solution_catalog. RLS habilitada en la misma migración que crea cada tabla.
 - `20260702100100_operations.sql` — operación: profiles, companies, assessments,

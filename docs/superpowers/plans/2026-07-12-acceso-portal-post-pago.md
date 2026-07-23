@@ -81,10 +81,10 @@ grant select on public.company_client_view to authenticated;
 Run: `supabase db reset`
 Expected: termina con "Finished supabase db reset" e incluye "Applying migration 20260712100000_post_pago_portal.sql".
 
-Run: `docker exec supabase_db_kromi-dpc psql -U postgres -d postgres -c "select column_name from information_schema.columns where table_name='companies' and column_name in ('service_paid_at','client_ready_at','preliminary_panorama') order by 1;"`
+Run: `docker exec supabase_db_kromi-kpc psql -U postgres -d postgres -c "select column_name from information_schema.columns where table_name='companies' and column_name in ('service_paid_at','client_ready_at','preliminary_panorama') order by 1;"`
 Expected: 3 filas (client_ready_at, preliminary_panorama, service_paid_at).
 
-Run: `docker exec supabase_db_kromi-dpc psql -U postgres -d postgres -c "select column_name from information_schema.columns where table_name='company_client_view' and column_name in ('service_paid_at','client_ready_at','preliminary_panorama') order by 1;"`
+Run: `docker exec supabase_db_kromi-kpc psql -U postgres -d postgres -c "select column_name from information_schema.columns where table_name='company_client_view' and column_name in ('service_paid_at','client_ready_at','preliminary_panorama') order by 1;"`
 Expected: 3 filas.
 
 - [ ] **Step 3: Actualizar los tipos generados a mano**
@@ -558,7 +558,7 @@ export async function registerAndStartCheckout(
     try {
       session = await stripe.checkout.sessions.create({
         mode: "payment",
-        line_items: [{ price_data: { currency: "clp", product_data: { name: `Servicio DPC — ${data.name}`, description: "Diagnóstico completo + propuesta de mitigación + certificación (IVA incluido)." }, unit_amount: amountClp }, quantity: 1 }],
+        line_items: [{ price_data: { currency: "clp", product_data: { name: `Servicio KPC — ${data.name}`, description: "Diagnóstico completo + propuesta de mitigación + certificación (IVA incluido)." }, unit_amount: amountClp }, quantity: 1 }],
         customer_email: data.contactEmail ?? undefined,
         metadata: { kind: "diagnosis_lead", lead_id: lead.id },
         success_url: `${origin}/portal`,
@@ -746,10 +746,10 @@ Expected: PASS (ambos casos).
 
 - [ ] **Step 3: Verificación de datos (webhook)**
 
-Run: `docker exec supabase_db_kromi-dpc psql -U postgres -d postgres -c "select payment_status, company_id is not null as linked from public.self_assessments order by created_at desc limit 1;"`
+Run: `docker exec supabase_db_kromi-kpc psql -U postgres -d postgres -c "select payment_status, company_id is not null as linked from public.self_assessments order by created_at desc limit 1;"`
 Expected: `paid | t`.
 
-Run: `docker exec supabase_db_kromi-dpc psql -U postgres -d postgres -c "select service_paid_at is not null as paid from public.companies order by created_at desc limit 1;"`
+Run: `docker exec supabase_db_kromi-kpc psql -U postgres -d postgres -c "select service_paid_at is not null as paid from public.companies order by created_at desc limit 1;"`
 Expected: `t`.
 
 - [ ] **Step 4: Commit**

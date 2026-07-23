@@ -9,10 +9,9 @@ import { LandingNav } from "@/components/landing/landing-nav";
 import { SmoothScrollProvider } from "@/components/landing/smooth-scroll-provider";
 import { StakesSection } from "@/components/landing/stakes-section";
 import { SupportSection } from "@/components/landing/support-section";
-import { TrustSection } from "@/components/landing/trust-section";
 
 /**
- * Landing pública DPC — réplica de la sección isLanding del prototipo
+ * Landing pública KPC — réplica de la sección isLanding del prototipo
  * (design/prototype.dc.html), en el orden exacto de sus secciones:
  * nav sticky → hero + banda Ley 21.719 → 14 dominios → logo cloud →
  * ciclo de servicio → entregable → confianza → CTA intermedio →
@@ -26,10 +25,8 @@ export default function LandingPage() {
       <LandingNav />
       <main id="main" className="flex-1">
         <Hero />
-        {/* Beat de riesgo (2026-07-05): Hero (intro) → Stakes (miedo) → Trust
-            (reaseguro) → marco. */}
+        {/* Hero (intro) → Stakes (riesgo relatable) → marco (dominios). */}
         <StakesSection />
-        <TrustSection />
         <DomainsSection />
         <AgenciesCloud />
         <CycleSection />

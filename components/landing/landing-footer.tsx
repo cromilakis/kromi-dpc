@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { Logo } from "@/components/ui";
 import { FOOTER_COLUMNS } from "./data";
 
 /**
@@ -26,14 +25,10 @@ export async function LandingFooter() {
     <footer className="bg-abyss text-white">
       <div className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-40 px-32 pb-40 pt-[64px] sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] max-sm:px-16">
         <div>
-          <div className="mb-[14px] flex items-center gap-[10px]">
-            {/* Texto accesible del logo: appName + appFullName (D10). */}
-            <Logo
-              alt={`${tCommon("appName")} — ${tCommon("appFullName")}`}
-              height={30}
-              className="invert"
-            />
-            <span className="text-[15px] font-semibold">{t("brandName")}</span>
+          <div className="mb-[14px]">
+            <span className="font-serif text-[19px] font-medium tracking-[-0.2px] text-white">
+              {t("brandName")}
+            </span>
           </div>
           <p className="max-w-[280px] text-[13px] leading-[1.6] text-overcast">
             {t("brandDescription")}

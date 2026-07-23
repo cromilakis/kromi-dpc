@@ -1,13 +1,13 @@
 ---
 title: Propuesta de mitigación — Marketing y consentimiento
 breach: B-LEG-001
-control: DPC-LIC-001
+control: KPC-LIC-001
 ---
 
 # Comunicaciones comerciales con consentimiento
 
 **Empresa:** {{companyName}} · **RUT:** {{rut}}
-**Preparado por:** DPC — Data Protection Compliance · **Fecha:** {{date}}
+**Preparado por:** KPC — Kromi Privacy Center · **Fecha:** {{date}}
 
 Esta propuesta detalla cómo cerrar la brecha detectada en su diagnóstico sobre
 el envío de comunicaciones comerciales, en qué orden hacerlo y con qué
@@ -110,13 +110,13 @@ menor. Esto materializa el derecho de oposición (Art. 8° letra b).
 ## 5. Cómo dar por abordada esta brecha
 
 Cuando su equipo haya ejecutado las tres acciones, marque la brecha como
-**abordada** en el portal. Es un registro para su propio seguimiento: DPC
+**abordada** en el portal. Es un registro para su propio seguimiento: KPC
 entrega el análisis y esta propuesta; la ejecución y el resguardo de la
 evidencia quedan a cargo de su empresa. Conserve los respaldos indicados en
 cada acción para su propio archivo y ante una eventual fiscalización.
 
 ---
 
-*Documento preparado por DPC — Data Protection Compliance como base estándar.
+*Documento preparado por KPC — Kromi Privacy Center como base estándar.
 Su contenido es referencial y debe ajustarse a la operación real de la empresa
 junto al consultor asignado.*

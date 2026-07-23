@@ -1,4 +1,4 @@
-# kromi-dpc
+# kromi-kpc
 
 Proyecto generado con Kromi.
 

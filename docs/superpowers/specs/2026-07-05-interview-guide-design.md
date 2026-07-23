@@ -66,7 +66,7 @@ lo aplicable; la aplicabilidad + expertise recortan lo que no corresponde.
 ## Adaptividad / expertise
 
 - El recorte por aplicabilidad ya omite dominios/controles que no aplican al rubro
-  (p. ej. sin datos sensibles → sin dominio DPC-SEN). Con el tiempo se afinan las
+  (p. ej. sin datos sensibles → sin dominio KPC-SEN). Con el tiempo se afinan las
   reglas `applies_when` y el consultor puede override. (Ya construido; esta feature
   lo reutiliza para acotar el guion.)
 

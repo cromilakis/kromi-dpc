@@ -1,13 +1,13 @@
 ---
 title: Propuesta de mitigación — Selección de personal con datos innecesarios
 breach: B-LAB-001
-control: DPC-PRO-001
+control: KPC-PRO-001
 ---
 
 # Selección de personal: pedir solo lo necesario para el cargo
 
 **Empresa:** {{companyName}} · **RUT:** {{rut}}
-**Preparado por:** DPC — Data Protection Compliance · **Fecha:** {{date}}
+**Preparado por:** KPC — Kromi Privacy Center · **Fecha:** {{date}}
 
 Esta propuesta detalla cómo cerrar la brecha detectada en los procesos de
 selección de personal, en qué orden y con qué evidencia respaldar cada avance.
@@ -94,13 +94,13 @@ reclutamiento de la plataforma de RRHH (*Talana*, *BUK*).
 ## 5. Cómo dar por abordada esta brecha
 
 Cuando su equipo haya ejecutado las tres acciones, marque la brecha como
-**abordada** en el portal. Es un registro para su propio seguimiento: DPC
+**abordada** en el portal. Es un registro para su propio seguimiento: KPC
 entrega el análisis y esta propuesta; la ejecución y el resguardo de la
 evidencia quedan a cargo de su empresa. Conserve los respaldos indicados en
 cada acción para su propio archivo y ante una eventual fiscalización.
 
 ---
 
-*Documento preparado por DPC — Data Protection Compliance como base estándar.
+*Documento preparado por KPC — Kromi Privacy Center como base estándar.
 Su contenido es referencial y debe ajustarse a la operación real de la empresa
 junto al consultor asignado.*

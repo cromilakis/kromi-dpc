@@ -51,8 +51,8 @@ import { qrDataUri, verifyUrl } from "../lib/documents/qr";
 
 describe("verifyUrl", () => {
   it("arma la URL de verificación con la base dada", () => {
-    expect(verifyUrl("DPC-CA-2026-X7K4QZ", "https://dpc.kromi.cl")).toBe(
-      "https://dpc.kromi.cl/verify/DPC-CA-2026-X7K4QZ",
+    expect(verifyUrl("KPC-CA-2026-X7K4QZ", "https://dpc.kromi.cl")).toBe(
+      "https://dpc.kromi.cl/verify/KPC-CA-2026-X7K4QZ",
     );
   });
 
@@ -84,7 +84,7 @@ Expected: FAIL (módulo `lib/documents/qr` no existe).
 import QRCode from "qrcode";
 
 /**
- * Helper de QR verificable para documentos DPC. `verifyUrl` arma la URL pública
+ * Helper de QR verificable para documentos KPC. `verifyUrl` arma la URL pública
  * de verificación (`/verify/[code]`); `qrDataUri` la codifica como data URI PNG
  * embebible en el HTML del documento. Reutilizable; se usa de verdad en el
  * certificado (#7). No se cablea en el informe de #4.
@@ -154,7 +154,7 @@ describe("escapeHtml", () => {
 describe("renderDocument", () => {
   const base = {
     title: "Informe de diagnóstico",
-    brand: "DPC · Data Protection Compliance",
+    brand: "KPC · Kromi Privacy Center",
     bodyHtml: "<p>cuerpo</p>",
     meta: { generated: "Generado el 14 de julio de 2026", folio: "76.086.428-5" },
   };
@@ -177,12 +177,12 @@ describe("renderDocument", () => {
   it("incluye el bloque código+QR cuando se entregan", () => {
     const html = renderDocument({
       ...base,
-      code: "DPC-CA-2026-X7K4QZ",
+      code: "KPC-CA-2026-X7K4QZ",
       qrDataUri: "data:image/png;base64,AAAA",
       verifyLabel: "Documento verificable en línea",
     });
     expect(html).toContain("doc-verify");
-    expect(html).toContain("DPC-CA-2026-X7K4QZ");
+    expect(html).toContain("KPC-CA-2026-X7K4QZ");
     expect(html).toContain("data:image/png;base64,AAAA");
     expect(html).toContain("Documento verificable en línea");
   });
@@ -362,7 +362,7 @@ import type { ReportData } from "../lib/documents/report-http";
 
 const dict: ReportDict = {
   title: "Informe de diagnóstico",
-  brand: "DPC · Data Protection Compliance",
+  brand: "KPC · Kromi Privacy Center",
   summaryTitle: "Resumen",
   riskLabel: "Nivel de riesgo",
   riskLevels: { alto: "Alto", medio: "Medio", bajo: "Bajo" },
@@ -375,7 +375,7 @@ const dict: ReportDict = {
   noFine: "—",
   empty: "No se detectaron brechas en tu diagnóstico.",
   generatedLabel: "Generado el",
-  footerNote: "Documento generado automáticamente por la plataforma DPC.",
+  footerNote: "Documento generado automáticamente por la plataforma KPC.",
 };
 
 const data: ReportData = {
@@ -939,7 +939,7 @@ git commit -m "feat(documents): loaders del informe (cliente + consultor) y resp
   "documents": {
     "report": {
       "title": "Informe de diagnóstico",
-      "brand": "DPC · Data Protection Compliance",
+      "brand": "KPC · Kromi Privacy Center",
       "summaryTitle": "Resumen",
       "riskLabel": "Nivel de riesgo",
       "riskLevels": {
@@ -961,7 +961,7 @@ git commit -m "feat(documents): loaders del informe (cliente + consultor) y resp
       "noFine": "—",
       "empty": "No se detectaron brechas en tu diagnóstico.",
       "generatedLabel": "Generado el",
-      "footerNote": "Documento generado automáticamente por la plataforma DPC. Refleja el diagnóstico vigente al momento de su emisión."
+      "footerNote": "Documento generado automáticamente por la plataforma KPC. Refleja el diagnóstico vigente al momento de su emisión."
     }
   }
 }

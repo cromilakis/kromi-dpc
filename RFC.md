@@ -1,4 +1,4 @@
-# **DPC — Data Protection Compliance**
+# **KPC — Kromi Privacy Center**
 
 Propuesta de Negocio y Diseño del Marco de Trabajo Multilaboral y Sectorial
 
@@ -25,7 +25,7 @@ Propuesta de Negocio y Diseño del Marco de Trabajo Multilaboral y Sectorial
 **Versión: 0.4 (Documento de Especificación Ampliado — Arquitectura por Principios, Modelo Comercial y Embudo)**
 **Fecha de Actualización: Julio 2026**
 
-> Nota de versión: la v0.4 actualiza la v0.3 con: (a) el renombre de "Framework" a **Marco de trabajo DPC**; (b) la reestructuración de los dominios alineados explícitamente a los principios de la Ley 21.719 (8 dominios por principio + 6 complementarios = **14 dominios**); (c) la ampliación de la ficha de control con objetivo detallado y criterios de verificación; (d) el rediseño del **modelo comercial** (certificación inicial + revalidación por suscripción) y del **embudo de venta** (autoevaluación gratuita → diagnóstico pagado); (e) la incorporación de la **autocertificación** y la **confidencialidad por diseño**; y (f) la definición del **entregable** (expediente de cumplimiento).
+> Nota de versión: la v0.4 actualiza la v0.3 con: (a) el renombre de "Framework" a **Marco de trabajo KPC**; (b) la reestructuración de los dominios alineados explícitamente a los principios de la Ley 21.719 (8 dominios por principio + 6 complementarios = **14 dominios**); (c) la ampliación de la ficha de control con objetivo detallado y criterios de verificación; (d) el rediseño del **modelo comercial** (certificación inicial + revalidación por suscripción) y del **embudo de venta** (autoevaluación gratuita → diagnóstico pagado); (e) la incorporación de la **autocertificación** y la **confidencialidad por diseño**; y (f) la definición del **entregable** (expediente de cumplimiento).
 
 ---
 
@@ -33,7 +33,7 @@ Propuesta de Negocio y Diseño del Marco de Trabajo Multilaboral y Sectorial
 
 El proyecto tiene como propósito la creación y consolidación de un estándar privado de cumplimiento estructurado y adaptado a las exigencias de la **Ley N° 21.719 sobre Protección de Datos Personales en Chile** (que moderniza la Ley N° 19.628), integrado de forma holística con el ecosistema de normativas de ciberseguridad, laborales y sectoriales del país.
 
-El **Marco de trabajo DPC (Data Protection Compliance)** no persigue la suplantación ni el reemplazo de las potestades fiscalizadoras de la Agencia de Protección de Datos Personales, ni la emisión de certificaciones gubernamentales oficiales. Su finalidad es dotar al tejido corporativo nacional de una metodología objetiva de evaluación, una infraestructura tecnológica centralizada y un proceso riguroso de certificación privada que permitan a las organizaciones gestionar, mitigar y **demostrar fehacientemente** evidencia estructurada de su estado de cumplimiento normativo real y operativo.
+El **Marco de trabajo KPC (Kromi Privacy Center)** no persigue la suplantación ni el reemplazo de las potestades fiscalizadoras de la Agencia de Protección de Datos Personales, ni la emisión de certificaciones gubernamentales oficiales. Su finalidad es dotar al tejido corporativo nacional de una metodología objetiva de evaluación, una infraestructura tecnológica centralizada y un proceso riguroso de certificación privada que permitan a las organizaciones gestionar, mitigar y **demostrar fehacientemente** evidencia estructurada de su estado de cumplimiento normativo real y operativo.
 
 La promesa de marca es la **asesoría constante con un consultor asignado durante todo el proceso**, sintetizada en el lema *"Protección Certificada"*.
 
@@ -52,7 +52,7 @@ A pesar de la inminencia e impacto de la Ley N° 21.719 (vigencia plena el **1 d
 
 Adicionalmente, la oferta actual está fragmentada: asesorías puramente legales, servicios aislados de ciberseguridad, certificaciones ISO 27001 o auditorías de TI operando en silos. Existe un vacío en soluciones integrales que unifiquen la arista técnico-operativa con el marco legal cruzado de la Ley 21.719 de principio a fin.
 
-En el extremo opuesto han surgido ofertas de "adecuación exprés" (documentos autogenerados, resueltos en horas, a bajo precio) que entregan papeles sin trazabilidad operativa ni acompañamiento. El posicionamiento de DPC se diferencia por rigor, personalización y acompañamiento humano real.
+En el extremo opuesto han surgido ofertas de "adecuación exprés" (documentos autogenerados, resueltos en horas, a bajo precio) que entregan papeles sin trazabilidad operativa ni acompañamiento. El posicionamiento de KPC se diferencia por rigor, personalización y acompañamiento humano real.
 
 ---
 
@@ -61,12 +61,12 @@ En el extremo opuesto han surgido ofertas de "adecuación exprés" (documentos a
 A diferencia del modelo tradicional centrado en la venta de horas de consultoría, la propuesta radica en una **metodología estandarizada y de adaptación sectorial**, estructurada en un ciclo de aseguramiento continuo:
 
 1. **Diagnóstico** inicial y clasificación operativa según el rubro de la empresa.
-2. Evaluación formal bajo los estándares de cumplimiento cruzado del Marco de trabajo DPC.
+2. Evaluación formal bajo los estándares de cumplimiento cruzado del Marco de trabajo KPC.
 3. Identificación exhaustiva de brechas (Gap Analysis) y asignación de riesgos regulatorios.
 4. Emisión de recomendaciones basadas en un catálogo estructurado de soluciones técnicas y legales.
 5. Acompañamiento metodológico en el **Plan de Adecuación**.
 6. Reevaluación técnica y legal.
-7. Otorgamiento de una **Certificación Privada de Cumplimiento DPC**.
+7. Otorgamiento de una **Certificación Privada de Cumplimiento KPC**.
 8. **Revalidación periódica** para garantizar la vigencia del estándar en el tiempo.
 
 El valor final para el cliente es un **expediente de cumplimiento documentado** entregado junto con la certificación, que sirve de respaldo verificable ante una fiscalización (ver Sección 17).
@@ -75,7 +75,7 @@ El valor final para el cliente es un **expediente de cumplimiento documentado** 
 
 ## **4. Fundamentos del Marco de Trabajo y Ecosistema Normativo**
 
-El **Marco de trabajo DPC** es el activo de propiedad intelectual estratégico de la compañía: una metodología propietaria integral diseñada a partir del análisis del ecosistema legal completo aplicable a la información corporativa en Chile:
+El **Marco de trabajo KPC** es el activo de propiedad intelectual estratégico de la compañía: una metodología propietaria integral diseñada a partir del análisis del ecosistema legal completo aplicable a la información corporativa en Chile:
 
 - **Ley N° 21.719 (Protección de Datos Personales):** eje central — principios, bases de licitud, consentimiento, derechos ARCOP, registro de actividades, notificación de brechas, evaluación de impacto y marco sancionatorio.
 - **Ley N° 21.663 (Marco de Ciberseguridad):** obligaciones técnicas para operadores de importancia vital y servicios esenciales; notificación de incidentes a la ANCI / CSIRT.
@@ -107,25 +107,25 @@ La estructura se reorganiza para **alinear explícitamente cada principio de la 
 
 | Código | Dominio | Principio asociado | Foco y leyes cruzadas |
 | :---- | :---- | :---- | :---- |
-| **DPC-LIC** | Licitud y Lealtad | Licitud y lealtad | Base legal válida (consentimiento, contrato, obligación legal, interés legítimo) y trato leal. Cruce con Ley 19.496 (SERNAC). |
-| **DPC-FIN** | Finalidad | Finalidad | Fines determinados, explícitos y legítimos; sin reutilización incompatible. Incluye conservación limitada y borrado. |
-| **DPC-PRO** | Proporcionalidad | Proporcionalidad | Minimización: solo los datos estrictamente necesarios para la finalidad declarada. |
-| **DPC-CAL** | Calidad | Calidad | Datos exactos, completos y actualizados, con mecanismos de corrección y depuración. |
-| **DPC-RES** | Responsabilidad | Responsabilidad (accountability) | Gobernanza, DPD, Modelo de Prevención de Infracciones (MPI) y evidencia trazable. Cruce con ISO 27001. |
-| **DPC-SEG** | Seguridad | Seguridad | Medidas técnicas y organizativas: cifrado, control de accesos, bitácoras. Cruce con Ley 21.459 y exigencias CMF. |
-| **DPC-TRA** | Transparencia e Información | Transparencia e información | Deber de información del Art. 14 ter: política pública con fecha y versión, información clara al titular. |
-| **DPC-CON** | Confidencialidad | Confidencialidad | Deber de secreto, incluso terminada la relación. Acuerdos de confidencialidad y capacitación. |
+| **KPC-LIC** | Licitud y Lealtad | Licitud y lealtad | Base legal válida (consentimiento, contrato, obligación legal, interés legítimo) y trato leal. Cruce con Ley 19.496 (SERNAC). |
+| **KPC-FIN** | Finalidad | Finalidad | Fines determinados, explícitos y legítimos; sin reutilización incompatible. Incluye conservación limitada y borrado. |
+| **KPC-PRO** | Proporcionalidad | Proporcionalidad | Minimización: solo los datos estrictamente necesarios para la finalidad declarada. |
+| **KPC-CAL** | Calidad | Calidad | Datos exactos, completos y actualizados, con mecanismos de corrección y depuración. |
+| **KPC-RES** | Responsabilidad | Responsabilidad (accountability) | Gobernanza, DPD, Modelo de Prevención de Infracciones (MPI) y evidencia trazable. Cruce con ISO 27001. |
+| **KPC-SEG** | Seguridad | Seguridad | Medidas técnicas y organizativas: cifrado, control de accesos, bitácoras. Cruce con Ley 21.459 y exigencias CMF. |
+| **KPC-TRA** | Transparencia e Información | Transparencia e información | Deber de información del Art. 14 ter: política pública con fecha y versión, información clara al titular. |
+| **KPC-CON** | Confidencialidad | Confidencialidad | Deber de secreto, incluso terminada la relación. Acuerdos de confidencialidad y capacitación. |
 
 ### **6.2 Dominios complementarios (obligaciones operativas)**
 
 | Código | Dominio | Obligación / foco |
 | :---- | :---- | :---- |
-| **DPC-INV** | Inventario y RAT | Inventario de datos y Registro de Actividades de Tratamiento; mapeo de flujos. |
-| **DPC-DER** | Derechos de los Titulares | Canal y procedimiento ARCOP (acceso, rectificación, supresión, oposición, portabilidad) con plazos auditables. |
-| **DPC-SEN** | Datos Sensibles y Grupos Especiales | Régimen reforzado (salud, biométricos, NNA, económico-financieros). Cruce con Ley 20.584 y Código del Trabajo. |
-| **DPC-TER** | Encargados y Transferencias | Evaluación de encargados, contratos de encargo (DPA) y transferencias internacionales con garantías. |
-| **DPC-INC** | Incidentes y Brechas | Detección, contención y notificación a la Agencia dentro de 72 horas y a titulares cuando corresponda. Alineación con Ley 21.663 (ANCI). |
-| **DPC-EIA** | Evaluación de Impacto y Decisiones Automatizadas | EIPD para tratamientos de alto riesgo; salvaguardas para perfilamiento e IA (supervisión humana y explicabilidad). |
+| **KPC-INV** | Inventario y RAT | Inventario de datos y Registro de Actividades de Tratamiento; mapeo de flujos. |
+| **KPC-DER** | Derechos de los Titulares | Canal y procedimiento ARCOP (acceso, rectificación, supresión, oposición, portabilidad) con plazos auditables. |
+| **KPC-SEN** | Datos Sensibles y Grupos Especiales | Régimen reforzado (salud, biométricos, NNA, económico-financieros). Cruce con Ley 20.584 y Código del Trabajo. |
+| **KPC-TER** | Encargados y Transferencias | Evaluación de encargados, contratos de encargo (DPA) y transferencias internacionales con garantías. |
+| **KPC-INC** | Incidentes y Brechas | Detección, contención y notificación a la Agencia dentro de 72 horas y a titulares cuando corresponda. Alineación con Ley 21.663 (ANCI). |
+| **KPC-EIA** | Evaluación de Impacto y Decisiones Automatizadas | EIPD para tratamientos de alto riesgo; salvaguardas para perfilamiento e IA (supervisión humana y explicabilidad). |
 
 ---
 
@@ -147,7 +147,7 @@ Cada control se estructura conforme a una ficha técnica normalizada que incorpo
 ### **Ejemplo de control multiregulatorio**
 
 ```
-Código: DPC-INC-002 · Dominio: DPC-INC (Incidentes y Brechas)
+Código: KPC-INC-002 · Dominio: KPC-INC (Incidentes y Brechas)
 Nombre: Protocolo de reporte e historial de incidentes de seguridad.
 Objetivo: Garantizar la capacidad operativa de identificar, mitigar y notificar
           oportunamente brechas de seguridad que afecten datos personales.
@@ -166,7 +166,7 @@ Evidencias: Manual del plan de respuesta · Log histórico centralizado · Simul
 Métrica: [ Cumple ] / [ Parcial ] / [ No cumple ]
 ```
 
-**Controles nuevos incorporados en v0.4** (para cerrar brechas frente a la ley): DPC-FIN-001 (finalidad), DPC-PRO-001 (minimización), DPC-CAL-001 (calidad), DPC-RES-004 (Modelo de Prevención de Infracciones), DPC-TRA-001 (deber de información Art. 14 ter), DPC-CON-001 (deber de secreto), DPC-TER-002 (transferencias internacionales), DPC-EIA-001 (EIPD) y DPC-EIA-002 (decisiones automatizadas / IA).
+**Controles nuevos incorporados en v0.4** (para cerrar brechas frente a la ley): KPC-FIN-001 (finalidad), KPC-PRO-001 (minimización), KPC-CAL-001 (calidad), KPC-RES-004 (Modelo de Prevención de Infracciones), KPC-TRA-001 (deber de información Art. 14 ter), KPC-CON-001 (deber de secreto), KPC-TER-002 (transferencias internacionales), KPC-EIA-001 (EIPD) y KPC-EIA-002 (decisiones automatizadas / IA).
 
 ---
 
@@ -202,20 +202,20 @@ Cada evaluación enriquece un repositorio de conocimiento con hallazgos típicos
 
 ---
 
-## **11. La Plataforma Tecnológica DPC**
+## **11. La Plataforma Tecnológica KPC**
 
 Núcleo operativo del negocio: un Sistema de Gestión del Cumplimiento inteligente y multi-inquilino. **Es una herramienta interna del equipo**, accesible mediante autenticación (el acceso se ofrece de forma discreta desde el pie de página del sitio público, no como un botón de login destacado, ya que los clientes no lo requieren).
 
 Capacidades funcionales:
 - Registro de empresas clientes y administración de usuarios.
-- **Clasificación por rubro:** al seleccionar el rubro, el sistema activa las leyes complementarias aplicables (ej. "Salud" → Ley 20.584 y régimen DPC-SEN reforzado).
+- **Clasificación por rubro:** al seleccionar el rubro, el sistema activa las leyes complementarias aplicables (ej. "Salud" → Ley 20.584 y régimen KPC-SEN reforzado).
 - Cálculo del **Complexity Score** (uso interno para dimensionar esfuerzo y precio).
-- Checklist DPC parametrizado por industria (14 dominios), con estados por control.
+- Checklist KPC parametrizado por industria (14 dominios), con estados por control.
 - Ficha de control con objetivo, criterios y evidencias.
 - Gap Analysis / matriz de riesgos.
 - Catálogo de soluciones y plan de adecuación con seguimiento.
 - Repositorio documental de evidencias (validación, versionado).
-- Generación de informes y emisión/verificación de certificados privados DPC.
+- Generación de informes y emisión/verificación de certificados privados KPC.
 
 **Autoevaluación en línea (cara pública):** además de la plataforma interna, el sitio ofrece un **autoevaluador gratuito** para prospectos (ver Sección 13).
 
@@ -223,7 +223,7 @@ Capacidades funcionales:
 
 ## **12. Flujo Operacional del Servicio**
 
-Registro de Empresa → Selección de Rubro → Clasificación DPC & Complexity Score → Checklist Multiregulatorio (14 dominios) → Levantamiento de Hallazgos y Riesgos → Plan de Adecuación → Implementación de Soluciones (cliente) → Carga de Evidencias → Reevaluación → **Certificación DPC** → **Revalidación periódica.**
+Registro de Empresa → Selección de Rubro → Clasificación KPC & Complexity Score → Checklist Multiregulatorio (14 dominios) → Levantamiento de Hallazgos y Riesgos → Plan de Adecuación → Implementación de Soluciones (cliente) → Carga de Evidencias → Reevaluación → **Certificación KPC** → **Revalidación periódica.**
 
 ---
 
@@ -254,12 +254,12 @@ El ciclo se estructura en cuatro fases (nomenclatura en español):
 | :---- | :---- | :---- |
 | **Fase 1** | Diagnóstico | Evaluación inicial de controles base y sectoriales, mapeo de brechas y perfil de riesgo. |
 | **Fase 2** | Propuesta | Soluciones parametrizadas por rubro, plan de acción y acompañamiento en la implementación. |
-| **Fase 3** | Certificación | Auditoría sobre las evidencias, validación de controles y emisión del Certificado Privado DPC. |
+| **Fase 3** | Certificación | Auditoría sobre las evidencias, validación de controles y emisión del Certificado Privado KPC. |
 | **Fase 4** | Revalidación | Auditoría de seguimiento periódica frente a cambios normativos o nuevas directrices. |
 
 ### **14.1 Dos componentes comerciales**
 
-1. **Certificación inicial (pago único por proyecto):** el trabajo para llevar a la organización hasta el estándar — diagnóstico, cierre de brechas y certificación privada DPC. El alcance se ajusta a la complejidad de la organización.
+1. **Certificación inicial (pago único por proyecto):** el trabajo para llevar a la organización hasta el estándar — diagnóstico, cierre de brechas y certificación privada KPC. El alcance se ajusta a la complejidad de la organización.
 2. **Revalidación periódica (suscripción renovable):** monitoreo de cambios normativos, revisiones periódicas, soporte ante incidentes y renovación de la certificación. La periodicidad se adapta a la organización (no es un cobro mensual indefinido).
 
 ### **14.2 Valor base por tamaño (referencial)**
@@ -274,10 +274,10 @@ Cada organización parte de un **valor base accesible y acorde a su tamaño**, q
 
 > Los valores son referenciales; el precio final se confirma tras el diagnóstico. Se opta por un ancla honesta ("desde") en lugar de un precio único fijo o de un gancho engañoso, para preservar la confianza.
 
-### **14.3 Factores que ajustan el valor sobre la base (DPC Complexity Score)**
+### **14.3 Factores que ajustan el valor sobre la base (KPC Complexity Score)**
 
 El **Complexity Score** es la herramienta interna que dimensiona el esfuerzo y traduce la base al precio final. Factores:
-- Tratamiento y volumen de **datos sensibles** (activa DPC-SEN reforzado y, a menudo, EIPD).
+- Tratamiento y volumen de **datos sensibles** (activa KPC-SEN reforzado y, a menudo, EIPD).
 - **Rubro regulado** (Salud/Ley 20.584, Fintech/CMF, servicios esenciales/ANCI).
 - Volumen y transversalidad de las **actividades de tratamiento**.
 - **Sistemas e infraestructura** crítica.
@@ -320,7 +320,7 @@ Al cerrar el proceso, la organización recibe, junto con la certificación, un *
 - Plan de respuesta ante incidentes.
 - Inventario y mapeo de flujos de datos.
 - Evidencias por control, versionadas.
-- **Certificado privado DPC**, verificable.
+- **Certificado privado KPC**, verificable.
 
 Garantías del entregable: **respaldo ante fiscalización** (evidencia admisible y ordenada, disponible de inmediato), **trazabilidad total** (cada control respaldado, versionado y fechado) y **detalle del tratamiento** (mapa completo de los datos personales de la organización).
 
@@ -348,14 +348,14 @@ Bajo filosofía Lean, dos roles fundacionales:
 ## **20. Visión de Largo Plazo y Ecosistema**
 
 Edificar un **Ecosistema Privado de Referencia en Protección de Datos e Información Corporativa**, articulado en módulos verticales por industria:
-- **Marco de trabajo DPC Base:** núcleo metodológico de la Ley 21.719.
-- **Verticales DPC (Fintech, Health, Retail):** módulos de controles avanzados por rubro.
-- **DPC Platform:** el SaaS que soporta la gestión multi-rubro.
+- **Marco de trabajo KPC Base:** núcleo metodológico de la Ley 21.719.
+- **Verticales KPC (Fintech, Health, Retail):** módulos de controles avanzados por rubro.
+- **KPC Platform:** el SaaS que soporta la gestión multi-rubro.
 - **Knowledge Base, Control Library, Risk Catalog y Remediation Catalog:** repositorios dinámicos.
-- **DPC Certification:** el sello privado de confianza multi-agencia.
+- **KPC Certification:** el sello privado de confianza multi-agencia.
 
-En fases avanzadas, el licenciamiento de las verticales y de la plataforma a firmas de auditoría, estudios jurídicos y consultores independientes puede transformar a DPC en el estándar de facto del mercado privado para la implementación y certificación de programas de cumplimiento a nivel nacional y regional.
+En fases avanzadas, el licenciamiento de las verticales y de la plataforma a firmas de auditoría, estudios jurídicos y consultores independientes puede transformar a KPC en el estándar de facto del mercado privado para la implementación y certificación de programas de cumplimiento a nivel nacional y regional.
 
 ---
 
-*Documento de trabajo interno. DPC — Data Protection Compliance no emite certificaciones gubernamentales oficiales ni suplanta las potestades de la Agencia de Protección de Datos Personales.*
+*Documento de trabajo interno. KPC — Kromi Privacy Center no emite certificaciones gubernamentales oficiales ni suplanta las potestades de la Agencia de Protección de Datos Personales.*

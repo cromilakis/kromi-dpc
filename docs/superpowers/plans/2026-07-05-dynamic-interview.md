@@ -41,7 +41,7 @@ comment on column public.companies.factors is
   'Factores de complejidad declarados en el alta (RFC §14.3). Fuente de la aplicabilidad de controles en la entrevista.';
 ```
 
-- [ ] **Step 2: Aplicar en local** — `docker exec -i supabase_db_kromi-dpc psql -U postgres -d postgres < supabase/migrations/20260705140000_company_factors.sql`; verificar con `\d companies`.
+- [ ] **Step 2: Aplicar en local** — `docker exec -i supabase_db_kromi-kpc psql -U postgres -d postgres < supabase/migrations/20260705140000_company_factors.sql`; verificar con `\d companies`.
 
 - [ ] **Step 3: Persistir en `createCompany`** — en el insert de `lib/actions/companies.ts` agregar `factors: [...data.factors],`.
 
@@ -72,11 +72,11 @@ comment on column public.controls.applies_when is
 
 -- Poblado por dominio (ante duda, se deja null = aplica). Revisar con abogado.
 update public.controls c set applies_when = '{"factors_any":["sensitive_data"]}'::jsonb
-  from public.domains d where c.domain_id = d.id and d.code = 'DPC-SEN';
+  from public.domains d where c.domain_id = d.id and d.code = 'KPC-SEN';
 update public.controls c set applies_when = '{"factors_any":["automated_decisions"]}'::jsonb
-  from public.domains d where c.domain_id = d.id and d.code = 'DPC-EIA';
--- DPC-TER mezcla transferencias y encargados: separar por code/nombre.
--- (El implementador lista los controles de DPC-TER y asigna
+  from public.domains d where c.domain_id = d.id and d.code = 'KPC-EIA';
+-- KPC-TER mezcla transferencias y encargados: separar por code/nombre.
+-- (El implementador lista los controles de KPC-TER y asigna
 --  international_transfers a los de transferencia y critical_providers a los de
 --  encargados; ante duda, dejar null.)
 ```
@@ -228,7 +228,7 @@ describe("inapplicabilityFactors", () => {
 ## Self-review
 
 - **Cobertura del spec:** persistir factors (T1), applies_when+enum+reglas (T2), evaluador (T3), cumplimiento dinámico+override (T4), RAT dinámico (T5), materializar no_aplica (T6), checklist (T7). ✓
-- **Sin placeholders:** los pasos deterministas traen código; el poblado de DPC-TER exige leer el catálogo (documentado, con regla "ante duda null"). ✓
+- **Sin placeholders:** los pasos deterministas traen código; el poblado de KPC-TER exige leer el catálogo (documentado, con regla "ante duda null"). ✓
 - **Consistencia de tipos:** `AppliesWhen` (T3) fluye a `ComplianceQuestion` (T4) y a `materializeDiagnosis` (T6); `answers.applicability` opcional consistente en schema/UI/materialize. ✓
 
 ## Handoff

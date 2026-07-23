@@ -50,10 +50,10 @@ aplica** (baseline). El consultor tiene la última palabra vía override.
 
 4. **Poblar `applies_when`** (dato, con revisión) para los controles ligados a
    factores. Mapa inicial por dominio/control:
-   - `DPC-SEN` (Datos Sensibles) → `{factors_any:["sensitive_data"]}`
-   - `DPC-TER` transferencias internacionales → `{factors_any:["international_transfers"]}`
-   - `DPC-TER` encargados/proveedores → `{factors_any:["critical_providers"]}`
-   - `DPC-EIA` (Decisiones Automatizadas / EIPD) → `{factors_any:["automated_decisions"]}`
+   - `KPC-SEN` (Datos Sensibles) → `{factors_any:["sensitive_data"]}`
+   - `KPC-TER` transferencias internacionales → `{factors_any:["international_transfers"]}`
+   - `KPC-TER` encargados/proveedores → `{factors_any:["critical_providers"]}`
+   - `KPC-EIA` (Decisiones Automatizadas / EIPD) → `{factors_any:["automated_decisions"]}`
    - resto → `null` (siempre aplica).
    La asignación exacta control-por-control se hace leyendo el catálogo (23
    controles) y se revisa; ante duda, `null` (aplica) — nunca ocultar de más.
@@ -137,7 +137,7 @@ menor al plan de transcripción; por eso esta feature va **primero**.)
   `not_applicable`; aplicables sin tocar no se pisan (regla actual).
 - **Integración**: `createCompany` persiste `factors`.
 - **E2E click-through (manual)**: crear "Margarita" (micro, sin factores) →
-  abrir diagnóstico → verificar entrevista corta (DPC-SEN/TER/EIA en "No aplica"
+  abrir diagnóstico → verificar entrevista corta (KPC-SEN/TER/EIA en "No aplica"
   con motivo) → incluir uno vía override → responder → Aplicar diagnóstico →
   verificar `assessment_controls` con `not_applicable` y checklist con avance
   sobre lo aplicable. Comparar con una empresa que sí declara factores

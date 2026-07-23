@@ -16,7 +16,7 @@
 -- Ejecutar contra la DB local (todo dentro de una transacción con ROLLBACK
 -- final: no deja datos de prueba en la DB):
 --
---   docker exec -i supabase_db_kromi-dpc psql -U postgres -d postgres \
+--   docker exec -i supabase_db_kromi-kpc psql -U postgres -d postgres \
 --     -v ON_ERROR_STOP=1 -f - < supabase/tests/client_rls_test.sql
 --
 -- (equivalente npm: `pnpm test:rls`, ver package.json)

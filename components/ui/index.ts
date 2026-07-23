@@ -1,5 +1,5 @@
 /**
- * Barrel del kit UI base — DPC (Style Reference Attio, .kromi/design.md).
+ * Barrel del kit UI base — KPC (Style Reference Attio, .kromi/design.md).
  * Server-friendly salvo Tabs ("use client" por interactividad).
  */
 export { Button, buttonClasses } from "./button";

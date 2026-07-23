@@ -11,19 +11,15 @@ import { Logo } from "@/components/ui";
  */
 export interface PublicTopbarProps {
   logoAlt: string;
-  tagline: string;
   backLabel: string;
 }
 
-export function PublicTopbar({ logoAlt, tagline, backLabel }: PublicTopbarProps) {
+export function PublicTopbar({ logoAlt, backLabel }: PublicTopbarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-stone bg-white/85 backdrop-blur-[12px] print:hidden">
-      <div className="mx-auto flex h-[64px] w-full max-w-[1080px] items-center justify-between px-32 max-sm:px-16">
-        <Link href="/" className="flex items-center gap-[10px]">
-          <Logo alt={logoAlt} height={36} priority />
-          <span className="font-serif text-body font-medium tracking-[-0.2px] text-ink max-sm:hidden">
-            {tagline}
-          </span>
+      <div className="mx-auto flex h-[64px] w-full max-w-[1180px] items-center justify-between px-32 max-sm:px-16">
+        <Link href="/" className="flex items-center">
+          <Logo alt={logoAlt} height={30} priority />
         </Link>
         <Link
           href="/"

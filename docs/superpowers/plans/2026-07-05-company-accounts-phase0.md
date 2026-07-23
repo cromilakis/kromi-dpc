@@ -39,7 +39,7 @@
   - GRANT DML de `company_members`: `revoke all on public.company_members from anon, authenticated; grant select, insert, update, delete on public.company_members to authenticated;` (el staff lo gestiona; RLS abajo lo restringe).
   - RLS de `company_members`: SELECT/INSERT/UPDATE/DELETE `to authenticated using ((select public.is_consultant()))` (solo staff gestiona membresías); ADEMÁS una policy SELECT para que el propio cliente lea SU fila: `using (user_id = (select auth.uid()))`.
 
-- [ ] **Step 2: Aplicar en local** — `docker exec -i supabase_db_kromi-dpc psql -U postgres -d postgres < supabase/migrations/20260706100000_company_members.sql`; verificar tabla + funciones (`\df current_company_id`, `\d company_members`).
+- [ ] **Step 2: Aplicar en local** — `docker exec -i supabase_db_kromi-kpc psql -U postgres -d postgres < supabase/migrations/20260706100000_company_members.sql`; verificar tabla + funciones (`\df current_company_id`, `\d company_members`).
 
 - [ ] **Step 3: Regenerar tipos** — `pnpm supabase gen types typescript --local` con stderr redirigido APARTE (no `2>&1`; el CLI escribe "Connecting to db" en stderr y corrompe el TS). En PowerShell la redirección da UTF-16: reconvertir a UTF-8 antes de sobrescribir `lib/supabase/types.ts`. Verificar que aparece `company_members`.
 

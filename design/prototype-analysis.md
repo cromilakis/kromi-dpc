@@ -1,7 +1,7 @@
-# Análisis exhaustivo del prototipo — Plataforma DPC (Data Protection Compliance)
+# Análisis exhaustivo del prototipo — Plataforma KPC (Kromi Privacy Center)
 
-**Fuente:** `C:/Kromi/kromi-dpc/design/prototype.dc.html` (161 KB, 1567 líneas, formato `.dc.html`)
-**Contexto de negocio:** `C:/Kromi/kromi-dpc/RFC.md` (v0.4) · **Style Reference:** `C:/Kromi/kromi-dpc/DESIGN.md` (Attio)
+**Fuente:** `C:/Kromi/kromi-kpc/design/prototype.dc.html` (161 KB, 1567 líneas, formato `.dc.html`)
+**Contexto de negocio:** `C:/Kromi/kromi-kpc/RFC.md` (v0.4) · **Style Reference:** `C:/Kromi/kromi-kpc/DESIGN.md` (Attio)
 **Fecha del análisis:** 2026-07-02
 
 Este documento es el **contrato de implementación** para construir la app real en Next.js a partir del prototipo de Claude Design.
@@ -18,8 +18,8 @@ this.state = {
   authed: false,               // sesión del equipo
   loginUser: '', loginPass: '', loginErr: false,
   company: 0,                  // índice de la empresa seleccionada (COMPANIES)
-  selectedDomain: 'DPC-INC',   // dominio activo del checklist
-  selectedControl: 'DPC-INC-002', // control activo (ficha)
+  selectedDomain: 'KPC-INC',   // dominio activo del checklist
+  selectedControl: 'KPC-INC-002', // control activo (ficha)
   regRubro: 'salud',           // rubro seleccionado en el alta de empresa
   controlStatus: {…},          // mapa código→estado (cumple|parcial|no), mutable
   cotSize: 'micro', cotRubro: 'ninguno',       // autoevaluador
@@ -54,7 +54,7 @@ Página de marketing, `max-width:1180px`, fondo blanco. Secciones en orden:
 2. **HERO** — centrado, padding `96px 32px 56px`.
    - **Pill de urgencia**: borde `#f3c9c6`, fondo `#fdf3f2`, radius 999px, 12px/600 color `#a1231f`; dentro: punto 8px `#e5342b` con animación `dpcBlink` (parpadeo 1.1s) + badge rojo `#e5342b` con texto blanco "Ley 21.719" + texto "vigente desde el 1 de diciembre de 2026".
    - **H1** 64px Newsreader 500, line-height 1.05, ls -1.28px, max-width 820px: *"Protección de datos personales, certificada"* + SVG check circular verde `#22C463` (58px) inline.
-   - Subtítulo 20px/500 `#6f7988` max 560px: *"En DPC acompañamos a las empresas en todo el proceso: diagnóstico, propuesta y validación."*
+   - Subtítulo 20px/500 `#6f7988` max 560px: *"En KPC acompañamos a las empresas en todo el proceso: diagnóstico, propuesta y validación."*
    - Micro-label "Dos formas de cotizar" (13px/600 `#8f99a8`).
    - **CTA duales**: botón secundario "Autoevaluación en línea" (blanco, borde `#d3d8df`, radius 10, padding 11px 18px, icono documento) → `goCotizador`; separador "o"; **CTA WhatsApp** "Cotización asistida" (fondo `#25D366`, texto blanco, icono WhatsApp) → `https://wa.me/56900000000?text=…`.
    - **Card "Lo que está en juego" (stakes)**: card borde `#e4e7ec` radius 12, sombra `rgba(28,40,64,0.08) 0px 8px 24px -12px`; header gris `#fbfbfc` con título 13px/600 y nota "Fiscalización de la Agencia desde el 1 de diciembre de 2026"; grid de 3 columnas (loop `stakes`): punto de color (`s.dot`), severidad (`s.sev` 13px/600), rango UTM en serif 26px (`s.utm`), equivalencia CLP 13px `#8f99a8` (`s.clp`).
@@ -70,7 +70,7 @@ Página de marketing, `max-width:1180px`, fondo blanco. Secciones en orden:
 
 6. **ENTREGABLE** — grid `1fr 1.05fr` gap 64, align center.
    - Izquierda: eyebrow "El entregable"; H2 *"Documentación lista para una fiscalización."*; párrafo; 3 bullets con icono check en cuadrado `#f3f4f6` 22px radius 6: **Respaldo ante fiscalización**, **Trazabilidad total**, **Detalle del tratamiento** (negrita 600 + texto normal).
-   - Derecha: **mock del expediente**: card radius 12 con sombra profunda (`rgba(28,40,64,0.1) 0px 16px 40px -16px, rgba(28,40,64,0.05) 0px 4px 8px -4px`); header `#fbfbfc` con icono documento en cuadrado ink 26px + título "Expediente de cumplimiento" + badge verde "Certificado" (11px/600 `#075a39` sobre `#e9f2ec`, pill); lista loop `dossierDocs` (7 ítems, check verde 18px `#e9f2ec`/`#075a39`); footer negro `#1c1d1f` con roseta (círculo 40px borde `#34353a` + icono medalla) + "Certificación privada DPC / Verificable en línea".
+   - Derecha: **mock del expediente**: card radius 12 con sombra profunda (`rgba(28,40,64,0.1) 0px 16px 40px -16px, rgba(28,40,64,0.05) 0px 4px 8px -4px`); header `#fbfbfc` con icono documento en cuadrado ink 26px + título "Expediente de cumplimiento" + badge verde "Certificado" (11px/600 `#075a39` sobre `#e9f2ec`, pill); lista loop `dossierDocs` (7 ítems, check verde 18px `#e9f2ec`/`#075a39`); footer negro `#1c1d1f` con roseta (círculo 40px borde `#34353a` + icono medalla) + "Certificación privada KPC / Verificable en línea".
 
 7. **CONFIANZA / AUTOCERTIFICACIÓN** — card única `#fbfbfc` radius 12 padding 32, grid 2 col: (a) icono medalla en cuadrado ink 44px radius 10 + "Nuestros procesos, bajo la misma rigurosidad" (dogfooding); (b) icono escudo-check en cuadrado blanco borde `#d3d8df` + "Confidencialidad por diseño".
 
@@ -84,14 +84,14 @@ Página de marketing, `max-width:1180px`, fondo blanco. Secciones en orden:
     - **Enterprise**: card invertida (fondo y borde `#1c1d1f`, texto blanco), serif 34px "Bajo cotización" + "según el alcance del diagnóstico" (`#b5bdc9`).
     - Barra final con disclaimer legal (13px `#8f99a8`) + botones "Autoevaluación en línea" (secundario) y "Cotizar certificación" (WhatsApp verde).
 
-11. **FOOTER** — fondo `#000000` (Abyss). Grid `1.4fr 1fr 1fr 1fr` gap 40, padding `64px 32px 40px`: columna de marca (logo con `filter:invert(1)` 30px + "Data Protection Compliance" + descripción 13px `#8f99a8` max 280px); loop `footerCols` (3 columnas: título 14px/500 blanco, links 14px `#8f99a8`). **El link "Panel del consultor" ejecuta `goLogin`** (acceso discreto a la app). Línea legal inferior con border-top `#1c1d1f`: "© 2026 DPC · Marco de trabajo. No emite certificaciones gubernamentales oficiales…".
+11. **FOOTER** — fondo `#000000` (Abyss). Grid `1.4fr 1fr 1fr 1fr` gap 40, padding `64px 32px 40px`: columna de marca (logo con `filter:invert(1)` 30px + "Kromi Privacy Center" + descripción 13px `#8f99a8` max 280px); loop `footerCols` (3 columnas: título 14px/500 blanco, links 14px `#8f99a8`). **El link "Panel del consultor" ejecuta `goLogin`** (acceso discreto a la app). Línea legal inferior con border-top `#1c1d1f`: "© 2026 KPC · Marco de trabajo. No emite certificaciones gubernamentales oficiales…".
 
 ### 1.2 `isLogin` — Login del equipo (route `login`)
 
 - Página completa centrada, fondo `#fbfbfc`, contenedor max-width 400px.
 - Encima de la card: logo 40px + tagline serif itálica.
 - **Card de login**: blanca, borde `#e4e7ec`, radius 12, padding 32, sombra `rgba(28,40,64,0.1) 0px 12px 32px -12px, rgba(28,40,64,0.06) 0px 4px 8px -4px`.
-  - H1 serif 26px "Ingreso del equipo"; subtítulo 14px `#6f7988` "Herramienta interna de evaluación y certificación DPC."
+  - H1 serif 26px "Ingreso del equipo"; subtítulo 14px `#6f7988` "Herramienta interna de evaluación y certificación KPC."
   - Inputs "Usuario" (placeholder `admin`) y "Contraseña" (password, placeholder `••••••`): label 12px/500 `#6f7988`; input 14px, borde `#d3d8df`, radius 8, padding 10px 12px. Manejan `onInput` y Enter (`onLoginKey`).
   - **Error condicional** `<sc-if value="{{ loginErr }}">`: caja 13px `#772322` sobre `#f6e9e8`, borde `#77232222`, radius 8: "Usuario o contraseña incorrectos."
   - Botón primario full-width "Ingresar" (ink, radius 10, padding 11) → `doLogin` (valida `admin`/`admin`, setea `authed:true` y navega a `dashboard`).
@@ -120,11 +120,11 @@ Página de marketing, `max-width:1180px`, fondo blanco. Secciones en orden:
 Layout de dos columnas `display:flex; min-height:100vh`:
 
 **SIDEBAR** (`<aside>` 236px, `border-right:#e4e7ec`, fondo `#fbfbfc`, sticky full-height):
-- Header 56px: logo 26px + "DPC · Marco de trabajo" (14px/600).
+- Header 56px: logo 26px + "KPC · Marco de trabajo" (14px/600).
 - **Bloque de contexto de empresa** (condicional `inCompany`): botón "← Todas las empresas" (12px `#8f99a8`) → `goEmpresas`; avatar cuadrado 32px radius 8 fondo ink con iniciales blancas `{{ current.in }}`; nombre 13px/600 truncado + rubro 11px `#8f99a8`.
 - **Nav** (loop `navItems`): label de grupo `{{ navLabel }}` (11px/600 `#b5bdc9` uppercase) = **"Consultoría"** (modo admin) o **"Empresa"** (modo empresa). Ítems: botón full-width, icono SVG 16px + label 13px/500, padding 8px 10px, radius 8; activo = texto `#1c1d1f` + fondo `#f3f4f6`, icono `#1c1d1f`; inactivo = texto `#6f7988`, icono `#8f99a8`.
   - Ítems modo admin (`adminKeys`): Panel general (`dashboard`), Empresas (`empresas`), Nueva empresa (`registro`).
-  - Ítems modo empresa (`companyKeys`): Resumen, Checklist DPC, Riesgos & Gap, Soluciones, Plan de adecuación, Evidencias, Certificación. (La vista `control` marca activo "Checklist DPC".)
+  - Ítems modo empresa (`companyKeys`): Resumen, Checklist KPC, Riesgos & Gap, Soluciones, Plan de adecuación, Evidencias, Certificación. (La vista `control` marca activo "Checklist KPC".)
 - Footer: botón "Cerrar sesión" (borde `#e4e7ec`, radius 10) → `logout` (vuelve a landing y desautentica).
 
 **TOPBAR** (56px, border-bottom `#e4e7ec`, sticky, fondo blanco):
@@ -134,7 +134,7 @@ Layout de dos columnas `display:flex; min-height:100vh`:
 **MAIN**: `max-width:1160px`, padding `32px 32px 80px`. Contiene las 10 sub-vistas:
 
 #### 1.4.1 `isDashboard` — Panel general (admin)
-- H1 serif 40px "Panel general" + subtítulo "Visión de administración del portafolio de evaluaciones DPC."
+- H1 serif 40px "Panel general" + subtítulo "Visión de administración del portafolio de evaluaciones KPC."
 - **4 stat-cards** (loop `dashStats`): label 12px `#8f99a8`, valor 30px/600 ls -0.9px, delta 12px/500 color variable. Datos calculados: Empresas en evaluación (assessment+remediation), Tasa de certificación %, Tiempo promedio (días), Riesgos abiertos (+% cumplimiento medio).
 - Grid `1fr 1.3fr`:
   - **"Distribución por fase"** (loop `faseDist`, 4 filas): label + n + progress bar 7px (track `#f3f4f6`, fill color de fase, radius 999).
@@ -151,7 +151,7 @@ Layout de dos columnas `display:flex; min-height:100vh`:
   - **Card formulario**: sección "Datos de la empresa" con 4 inputs prellenados (grid 2×2): Razón social ("Clínica Andes Salud SpA"), RUT ("76.421.905-K"), N° de colaboradores ("480"), Sucursales/oficinas ("6"). Inputs: 14px, borde `#d3d8df`, radius 7, padding 9px 12px. *(Estáticos en el prototipo — sin onInput.)*
   - Sección "Rubro corporativo" (+hint "Determina el multiplicador sectorial…"): grid 2 col de **7 botones-toggle de rubro** (loop `rubros`); activo = ink invertido, inactivo = blanco borde `#d3d8df`; radius 10, padding 10px 12px, transition .12s.
   - Sección "Leyes complementarias activadas automáticamente": chip azul fijo "Ley 21.719 · base" (fondo `#eaf1fe`, borde `#dbe7fd`) + chips grises dinámicos (loop `comp.laws`).
-  - **Card Complexity Score** (fondo ink, texto blanco): label "DPC Complexity Score"; **score gigante en serif 64px** `{{ comp.final }}` + badge de tier (12px/600, texto color `tierColor` sobre fondo blanco, pill); línea explicativa "Rubro **X** · multiplicador ×1.7 (+70% sectorial sobre 52 pts base)"; divisor `#2c2d30`; "Factores del score" — loop `factors` (7): label 12px `#d3d8df` + pts + mini barra 5px (track `#2c2d30`, fill blanco 85% opacidad); botón blanco full-width "Iniciar assessment →" → `goChecklist`.
+  - **Card Complexity Score** (fondo ink, texto blanco): label "KPC Complexity Score"; **score gigante en serif 64px** `{{ comp.final }}` + badge de tier (12px/600, texto color `tierColor` sobre fondo blanco, pill); línea explicativa "Rubro **X** · multiplicador ×1.7 (+70% sectorial sobre 52 pts base)"; divisor `#2c2d30`; "Factores del score" — loop `factors` (7): label 12px `#d3d8df` + pts + mini barra 5px (track `#2c2d30`, fill blanco 85% opacidad); botón blanco full-width "Iniciar assessment →" → `goChecklist`.
   - **Cálculo**: `base = Σ pts = 52`; `final = round(52 × mult_rubro)`; tier: ≥85 Crítico / ≥70 Alto / ≥50 Medio / <50 Bajo.
 
 #### 1.4.4 `isResumen` — Resumen de empresa (overview)
@@ -162,7 +162,7 @@ Layout de dos columnas `display:flex; min-height:100vh`:
   - **"Próximos pasos"** (loop `resumenPasos`, 3 ítems clicables): punto accent 7px + texto 13px + chip dominio 11px. (Ítems hardcodeados: completar RAT → checklist; aprobar plan de respuesta → plan; cargar evidencias → evidencias.)
 
 #### 1.4.5 `isChecklist` — Checklist multiregulatorio
-- Eyebrow "Checklist DPC · {{ current.name }}"; H1 "Checklist multiregulatorio"; subtítulo "…Haz clic en el estado para actualizarlo."
+- Eyebrow "Checklist KPC · {{ current.name }}"; H1 "Checklist multiregulatorio"; subtítulo "…Haz clic en el estado para actualizarlo."
 - Grid `284px 1fr`:
   - **Rail de dominios** (card, padding 10): label "14 dominios · 8 por principio"; loop `checkDomains` (14 botones): fila código 11px/600 + contador done/total 11px; nombre 13px/500; barra de avance 5px fill ink. Seleccionado = fondo `#f3f4f6` radius 8.
   - **Panel del dominio**: header con chip código + nombre 16px/600 + **pill de principio** a la derecha (`{{ selDomain.rel }}`, 11px/600 color `#2c5bb8` fondo `#eef4ff` borde `#dbe7fd`) + descripción 13px.
@@ -201,17 +201,17 @@ Layout de dos columnas `display:flex; min-height:100vh`:
 - **4 summary-cards**: Documentos / Validados / Pendientes / Rechazados.
 - **Tabla** grid `2.4fr 1.1fr 1fr 1fr 0.8fr 1fr`: **Documento · Control · Tipo · Fecha · Tamaño · Estado**. Documento = icono archivo en cuadrado 28px `#f3f4f6` + nombre truncado; Estado = pill (`repoMeta`): Validado verde / Pendiente ámbar / Rechazado rojo.
 
-#### 1.4.11 `isCertificacion` — Certificación DPC
-- Eyebrow "Certificación DPC · {{ current.name }}"; H1 "Certificado privado de cumplimiento"; subtítulo "Emisión y verificación criptográfica del sello DPC…".
+#### 1.4.11 `isCertificacion` — Certificación KPC
+- Eyebrow "Certificación KPC · {{ current.name }}"; H1 "Certificado privado de cumplimiento"; subtítulo "Emisión y verificación criptográfica del sello KPC…".
 - Grid `1fr 1fr`:
   - **Columna izquierda**:
     - Card "Ciclo de aseguramiento": timeline vertical (loop `certPhases`, 4): círculo numerado 28px (colores por estado), nombre 14px/600 + pill de estado (Completada verde / En curso azul / Pendiente gris) + descripción 12px. El estado se deriva de la fase de la empresa (`order.indexOf(fase)`).
     - Card "Resumen de controles": 3 mini-cards tintadas — Cumple (borde `#e9f2ec`, fondo `#f6faf7`, número 24px `#075a39`), Parcial (`#f6f0df`/`#fbf8ef`/`#705500`), No cumple (`#f6e9e8`/`#fbf3f2`/`#772322`); línea "23 controles evaluados · X% de cumplimiento global".
   - **Card certificado** (fondo ink, radius 12, padding 36px 32px, sticky top 80px):
-    - Header: mini-logo "D" en cuadrado blanco 24px + "DPC Certification"; **pill de estado** ("Certificado vigente" verde / "Pendiente de emisión" ámbar).
+    - Header: mini-logo "D" en cuadrado blanco 24px + "KPC Certification"; **pill de estado** ("Certificado vigente" verde / "Pendiente de emisión" ámbar).
     - Roseta: círculo 72px borde `#34353a` + icono medalla SVG 34px.
-    - "Certificado de cumplimiento otorgado a" (12px `#8f99a8`) → nombre en serif 28px → "Rubro {{rubro}} · Estándar DPC v0.3" (13px).
-    - Grid 2×2 con border-top `#34353a`: **Código** (`DPC-{iniciales}-2026-{1001+idx}`), **Cumplimiento** (%), **Emitido** (28 jun 2026), **Vence** (28 jun 2027).
+    - "Certificado de cumplimiento otorgado a" (12px `#8f99a8`) → nombre en serif 28px → "Rubro {{rubro}} · Estándar KPC v0.3" (13px).
+    - Grid 2×2 con border-top `#34353a`: **Código** (`KPC-{iniciales}-2026-{1001+idx}`), **Cumplimiento** (%), **Emitido** (28 jun 2026), **Vence** (28 jun 2027).
     - **Hash de verificación**: `0x{iniciales}a3f9c72e1d84b6` (12px Inter, `#d3d8df`, word-break).
     - Botón blanco full-width "Verificar certificado ↗" (decorativo — implica página pública de verificación).
 
@@ -250,8 +250,8 @@ cualquier vista app ──"Cerrar sesión"──▶ landing (authed=false)
 | `isEmpresas` | `/app/empresas` | Sidebar "Consultoría" |
 | `isRegistro` | `/app/empresas/nueva` — wizard multi-paso: `/app/empresas/nueva?paso=1..4` o segmentos | El prototipo solo muestra el Paso 1 de 4 |
 | `isResumen` | `/app/empresas/[id]` | Layout anidado `app/empresas/[id]/layout.tsx` inyecta el contexto de empresa en sidebar/topbar (`inCompany`) |
-| `isChecklist` | `/app/empresas/[id]/checklist` (+ `?dominio=DPC-INC` o `/checklist/[dominio]`) | El dominio seleccionado debe ser URL-state |
-| `isControl` | `/app/empresas/[id]/controles/[codigo]` | Ej.: `/app/empresas/clinica-andes/controles/DPC-INC-002` |
+| `isChecklist` | `/app/empresas/[id]/checklist` (+ `?dominio=KPC-INC` o `/checklist/[dominio]`) | El dominio seleccionado debe ser URL-state |
+| `isControl` | `/app/empresas/[id]/controles/[codigo]` | Ej.: `/app/empresas/clinica-andes/controles/KPC-INC-002` |
 | `isRiesgos` | `/app/empresas/[id]/riesgos` | |
 | `isSoluciones` | `/app/empresas/[id]/soluciones` | |
 | `isPlan` | `/app/empresas/[id]/plan` | |
@@ -371,10 +371,10 @@ Funciones de color por umbral:
 - `key`, `label`, `mult` (multiplicador sectorial: 1.1–1.8), `laws[]` (leyes complementarias activadas).
 
 **Dominio** (`DOMAINS`) — catálogo de 14
-- `code` (`DPC-XXX`), `name`, `esPrincipio` (bool: 8 true / 6 false), `rel` (principio u obligación asociada), `desc`.
+- `code` (`KPC-XXX`), `name`, `esPrincipio` (bool: 8 true / 6 false), `rel` (principio u obligación asociada), `desc`.
 
 **Control** (`CONTROLS`) — catálogo de 23 fichas
-- `code` (`DPC-XXX-NNN`), `domain` (FK código dominio), `name`, `status` (estado inicial seed), `laws[]`, `objetivo` (resumen), `detalle` (explicación larga), `criterios[]` (3–4 strings), `fp` (fundamento legal primario), `fc` (fundamento conectado, "—" si no hay), `riesgo` (riesgo mitigado), `evidencias[]` de `{n (nombre), estado}`.
+- `code` (`KPC-XXX-NNN`), `domain` (FK código dominio), `name`, `status` (estado inicial seed), `laws[]`, `objetivo` (resumen), `detalle` (explicación larga), `criterios[]` (3–4 strings), `fp` (fundamento legal primario), `fc` (fundamento conectado, "—" si no hay), `riesgo` (riesgo mitigado), `evidencias[]` de `{n (nombre), estado}`.
 - **Enum resultado**: `cumple` / `parcial` / `no` → labels "Cumple" / "Parcial" / "No cumple".
 - **Enum estado de evidencia requerida**: `validada` / `parcial` / `faltante`.
 
@@ -393,7 +393,7 @@ Funciones de color por umbral:
 - `name` (nombre de archivo), `control` (FK código), `tipo` (enum visto: Política / Acta / Registro / Bitácora / Contrato / Configuración / Captura), `estado` (enum Validado / Pendiente / Rechazado), `fecha`, `size`.
 
 **Certificado** (`cert`, derivado)
-- `code` = `DPC-{iniciales}-2026-{1001+idx}`, `hash` = `0x{in}a3f9c72e1d84b6`, `emitida` (bool: fase ∈ {certification, renewal}), `estadoLabel` ("Certificado vigente" / "Pendiente de emisión"), `fecha` (emisión), `vence` (+1 año), `pct`, conteos `cumple/parcial/no`, `totalCtrl`, `company`, `rubro`, versión del estándar ("Estándar DPC v0.3").
+- `code` = `KPC-{iniciales}-2026-{1001+idx}`, `hash` = `0x{in}a3f9c72e1d84b6`, `emitida` (bool: fase ∈ {certification, renewal}), `estadoLabel` ("Certificado vigente" / "Pendiente de emisión"), `fecha` (emisión), `vence` (+1 año), `pct`, conteos `cumple/parcial/no`, `totalCtrl`, `company`, `rubro`, versión del estándar ("Estándar KPC v0.3").
 
 **FactorScore** (`FACTORS`) — 7 factores con `label` y `pts`; base = 52 pts; `final = round(base × mult_rubro)`.
 
@@ -418,12 +418,12 @@ Rubro 1─n LeyComplementaria (array embebido)
 
 ### 4.3 Inconsistencias del prototipo a resolver en implementación
 
-1. **Códigos de control obsoletos en EVIDENCES**: usan una taxonomía vieja (`DPC-GOV-001/002`, `DPC-DAT-001`, `DPC-SEC-001/002`, `DPC-THD-001`, `DPC-RGT-001`) que no existe en los 14 dominios v0.4. Mapear a: DPC-RES-001/002, DPC-INV-001, DPC-SEG-001/002, DPC-TER-001, DPC-DER-001.
-2. **"ARSOP" vs "ARCOP"**: el RFC usa ARCOP; el prototipo dice "derechos ARSOP" (control DPC-DER-001, dossierDocs, evidencia `Formulario_ARSOP_web.png`). Unificar (el RFC v0.4 manda: ARCOP).
-3. `resumenPasos` referencia dominio inexistente `DPC-EVD`.
+1. **Códigos de control obsoletos en EVIDENCES**: usan una taxonomía vieja (`KPC-GOV-001/002`, `KPC-DAT-001`, `KPC-SEC-001/002`, `KPC-THD-001`, `KPC-RGT-001`) que no existe en los 14 dominios v0.4. Mapear a: KPC-RES-001/002, KPC-INV-001, KPC-SEG-001/002, KPC-TER-001, KPC-DER-001.
+2. **"ARSOP" vs "ARCOP"**: el RFC usa ARCOP; el prototipo dice "derechos ARSOP" (control KPC-DER-001, dossierDocs, evidencia `Formulario_ARSOP_web.png`). Unificar (el RFC v0.4 manda: ARCOP).
+3. `resumenPasos` referencia dominio inexistente `KPC-EVD`.
 4. `controlStatus` es global (compartido entre empresas): en la app real es per-empresa.
 5. Labels de fase: key `remediation` = "Propuesta" (RFC llama a la Fase 2 "Propuesta" pero la vista plan habla de "remediación"); decidir nomenclatura canónica.
-6. El certificado dice "Estándar DPC v0.3" pero el RFC es v0.4.
+6. El certificado dice "Estándar KPC v0.3" pero el RFC es v0.4.
 7. Datos no usados en el template pero computados (vestigiales, útiles como seed extra): `heroNav`, `heroStats`, `heroDomains`, `planes` (Esencial/Profesional/Corporativo), `principios` (6 principios rectores), `goPlatform`, `goDashboard`, y los campos `sub` de `cotSizes`.
 
 ---
@@ -435,30 +435,30 @@ Rubro 1─n LeyComplementaria (array embebido)
 **Por principio (Art. 3, Ley 21.719):**
 | Código | Nombre | `rel` |
 |---|---|---|
-| DPC-LIC | Licitud y Lealtad | Licitud y lealtad |
-| DPC-FIN | Finalidad | Finalidad |
-| DPC-PRO | Proporcionalidad | Proporcionalidad |
-| DPC-CAL | Calidad | Calidad |
-| DPC-RES | Responsabilidad | Responsabilidad (accountability) |
-| DPC-SEG | Seguridad | Seguridad |
-| DPC-TRA | Transparencia e Información | Transparencia e información |
-| DPC-CON | Confidencialidad | Confidencialidad |
+| KPC-LIC | Licitud y Lealtad | Licitud y lealtad |
+| KPC-FIN | Finalidad | Finalidad |
+| KPC-PRO | Proporcionalidad | Proporcionalidad |
+| KPC-CAL | Calidad | Calidad |
+| KPC-RES | Responsabilidad | Responsabilidad (accountability) |
+| KPC-SEG | Seguridad | Seguridad |
+| KPC-TRA | Transparencia e Información | Transparencia e información |
+| KPC-CON | Confidencialidad | Confidencialidad |
 
 **Complementarios:**
 | Código | Nombre | `rel` |
 |---|---|---|
-| DPC-INV | Inventario y RAT | Registro de Actividades de Tratamiento |
-| DPC-DER | Derechos de los Titulares | Derechos ARCOP *(prototipo: "ARCOP" en rel, "ARSOP" en control)* |
-| DPC-SEN | Datos Sensibles y Grupos Especiales | Régimen reforzado |
-| DPC-TER | Encargados y Transferencias | Encargados y transferencias internacionales |
-| DPC-INC | Incidentes y Brechas | Notificación de brechas (72 h) |
-| DPC-EIA | Evaluación de Impacto y Decisiones Automatizadas | EIPD · perfilamiento e IA |
+| KPC-INV | Inventario y RAT | Registro de Actividades de Tratamiento |
+| KPC-DER | Derechos de los Titulares | Derechos ARCOP *(prototipo: "ARCOP" en rel, "ARSOP" en control)* |
+| KPC-SEN | Datos Sensibles y Grupos Especiales | Régimen reforzado |
+| KPC-TER | Encargados y Transferencias | Encargados y transferencias internacionales |
+| KPC-INC | Incidentes y Brechas | Notificación de brechas (72 h) |
+| KPC-EIA | Evaluación de Impacto y Decisiones Automatizadas | EIPD · perfilamiento e IA |
 
 Cada uno con `desc` completa en el prototipo (líneas 1040–1054) — copiar literal.
 
 ### 5.2 Los 23 controles (`CONTROLS`) — ficha completa cada uno
 
-Distribución por dominio: DPC-RES ×4 (001 DPD, 002 Política gobierno datos, 003 Centralización evidencias, 004 MPI) · DPC-INV ×2 (001 RAT, 002 Ciclo de vida/flujos transfronterizos) · DPC-SEG ×2 (001 Accesos/logs, 002 Cifrado+MFA) · DPC-FIN ×2 (001 Finalidades, 002 Retención/borrado) · DPC-TER ×2 (001 Contratos encargados, 002 Transferencias internacionales) · DPC-INC ×2 (001 Plan de respuesta, 002 Protocolo/historial incidentes) · DPC-EIA ×2 (001 EIPD, 002 Decisiones automatizadas) · DPC-LIC-001, DPC-DER-001, DPC-SEN-001 (biometría laboral), DPC-CAL-001, DPC-PRO-001, DPC-TRA-001 (Art. 14 ter), DPC-CON-001 ×1 c/u.
+Distribución por dominio: KPC-RES ×4 (001 DPD, 002 Política gobierno datos, 003 Centralización evidencias, 004 MPI) · KPC-INV ×2 (001 RAT, 002 Ciclo de vida/flujos transfronterizos) · KPC-SEG ×2 (001 Accesos/logs, 002 Cifrado+MFA) · KPC-FIN ×2 (001 Finalidades, 002 Retención/borrado) · KPC-TER ×2 (001 Contratos encargados, 002 Transferencias internacionales) · KPC-INC ×2 (001 Plan de respuesta, 002 Protocolo/historial incidentes) · KPC-EIA ×2 (001 EIPD, 002 Decisiones automatizadas) · KPC-LIC-001, KPC-DER-001, KPC-SEN-001 (biometría laboral), KPC-CAL-001, KPC-PRO-001, KPC-TRA-001 (Art. 14 ter), KPC-CON-001 ×1 c/u.
 
 Estados seed: **4 cumple** (RES-002, DER-001, SEG-002, RES-003), **10 parcial** (RES-001, INV-001, LIC-001, SEG-001, TER-001, INC-001, FIN-001, CAL-001, TRA-001, CON-001), **9 no** (INV-002, SEN-001, INC-002, FIN-002, PRO-001, RES-004, TER-002, EIA-001, EIA-002).
 
@@ -470,7 +470,7 @@ Cada control trae: objetivo, detalle (~3–5 líneas), 4 criterios, fp, fc, ries
 |---|---|---|---|
 | retail | Retail / e-commerce | 1.2 | Ley 19.496 (SERNAC), Ley 21.719 |
 | fintech | Fintech / Financiero | 1.8 | Circulares CMF, Ley 21.663, Ley 21.719 |
-| salud | Salud | 1.7 | Ley 20.584, Ley 21.719, DPC-SEN reforzado |
+| salud | Salud | 1.7 | Ley 20.584, Ley 21.719, KPC-SEN reforzado |
 | b2b | Servicios B2B | 1.3 | Código del Trabajo, Ley 21.719 |
 | telco | Telecomunicaciones | 1.6 | Normas SUBTEL, Ley 21.663, Ley 21.719 |
 | startup | Startup tecnológica | 1.1 | Ley 21.719, Ley 21.459 |
@@ -497,54 +497,54 @@ Formulario de registro prellenado: "Clínica Andes Salud SpA", RUT 76.421.905-K,
 
 | Código | Tipo | Impacto | Prob. | Dominio | Descripción |
 |---|---|---|---|---|---|
-| R-001 | Transversal | Medio | Alta | DPC-SEG | Uso de canales informales (WhatsApp) para envío de documentación con datos personales |
-| R-002 | Transversal | Medio | Alta | DPC-INV | Ausencia de RAT actualizado |
-| R-004 | Transversal / Financiero | Crítico | Media | DPC-SEG | Planillas Excel con datos sensibles sin control de acceso ni cifrado |
-| R-005 | Transversal | Bajo | Media | DPC-LIC | Políticas de privacidad desactualizadas frente a Ley 21.719 |
-| R-007 | Laboral | Crítico | Media | DPC-SEN | Control de asistencia biométrico sin cumplir exigencias DT |
-| R-008 | Salud / Fintech | Crítico | Alta | DPC-SEG | Cuentas genéricas compartidas para historial clínico o datos transaccionales |
-| R-009 | Seguridad | Crítico | Alta | DPC-INC | Inexistencia de plan de respuesta y notificación ante brechas |
+| R-001 | Transversal | Medio | Alta | KPC-SEG | Uso de canales informales (WhatsApp) para envío de documentación con datos personales |
+| R-002 | Transversal | Medio | Alta | KPC-INV | Ausencia de RAT actualizado |
+| R-004 | Transversal / Financiero | Crítico | Media | KPC-SEG | Planillas Excel con datos sensibles sin control de acceso ni cifrado |
+| R-005 | Transversal | Bajo | Media | KPC-LIC | Políticas de privacidad desactualizadas frente a Ley 21.719 |
+| R-007 | Laboral | Crítico | Media | KPC-SEN | Control de asistencia biométrico sin cumplir exigencias DT |
+| R-008 | Salud / Fintech | Crítico | Alta | KPC-SEG | Cuentas genéricas compartidas para historial clínico o datos transaccionales |
+| R-009 | Seguridad | Crítico | Alta | KPC-INC | Inexistencia de plan de respuesta y notificación ante brechas |
 
 *(Nota: R-003 y R-006 no existen — la numeración del catálogo tiene huecos intencionales, coherentes con RFC §8.)*
 
 ### 5.7 Soluciones (`SOLUTIONS`)
 
-1. **Control biométrico sin resguardo** (DPC-SEN, R-007): sistema de marcas autorizado por DT / hash irreversible de templates / anexo de contrato / enrolamiento y eliminación al término.
-2. **Planillas Excel con datos sensibles** (DPC-SEG, R-004): migración a repositorio RBAC / cifrado en reposo + DLP / bitácora de acceso y descarga.
-3. **Canales informales** (DPC-SEG, R-001): canal corporativo seguro / política de uso aceptable + capacitación / bloqueo de reenvío externo.
+1. **Control biométrico sin resguardo** (KPC-SEN, R-007): sistema de marcas autorizado por DT / hash irreversible de templates / anexo de contrato / enrolamiento y eliminación al término.
+2. **Planillas Excel con datos sensibles** (KPC-SEG, R-004): migración a repositorio RBAC / cifrado en reposo + DLP / bitácora de acceso y descarga.
+3. **Canales informales** (KPC-SEG, R-001): canal corporativo seguro / política de uso aceptable + capacitación / bloqueo de reenvío externo.
 
 ### 5.8 Plan de adecuación (`PLAN`) — 7 tareas
 
 | Tarea | Dominio | Responsable | Estado | Vence | % |
 |---|---|---|---|---|---|
-| Redactar anexo de contrato para tratamiento biométrico | DPC-SEN | Legal · A. Soto | En curso | 15 jul 2026 | 40 |
-| Implementar cifrado hash de templates biométricos | DPC-SEN | TI · Infra | Pendiente | 30 jul 2026 | 0 |
-| Aprobar manual del plan de respuesta a incidentes | DPC-INC | Dirección | En revisión | 10 jul 2026 | 75 |
-| Ejecutar simulacro de brecha de datos | DPC-INC | TI · SecOps | Pendiente | 20 ago 2026 | 0 |
-| Completar Registro de Actividades de Tratamiento | DPC-INV | DPO | En curso | 25 jul 2026 | 55 |
-| Actualizar cláusulas con encargados de hosting | DPC-TER | Legal | Completado | 02 jul 2026 | 100 |
-| Definir matriz de plazos de retención | DPC-FIN | DPO | Pendiente | 12 ago 2026 | 0 |
+| Redactar anexo de contrato para tratamiento biométrico | KPC-SEN | Legal · A. Soto | En curso | 15 jul 2026 | 40 |
+| Implementar cifrado hash de templates biométricos | KPC-SEN | TI · Infra | Pendiente | 30 jul 2026 | 0 |
+| Aprobar manual del plan de respuesta a incidentes | KPC-INC | Dirección | En revisión | 10 jul 2026 | 75 |
+| Ejecutar simulacro de brecha de datos | KPC-INC | TI · SecOps | Pendiente | 20 ago 2026 | 0 |
+| Completar Registro de Actividades de Tratamiento | KPC-INV | DPO | En curso | 25 jul 2026 | 55 |
+| Actualizar cláusulas con encargados de hosting | KPC-TER | Legal | Completado | 02 jul 2026 | 100 |
+| Definir matriz de plazos de retención | KPC-FIN | DPO | Pendiente | 12 ago 2026 | 0 |
 
 ### 5.9 Evidencias del repositorio (`EVIDENCES`) — 7 documentos
 
 | Archivo | Control (obsoleto→mapear) | Tipo | Estado | Fecha | Tamaño |
 |---|---|---|---|---|---|
-| Politica_Tratamiento_v3.pdf | DPC-GOV-002 → DPC-RES-002 | Política | Validado | 12 jun 2026 | 1.2 MB |
-| Acta_Nombramiento_DPD.pdf | DPC-GOV-001 → DPC-RES-001 | Acta | Validado | 10 jun 2026 | 480 KB |
-| Matriz_RAT_procesos.xlsx | DPC-DAT-001 → DPC-INV-001 | Registro | Pendiente | 18 jun 2026 | 2.4 MB |
-| Logs_auditoria_Q2.csv | DPC-SEC-001 → DPC-SEG-001 | Bitácora | Pendiente | 20 jun 2026 | 8.1 MB |
-| Contrato_Encargado_Hosting.pdf | DPC-THD-001 → DPC-TER-001 | Contrato | Rechazado | 05 jun 2026 | 900 KB |
-| Config_MFA_corporativa.pdf | DPC-SEC-002 → DPC-SEG-002 | Configuración | Validado | 14 jun 2026 | 320 KB |
-| Formulario_ARSOP_web.png | DPC-RGT-001 → DPC-DER-001 | Captura | Validado | 09 jun 2026 | 640 KB |
+| Politica_Tratamiento_v3.pdf | KPC-GOV-002 → KPC-RES-002 | Política | Validado | 12 jun 2026 | 1.2 MB |
+| Acta_Nombramiento_DPD.pdf | KPC-GOV-001 → KPC-RES-001 | Acta | Validado | 10 jun 2026 | 480 KB |
+| Matriz_RAT_procesos.xlsx | KPC-DAT-001 → KPC-INV-001 | Registro | Pendiente | 18 jun 2026 | 2.4 MB |
+| Logs_auditoria_Q2.csv | KPC-SEC-001 → KPC-SEG-001 | Bitácora | Pendiente | 20 jun 2026 | 8.1 MB |
+| Contrato_Encargado_Hosting.pdf | KPC-THD-001 → KPC-TER-001 | Contrato | Rechazado | 05 jun 2026 | 900 KB |
+| Config_MFA_corporativa.pdf | KPC-SEC-002 → KPC-SEG-002 | Configuración | Validado | 14 jun 2026 | 320 KB |
+| Formulario_ARSOP_web.png | KPC-RGT-001 → KPC-DER-001 | Captura | Validado | 09 jun 2026 | 640 KB |
 
 ### 5.10 Contenido de la landing (seed de marketing)
 
 - **Stakes (sanciones)**: Infracción leve · 100–5.000 UTM · ≈ $7M–$340M CLP (dot `#b5bdc9`) / Infracción grave · 5.001–10.000 UTM · ≈ $340M–$680M (dot `#705500`) / Infracción gravísima · 10.001–20.000 UTM · hasta ≈ $1.360M (dot `#772322`).
 - **Agencias**: APDP, ANCI, SERNAC, CMF, Dirección del Trabajo, SUBTEL.
 - **Fases** (`FASES`): Fase 1 Diagnóstico / Fase 2 Propuesta / Fase 3 Certificación / Fase 4 Revalidación (con descripciones).
-- **dossierDocs** (7): RAT · Políticas y avisos de privacidad vigentes · Procedimiento de derechos ARSOP · Plan de respuesta ante incidentes · Inventario y mapeo de flujos de datos · Evidencias por control, versionadas · Certificado privado DPC con hash de verificación.
+- **dossierDocs** (7): RAT · Políticas y avisos de privacidad vigentes · Procedimiento de derechos ARSOP · Plan de respuesta ante incidentes · Inventario y mapeo de flujos de datos · Evidencias por control, versionadas · Certificado privado KPC con hash de verificación.
 - **acompanamiento** (4): Consultor asignado / Asesoría personalizada / Acompañamiento en la implementación / Seguimiento posterior.
-- **footerCols**: Marco de trabajo (Los 14 dominios, Taxonomía de controles, Catálogo de riesgos, Verticales sectoriales) · Plataforma (**Panel del consultor** → login, Complexity Score, Repositorio de evidencias, Certificación DPC) · Marco legal (Ley 21.719, Ley 21.663, Ley 19.496, Código del Trabajo).
+- **footerCols**: Marco de trabajo (Los 14 dominios, Taxonomía de controles, Catálogo de riesgos, Verticales sectoriales) · Plataforma (**Panel del consultor** → login, Complexity Score, Repositorio de evidencias, Certificación KPC) · Marco legal (Ley 21.719, Ley 21.663, Ley 19.496, Código del Trabajo).
 - **cotValor** (3): Protección económica / Cumplimiento demostrable / Prestigio y confianza.
 - **Precios**: Micro desde 5 UF + IVA / Pequeña desde 15 UF + IVA / Enterprise bajo cotización.
 - **WhatsApp**: `wa.me/56900000000` con 3 mensajes prellenados distintos (info, cotizar, post-autoevaluación).
@@ -696,7 +696,7 @@ No hay modales ni menús desplegables en el prototipo. No hay estados vacíos (e
 1. Next.js App Router con grupos `(public)` y `(app)`; middleware de auth para `/app/**`; layouts anidados para el shell y el contexto de empresa.
 2. Design tokens: base Attio (DESIGN.md) + tokens extendidos §9.3; `next/font/google` (Inter + Newsreader con itálica).
 3. Componentes compartidos: Button (5 variantes), Card (3 niveles), StatCard, ProgressBar, Pill/Badge (6 variantes semánticas), CodeChip, LawChip, AvatarInitials, GridTable, SectionHeading (eyebrow+H1+sub), DomainRail, StatusCyclePill, DarkPanel, Timeline, RiskMatrix, SegmentedToggle, Sidebar+Topbar.
-4. Modelo de datos §4 con seed §5 (corrigiendo códigos de evidencias, ARSOP→ARCOP, dominio DPC-EVD, versión estándar v0.4, `controlStatus` per-empresa).
+4. Modelo de datos §4 con seed §5 (corrigiendo códigos de evidencias, ARSOP→ARCOP, dominio KPC-EVD, versión estándar v0.4, `controlStatus` per-empresa).
 5. Vistas: 3 públicas + 10 internas + página pública de verificación de certificado (nueva).
 6. Pendientes de diseño no cubiertos por el prototipo: pasos 2–4 del alta de empresa, carga real de evidencias (upload), búsqueda de controles, gestión de usuarios/consultores, empty states, responsive móvil (el prototipo es desktop-only, con grids fijos de 2–4 columnas).
 7. Conseguir/crear `dpc-logo.png` (falta en el repo) y variante para fondo oscuro.

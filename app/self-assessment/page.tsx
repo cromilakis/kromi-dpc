@@ -28,7 +28,6 @@ export default async function SelfAssessmentPage() {
     <div className="flex min-h-screen flex-1 flex-col bg-[#fbfbfc]">
       <PublicTopbar
         logoAlt={`${tCommon("appName")} — ${tCommon("appFullName")}`}
-        tagline={tCommon("tagline")}
         backLabel={t("topbar.backToSite")}
       />
       <main

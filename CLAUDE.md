@@ -1,7 +1,7 @@
-# CLAUDE.md — kromi-dpc
+# CLAUDE.md — kromi-kpc
 
 ## Qué es este proyecto
-**DPC — Data Protection Compliance**: plataforma de gestión de cumplimiento de la Ley 21.719
+**KPC — Kromi Privacy Center**: plataforma de gestión de cumplimiento de la Ley 21.719
 (protección de datos personales, Chile). Cara pública (landing + autoevaluación gratuita +
 verificación de certificados) y plataforma interna multi-empresa para el equipo consultor
 (checklist de 14 dominios, fichas de control, evidencias, riesgos, plan de adecuación,
