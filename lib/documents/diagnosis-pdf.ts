@@ -86,8 +86,9 @@ const STYLES = `
     page-break-after: always;
   }
   .page:last-child { page-break-after: auto; }
-  /* Las páginas de brecha usan márgenes más ajustados para caber en 1 hoja. */
-  .page.breach { padding: 16mm 22mm 14mm; }
+  /* Las páginas de brecha usan márgenes más ajustados para caber en 1 hoja:
+     header más arriba (top) y pie más estrecho (bottom). */
+  .page.breach { padding: 10mm 22mm 10mm; }
 
   /* ---------- Portada oscura ---------- */
   .cover {
