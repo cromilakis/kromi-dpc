@@ -410,12 +410,12 @@ export function buildDiagnosisPdfHtml(d: DiagnosisPdfData): string {
     1,
     Math.ceil(d.breaches.length / INDEX_ITEMS_PER_PAGE),
   );
-  // portada (1) + índice (numIndexPages) + presentación (1) → primera brecha.
+  // portada (1) + presentación (1) + índice (numIndexPages) → primera brecha.
   const firstBreachPage = 2 + numIndexPages + 1;
   const pages =
     coverPage(d) +
-    indexPages(d, firstBreachPage) +
     presentationPage(d) +
+    indexPages(d, firstBreachPage) +
     d.breaches
       .map((b, i) => breachPage(b, i + 1, d.breaches.length, d.logoDataUri))
       .join("") +
