@@ -25,6 +25,7 @@
       "risk": "El riesgo",
       "domains": "El estándar",
       "cycle": "Cómo funciona",
+      "resources": "Recursos",
       "cta": "Evalúa gratis",
       "menu": "Abrir menú"
     },
@@ -278,7 +279,8 @@
           "title": "Empezar",
           "links": {
             "selfAssessment": "Autoevaluación gratis",
-            "risk": "El riesgo"
+            "risk": "El riesgo",
+            "resources": "Recursos"
           }
         },
         "legal": {
