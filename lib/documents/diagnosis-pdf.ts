@@ -86,6 +86,8 @@ const STYLES = `
     page-break-after: always;
   }
   .page:last-child { page-break-after: auto; }
+  /* Las páginas de brecha usan márgenes más ajustados para caber en 1 hoja. */
+  .page.breach { padding: 16mm 22mm 14mm; }
 
   /* ---------- Portada oscura ---------- */
   .cover {
@@ -128,6 +130,7 @@ const STYLES = `
   /* ---------- Header de marca (índice / presentación / brechas) ---------- */
   .hd { display: flex; align-items: center; justify-content: space-between;
         border-bottom: 1px solid #e6e6e8; padding-bottom: 12px; margin-bottom: 30px; }
+  .page.breach .hd { margin-bottom: 20px; }
   .hd img { height: 28px; width: auto; }
   .hd .tag-r { font-size: 10px; letter-spacing: .4px; text-transform: uppercase;
                color: #6b6f76; font-weight: 600; }
@@ -160,29 +163,29 @@ const STYLES = `
              color: #6b6f76; font-weight: 600; }
   .b-title { font-size: 18px; line-height: 1.3; color: #1c1d1f; margin-top: 6px;
              font-weight: 600; }
-  .tag { display: inline-block; margin-top: 12px; font-size: 10px; font-weight: 700;
+  .tag { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 700;
          letter-spacing: .3px; text-transform: uppercase; padding: 3px 9px;
          border-radius: 999px; }
   .sec { font-size: 10px; letter-spacing: .4px; text-transform: uppercase;
-         color: #6b6f76; font-weight: 600; margin-top: 24px; }
-  .obj { color: #3a3d42; margin-top: 6px; }
+         color: #6b6f76; font-weight: 600; margin-top: 15px; }
+  .obj { color: #3a3d42; margin-top: 5px; }
   .meta { margin-top: 14px; font-size: 11px; color: #6b6f76; }
   .meta strong { color: #1c1d1f; }
-  ol.actions { list-style: none; margin-top: 10px; }
-  ol.actions li { display: flex; gap: 12px; margin-top: 14px; }
+  ol.actions { list-style: none; margin-top: 8px; }
+  ol.actions li { display: flex; gap: 12px; margin-top: 9px; }
   .num { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
          background: #f2f2f3; color: #3a3d42; font-size: 11px; font-weight: 700;
          display: flex; align-items: center; justify-content: center; }
   .act-title { color: #1c1d1f; font-weight: 600; }
   .act-detail { color: #3a3d42; margin-top: 2px; }
-  .act-ev { color: #6b6f76; font-size: 11px; margin-top: 4px; }
+  .act-ev { color: #6b6f76; font-size: 11px; margin-top: 3px; }
   .act-ev strong { color: #3a3d42; font-weight: 600; }
   .noplan { color: #6b6f76; margin-top: 8px; }
 
   /* ---------- Fundamento legal de la brecha ---------- */
-  .legal-note { color: #6b6f76; margin-top: 6px; font-size: 11px; }
-  ul.legal { list-style: none; margin-top: 10px; }
-  ul.legal li { padding: 9px 0; border-bottom: 1px solid #eeeeef; }
+  .legal-note { color: #6b6f76; margin-top: 5px; font-size: 11px; }
+  ul.legal { list-style: none; margin-top: 7px; }
+  ul.legal li { padding: 6px 0; border-bottom: 1px solid #eeeeef; }
   ul.legal li:last-child { border-bottom: none; }
   .legal-norm { display: block; font-size: 11.5px; font-weight: 600; color: #1c1d1f; }
   .legal-norm a { color: #1c1d1f; text-decoration: none;
@@ -328,7 +331,7 @@ function breachPage(b: PdfBreach, index: number, total: number, logo: string): s
       : `<p class="noplan">${escapeHtml(b.objective)}</p>`;
 
   return `
-  <section class="page">
+  <section class="page breach">
     ${header(logo, `Brecha ${index} de ${total}`)}
     <p class="b-index">Brecha ${index}</p>
     <h2 class="serif b-title">${escapeHtml(b.description)}</h2>
