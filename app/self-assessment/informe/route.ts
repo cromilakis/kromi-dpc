@@ -6,6 +6,7 @@ import {
   type DiagnosisPdfData,
 } from "@/lib/documents/diagnosis-pdf";
 import { renderPdf } from "@/lib/documents/render.server";
+import { whatsappUrl } from "@/lib/contact";
 
 /**
  * POST /self-assessment/informe — genera el PDF del diagnóstico (portada +
@@ -73,6 +74,9 @@ export async function POST(request: Request): Promise<Response> {
       ...parsed.data,
       generated: formatDate(new Date()),
       logoDataUri: logoDataUri(),
+      contactUrl: whatsappUrl(
+        "Hola KPC. Hice la autoevaluación y quiero implementar las mitigaciones de mi diagnóstico con ustedes.",
+      ),
     };
     const pdf = await renderPdf(buildDiagnosisPdfHtml(data));
     return new Response(new Uint8Array(pdf), {

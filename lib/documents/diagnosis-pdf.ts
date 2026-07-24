@@ -47,6 +47,8 @@ export interface DiagnosisPdfData {
   logoDataUri: string;
   /** Nombre de la empresa diagnosticada (opcional). */
   companyName?: string;
+  /** Enlace de contacto (WhatsApp) para la invitación de cierre. */
+  contactUrl?: string;
   breaches: PdfBreach[];
 }
 
@@ -196,6 +198,29 @@ const STYLES = `
                   border-bottom: 1px solid #c9ccd1; }
   .legal-sum { display: block; font-size: 11px; color: #3a3d42;
                margin-top: 3px; line-height: 1.5; }
+
+  /* ---------- Cierre: invitación a implementar con KPC ---------- */
+  .close-eyebrow { font-size: 11px; letter-spacing: .4px; text-transform: uppercase;
+                   color: #6b6f76; font-weight: 600; }
+  .close-h { margin-top: 6px; }
+  .close-lead { color: #3a3d42; font-size: 12.5px; margin-top: 14px; max-width: 64ch; }
+  .close-card { margin-top: 24px; border: 1px solid #e6e6e8; border-radius: 10px;
+                padding: 20px 22px; background: #fafafa; }
+  .close-card-h { font-size: 10px; letter-spacing: .4px; text-transform: uppercase;
+                  color: #6b6f76; font-weight: 600; }
+  ul.close-list { list-style: none; margin-top: 12px; }
+  ul.close-list li { position: relative; padding-left: 22px; color: #3a3d42;
+                     font-size: 12px; line-height: 1.5; margin-top: 10px; }
+  ul.close-list li:first-child { margin-top: 0; }
+  ul.close-list li::before { content: ""; position: absolute; left: 0; top: 6px;
+                             width: 8px; height: 8px; border-radius: 999px;
+                             background: #1c1d1f; }
+  ul.close-list li strong { color: #1c1d1f; font-weight: 600; }
+  .close-cta { display: inline-block; margin-top: 26px; background: #1c1d1f;
+               color: #fff; text-decoration: none; font-size: 12.5px; font-weight: 600;
+               padding: 12px 26px; border-radius: 999px; }
+  .close-note { margin-top: 16px; font-size: 11px; color: #6b6f76;
+                max-width: 64ch; line-height: 1.5; }
 `;
 
 function header(logo: string, right: string): string {
@@ -344,6 +369,42 @@ function breachPage(b: PdfBreach, index: number, total: number, logo: string): s
   </section>`;
 }
 
+function closingPage(d: DiagnosisPdfData): string {
+  const cta = d.contactUrl
+    ? `<a class="close-cta" href="${escapeHtml(d.contactUrl)}">Conversemos por WhatsApp</a>`
+    : "";
+  return `
+  <section class="page">
+    ${header(d.logoDataUri, "Paso siguiente")}
+    <p class="close-eyebrow">Paso siguiente · opcional</p>
+    <h2 class="serif page-h close-h">Este diagnóstico es tuyo, gratis y sin compromiso</h2>
+    <p class="close-lead">
+      Todo lo que contiene este informe —el diagnóstico y la propuesta de mitigación
+      de cada brecha— es gratuito y sin ninguna obligación. Puedes implementarlo por tu
+      cuenta, a tu ritmo, siguiendo las acciones y los respaldos que aquí se detallan.
+    </p>
+    <p class="close-lead">
+      Y si prefieres hacerlo con acompañamiento profesional, con la tranquilidad de que
+      todo queda en regla, en Kromi Privacy Center podemos implementarlo contigo y dejar
+      tu cumplimiento documentado de principio a fin.
+    </p>
+    <div class="close-card">
+      <p class="close-card-h">Implementarlo con nosotros incluye</p>
+      <ul class="close-list">
+        <li><strong>Implementación guiada de cada mitigación</strong>, con los documentos y las configuraciones que exige la Ley 21.719.</li>
+        <li><strong>Auditoría y verificación</strong> del cierre de todas las brechas detectadas en este informe.</li>
+        <li><strong>Documentación de cumplimiento personalizada</strong>: qué datos personales maneja tu empresa y cómo cumple cada norma, caso a caso.</li>
+        <li><strong>Constancia final de cumplimiento</strong> que respalda tu diligencia ante la Agencia de Protección de Datos y ante tus clientes.</li>
+      </ul>
+    </div>
+    ${cta}
+    <p class="close-note">
+      Conversar no tiene costo ni compromiso: primero entendemos tu caso y, solo si
+      decides avanzar, definimos juntos el alcance y el presupuesto.
+    </p>
+  </section>`;
+}
+
 export function buildDiagnosisPdfHtml(d: DiagnosisPdfData): string {
   const numIndexPages = Math.max(
     1,
@@ -357,6 +418,7 @@ export function buildDiagnosisPdfHtml(d: DiagnosisPdfData): string {
     presentationPage(d) +
     d.breaches
       .map((b, i) => breachPage(b, i + 1, d.breaches.length, d.logoDataUri))
-      .join("");
+      .join("") +
+    closingPage(d);
   return `<!doctype html><html lang="es"><head><meta charset="utf-8" /><style>${STYLES}</style></head><body>${pages}</body></html>`;
 }
