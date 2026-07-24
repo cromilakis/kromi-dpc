@@ -83,9 +83,8 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: ["/og.png"],
   },
-  // Alta en Google Search Console: reemplazar por el token entregado por Google
-  // (Propiedad → Etiqueta HTML) y descomentar.
-  // verification: { google: "TOKEN_DE_SEARCH_CONSOLE" },
+  // Verificación de propiedad en Google Search Console (método Etiqueta HTML).
+  verification: { google: "av-F--Loiwj_XTvckFb01BsdtLh-JhiKy1B96szkTeU" },
 };
 
 /** JSON-LD de sitio: identifica la organización y el sitio ante buscadores. */
