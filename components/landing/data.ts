@@ -79,6 +79,7 @@ export const NAV_LINKS = [
   { key: "risk", href: "#riesgo" },
   { key: "domains", href: "#dominios" },
   { key: "cycle", href: "#ciclo" },
+  { key: "resources", href: "/recursos" },
 ] as const;
 
 /**
@@ -109,6 +110,7 @@ export const FOOTER_COLUMNS: FooterColumnRef[] = [
     links: [
       { key: "selfAssessment", href: "/self-assessment" },
       { key: "risk", href: "#riesgo" },
+      { key: "resources", href: "/recursos" },
     ],
   },
   {
