@@ -218,8 +218,8 @@ const STYLES = `
                              width: 8px; height: 8px; border-radius: 999px;
                              background: #1c1d1f; }
   ul.close-list li strong { color: #1c1d1f; font-weight: 600; }
-  .close-contact { display: flex; align-items: center; justify-content: center;
-                   gap: 30px; margin-top: 32px; }
+  .close-contact { display: flex; flex-direction: column; align-items: center;
+                   gap: 20px; margin-top: 32px; }
   .close-cta { display: inline-flex; align-items: center; gap: 9px; background: #1c1d1f;
                color: #fff; text-decoration: none; font-size: 13px; font-weight: 600;
                padding: 12px 28px; border-radius: 999px; }
