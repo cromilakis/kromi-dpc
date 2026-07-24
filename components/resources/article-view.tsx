@@ -105,12 +105,6 @@ export function ArticleView({ article }: { article: ResourceArticle }) {
           </ul>
         </section>
       )}
-
-      {/* Autoría E-E-A-T. */}
-      <footer className="mt-40 border-t border-stone pt-20 text-caption text-metal">
-        Revisado por {article.author.name} · {article.author.credential}. Última
-        actualización: {article.dateModified}.
-      </footer>
     </article>
   );
 }

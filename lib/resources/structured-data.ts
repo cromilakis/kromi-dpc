@@ -15,11 +15,7 @@ export function articleJsonLd(article: ResourceArticle): object {
         inLanguage: "es-CL",
         datePublished: article.datePublished,
         dateModified: article.dateModified,
-        author: {
-          "@type": "Person",
-          name: article.author.name,
-          jobTitle: article.author.credential,
-        },
+        author: { "@id": absoluteUrl("/#organization") },
         publisher: { "@id": absoluteUrl("/#organization") },
         mainEntityOfPage: url,
       },
