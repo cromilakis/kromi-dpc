@@ -13,7 +13,7 @@ export function ArticleView({ article }: { article: ResourceArticle }) {
     .filter((a): a is ResourceArticle => a !== null && a.reviewed);
 
   return (
-    <article className="mx-auto w-full max-w-[760px] px-32 py-64 max-sm:px-16 max-sm:py-40">
+    <article className="mx-auto w-full max-w-[760px] px-32 pt-[64px] pb-[96px] max-sm:px-16 max-sm:pt-[40px] max-sm:pb-[64px]">
       <p className="text-caption font-medium uppercase tracking-[0.4px] text-metal">
         Recursos
       </p>
