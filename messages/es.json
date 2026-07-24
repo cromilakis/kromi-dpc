@@ -374,5 +374,13 @@
         "button": "Escribir por WhatsApp"
       }
     }
+  },
+  "notFound": {
+    "eyebrow": "Error 404",
+    "title": "No encontramos esta página",
+    "body": "Es posible que el enlace esté roto o que la página ya no exista. Desde aquí puedes volver al inicio o seguir explorando.",
+    "backHome": "Volver al inicio",
+    "resources": "Ver recursos",
+    "selfAssessment": "Hacer la autoevaluación gratuita"
   }
 }
