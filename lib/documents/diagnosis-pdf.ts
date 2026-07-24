@@ -218,7 +218,8 @@ const STYLES = `
                              width: 8px; height: 8px; border-radius: 999px;
                              background: #1c1d1f; }
   ul.close-list li strong { color: #1c1d1f; font-weight: 600; }
-  .close-contact { display: flex; align-items: center; gap: 30px; margin-top: 26px; }
+  .close-contact { display: flex; align-items: center; justify-content: center;
+                   gap: 30px; margin-top: 32px; }
   .close-cta { display: inline-flex; align-items: center; gap: 9px; background: #1c1d1f;
                color: #fff; text-decoration: none; font-size: 13px; font-weight: 600;
                padding: 12px 28px; border-radius: 999px; }
@@ -229,8 +230,6 @@ const STYLES = `
                   background: #fff; }
   .close-qr span { display: block; margin-top: 7px; font-size: 10px; color: #6b6f76;
                    max-width: 130px; line-height: 1.4; }
-  .close-note { margin-top: 20px; font-size: 11px; color: #6b6f76;
-                max-width: 64ch; line-height: 1.5; }
 `;
 
 function header(logo: string, right: string): string {
@@ -420,10 +419,6 @@ function closingPage(d: DiagnosisPdfData): string {
       </ul>
     </div>
     ${closingContact(d)}
-    <p class="close-note">
-      Conversar no tiene costo ni compromiso: primero entendemos tu caso y, solo si
-      decides avanzar, definimos juntos el alcance y el presupuesto.
-    </p>
   </section>`;
 }
 
