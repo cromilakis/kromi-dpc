@@ -225,7 +225,7 @@ const STYLES = `
                padding: 12px 28px; border-radius: 999px; }
   .close-cta svg { display: block; }
   .close-qr { text-align: center; }
-  .close-qr img { display: block; width: 92px; height: 92px;
+  .close-qr img { display: block; width: 92px; height: 92px; margin: 0 auto;
                   border: 1px solid #e6e6e8; border-radius: 8px; padding: 5px;
                   background: #fff; }
   .close-qr span { display: block; margin-top: 7px; font-size: 10px; color: #6b6f76;
