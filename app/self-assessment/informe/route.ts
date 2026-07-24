@@ -6,6 +6,8 @@ import {
   type DiagnosisPdfData,
 } from "@/lib/documents/diagnosis-pdf";
 import { renderPdf } from "@/lib/documents/render.server";
+import { whatsappUrl } from "@/lib/contact";
+import QRCode from "qrcode";
 
 /**
  * POST /self-assessment/informe — genera el PDF del diagnóstico (portada +
@@ -69,10 +71,20 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
+    const contactUrl = whatsappUrl(
+      "Hola KPC. Hice la autoevaluación y quiero implementar las mitigaciones de mi diagnóstico con ustedes.",
+    );
+    const contactQrDataUri = await QRCode.toDataURL(contactUrl, {
+      margin: 1,
+      width: 220,
+      color: { dark: "#1c1d1f", light: "#ffffff" },
+    });
     const data: DiagnosisPdfData = {
       ...parsed.data,
       generated: formatDate(new Date()),
       logoDataUri: logoDataUri(),
+      contactUrl,
+      contactQrDataUri,
     };
     const pdf = await renderPdf(buildDiagnosisPdfHtml(data));
     return new Response(new Uint8Array(pdf), {

@@ -47,6 +47,10 @@ export interface DiagnosisPdfData {
   logoDataUri: string;
   /** Nombre de la empresa diagnosticada (opcional). */
   companyName?: string;
+  /** Enlace de contacto (WhatsApp) para la invitación de cierre. */
+  contactUrl?: string;
+  /** Data URI (PNG) del código QR que abre el mismo chat de WhatsApp. */
+  contactQrDataUri?: string;
   breaches: PdfBreach[];
 }
 
@@ -86,6 +90,9 @@ const STYLES = `
     page-break-after: always;
   }
   .page:last-child { page-break-after: auto; }
+  /* Las páginas de brecha usan márgenes más ajustados para caber en 1 hoja:
+     header más arriba (top) y pie más estrecho (bottom). */
+  .page.breach { padding: 10mm 22mm 10mm; }
 
   /* ---------- Portada oscura ---------- */
   .cover {
@@ -128,6 +135,7 @@ const STYLES = `
   /* ---------- Header de marca (índice / presentación / brechas) ---------- */
   .hd { display: flex; align-items: center; justify-content: space-between;
         border-bottom: 1px solid #e6e6e8; padding-bottom: 12px; margin-bottom: 30px; }
+  .page.breach .hd { margin-bottom: 20px; }
   .hd img { height: 28px; width: auto; }
   .hd .tag-r { font-size: 10px; letter-spacing: .4px; text-transform: uppercase;
                color: #6b6f76; font-weight: 600; }
@@ -160,35 +168,68 @@ const STYLES = `
              color: #6b6f76; font-weight: 600; }
   .b-title { font-size: 18px; line-height: 1.3; color: #1c1d1f; margin-top: 6px;
              font-weight: 600; }
-  .tag { display: inline-block; margin-top: 12px; font-size: 10px; font-weight: 700;
+  .tag { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 700;
          letter-spacing: .3px; text-transform: uppercase; padding: 3px 9px;
          border-radius: 999px; }
+  /* Pill de severidad a continuación del título (misma línea que el texto). */
+  .tag-inline { margin-top: 0; margin-left: 8px; vertical-align: middle;
+                white-space: nowrap; }
   .sec { font-size: 10px; letter-spacing: .4px; text-transform: uppercase;
-         color: #6b6f76; font-weight: 600; margin-top: 24px; }
-  .obj { color: #3a3d42; margin-top: 6px; }
+         color: #6b6f76; font-weight: 600; margin-top: 15px; }
+  .obj { color: #3a3d42; margin-top: 5px; }
   .meta { margin-top: 14px; font-size: 11px; color: #6b6f76; }
   .meta strong { color: #1c1d1f; }
-  ol.actions { list-style: none; margin-top: 10px; }
-  ol.actions li { display: flex; gap: 12px; margin-top: 14px; }
+  ol.actions { list-style: none; margin-top: 8px; }
+  ol.actions li { display: flex; gap: 12px; margin-top: 9px; }
   .num { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
          background: #f2f2f3; color: #3a3d42; font-size: 11px; font-weight: 700;
          display: flex; align-items: center; justify-content: center; }
   .act-title { color: #1c1d1f; font-weight: 600; }
   .act-detail { color: #3a3d42; margin-top: 2px; }
-  .act-ev { color: #6b6f76; font-size: 11px; margin-top: 4px; }
+  .act-ev { color: #6b6f76; font-size: 11px; margin-top: 3px; }
   .act-ev strong { color: #3a3d42; font-weight: 600; }
   .noplan { color: #6b6f76; margin-top: 8px; }
 
   /* ---------- Fundamento legal de la brecha ---------- */
-  .legal-note { color: #6b6f76; margin-top: 6px; font-size: 11px; }
-  ul.legal { list-style: none; margin-top: 10px; }
-  ul.legal li { padding: 9px 0; border-bottom: 1px solid #eeeeef; }
+  .legal-note { color: #6b6f76; margin-top: 5px; font-size: 11px; }
+  ul.legal { list-style: none; margin-top: 7px; }
+  ul.legal li { padding: 6px 0; border-bottom: 1px solid #eeeeef; }
   ul.legal li:last-child { border-bottom: none; }
   .legal-norm { display: block; font-size: 11.5px; font-weight: 600; color: #1c1d1f; }
   .legal-norm a { color: #1c1d1f; text-decoration: none;
                   border-bottom: 1px solid #c9ccd1; }
   .legal-sum { display: block; font-size: 11px; color: #3a3d42;
                margin-top: 3px; line-height: 1.5; }
+
+  /* ---------- Cierre: invitación a implementar con KPC ---------- */
+  .close-eyebrow { font-size: 11px; letter-spacing: .4px; text-transform: uppercase;
+                   color: #6b6f76; font-weight: 600; }
+  .close-h { margin-top: 6px; }
+  .close-lead { color: #3a3d42; font-size: 12.5px; margin-top: 14px; max-width: 64ch; }
+  .close-card { margin-top: 24px; border: 1px solid #e6e6e8; border-radius: 10px;
+                padding: 20px 22px; background: #fafafa; }
+  .close-card-h { font-size: 10px; letter-spacing: .4px; text-transform: uppercase;
+                  color: #6b6f76; font-weight: 600; }
+  ul.close-list { list-style: none; margin-top: 12px; }
+  ul.close-list li { position: relative; padding-left: 22px; color: #3a3d42;
+                     font-size: 12px; line-height: 1.5; margin-top: 10px; }
+  ul.close-list li:first-child { margin-top: 0; }
+  ul.close-list li::before { content: ""; position: absolute; left: 0; top: 6px;
+                             width: 8px; height: 8px; border-radius: 999px;
+                             background: #1c1d1f; }
+  ul.close-list li strong { color: #1c1d1f; font-weight: 600; }
+  .close-contact { display: flex; flex-direction: column; align-items: center;
+                   gap: 20px; margin-top: 32px; }
+  .close-cta { display: inline-flex; align-items: center; gap: 9px; background: #1c1d1f;
+               color: #fff; text-decoration: none; font-size: 13px; font-weight: 600;
+               padding: 12px 28px; border-radius: 999px; }
+  .close-cta svg { display: block; }
+  .close-qr { text-align: center; }
+  .close-qr img { display: block; width: 92px; height: 92px; margin: 0 auto;
+                  border: 1px solid #e6e6e8; border-radius: 8px; padding: 5px;
+                  background: #fff; }
+  .close-qr span { display: block; margin-top: 7px; font-size: 10px; color: #6b6f76;
+                   max-width: 130px; line-height: 1.4; }
 `;
 
 function header(logo: string, right: string): string {
@@ -328,13 +369,56 @@ function breachPage(b: PdfBreach, index: number, total: number, logo: string): s
       : `<p class="noplan">${escapeHtml(b.objective)}</p>`;
 
   return `
-  <section class="page">
+  <section class="page breach">
     ${header(logo, `Brecha ${index} de ${total}`)}
     <p class="b-index">Brecha ${index}</p>
-    <h2 class="serif b-title">${escapeHtml(b.description)}</h2>
-    ${severityTag(b, "tag")}
+    <h2 class="serif b-title">${escapeHtml(b.description)}${severityTag(b, "tag tag-inline")}</h2>
     ${legalSection(b.legalRefs)}
     ${body}
+  </section>`;
+}
+
+// Glifo de WhatsApp (viewBox 0 0 24 24), heredando el color del contenedor.
+const WHATSAPP_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.82c0 4.54-3.7 8.24-8.24 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42l-.48-.01c-.16 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>`;
+
+function closingContact(d: DiagnosisPdfData): string {
+  if (!d.contactUrl) return "";
+  const cta = `<a class="close-cta" href="${escapeHtml(d.contactUrl)}">${WHATSAPP_ICON}<span>Conversemos</span></a>`;
+  const qr = d.contactQrDataUri
+    ? `<div class="close-qr">
+         <img src="${d.contactQrDataUri}" alt="Código QR para abrir el chat de WhatsApp" />
+         <span>Escanéalo para abrir el chat desde tu teléfono</span>
+       </div>`
+    : "";
+  return `<div class="close-contact">${cta}${qr}</div>`;
+}
+
+function closingPage(d: DiagnosisPdfData): string {
+  return `
+  <section class="page">
+    ${header(d.logoDataUri, "Paso siguiente")}
+    <p class="close-eyebrow">Paso siguiente · opcional</p>
+    <h2 class="serif page-h close-h">Este diagnóstico es tuyo, gratis y sin compromiso</h2>
+    <p class="close-lead">
+      Todo lo que contiene este informe —el diagnóstico y la propuesta de mitigación
+      de cada brecha— es gratuito y sin ninguna obligación. Puedes implementarlo por tu
+      cuenta, a tu ritmo, siguiendo las acciones y los respaldos que aquí se detallan.
+    </p>
+    <p class="close-lead">
+      Y si prefieres hacerlo con acompañamiento profesional, con la tranquilidad de que
+      todo queda en regla, en Kromi Privacy Center podemos implementarlo contigo y dejar
+      tu cumplimiento documentado de principio a fin.
+    </p>
+    <div class="close-card">
+      <p class="close-card-h">Implementarlo con nosotros incluye</p>
+      <ul class="close-list">
+        <li><strong>Implementación guiada de cada mitigación</strong>, con los documentos y las configuraciones que exige la Ley 21.719.</li>
+        <li><strong>Auditoría y verificación</strong> del cierre de todas las brechas detectadas en este informe.</li>
+        <li><strong>Documentación de cumplimiento personalizada</strong>: qué datos personales maneja tu empresa y cómo cumple cada norma, caso a caso.</li>
+        <li><strong>Constancia final de cumplimiento</strong> que respalda tu diligencia ante la Agencia de Protección de Datos y ante tus clientes.</li>
+      </ul>
+    </div>
+    ${closingContact(d)}
   </section>`;
 }
 
@@ -343,14 +427,15 @@ export function buildDiagnosisPdfHtml(d: DiagnosisPdfData): string {
     1,
     Math.ceil(d.breaches.length / INDEX_ITEMS_PER_PAGE),
   );
-  // portada (1) + índice (numIndexPages) + presentación (1) → primera brecha.
+  // portada (1) + presentación (1) + índice (numIndexPages) → primera brecha.
   const firstBreachPage = 2 + numIndexPages + 1;
   const pages =
     coverPage(d) +
-    indexPages(d, firstBreachPage) +
     presentationPage(d) +
+    indexPages(d, firstBreachPage) +
     d.breaches
       .map((b, i) => breachPage(b, i + 1, d.breaches.length, d.logoDataUri))
-      .join("");
+      .join("") +
+    closingPage(d);
   return `<!doctype html><html lang="es"><head><meta charset="utf-8" /><style>${STYLES}</style></head><body>${pages}</body></html>`;
 }
