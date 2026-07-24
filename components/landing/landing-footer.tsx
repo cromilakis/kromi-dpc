@@ -17,9 +17,6 @@ import { FOOTER_COLUMNS } from "./data";
 export async function LandingFooter() {
   const t = await getTranslations("landing.footer");
   const tCommon = await getTranslations("common");
-  // Demo estática (GitHub Pages): /login queda fuera del export — el acceso
-  // del consultor se muestra como entrada informativa sin destino.
-  const isStaticDemo = process.env.NEXT_PUBLIC_STATIC_DEMO === "1";
 
   return (
     <footer className="bg-abyss text-white">
@@ -46,8 +43,7 @@ export async function LandingFooter() {
                 // eran ~20px). inline-flex + min-h da la altura sin inflar el gap.
                 const linkClass =
                   "inline-flex min-h-[36px] items-center text-body-sm text-overcast transition-colors hover:text-white";
-                const hidden = isStaticDemo && link.href === "/login";
-                if (!link.href || hidden) {
+                if (!link.href) {
                   return (
                     <li key={link.key}>
                       <span className="inline-flex min-h-[36px] items-center text-body-sm text-metal">

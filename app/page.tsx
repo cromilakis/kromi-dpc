@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { AgenciesCloud } from "@/components/landing/agencies-cloud";
 import { CtaBand } from "@/components/landing/cta-band";
 import { CycleSection } from "@/components/landing/cycle-section";
@@ -18,9 +20,37 @@ import { SupportSection } from "@/components/landing/support-section";
  * acompañamiento → modelo de servicio → FAQ → inversión/CTA final → footer Abyss.
  * Todo server components; los textos salen de messages/es.json (next-intl).
  */
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+// Claves del FAQ (messages/es.json → landing.faq.items) para el JSON-LD FAQPage,
+// que habilita el resultado enriquecido de preguntas frecuentes en Google.
+const FAQ_KEYS = ["obligation", "duration", "cost", "skills", "deliverable"];
+
+async function FaqStructuredData() {
+  const t = await getTranslations("landing.faq.items");
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_KEYS.map((key) => ({
+      "@type": "Question",
+      name: t(`${key}.q`),
+      acceptedAnswer: { "@type": "Answer", text: t(`${key}.a`) },
+    })),
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
 export default function LandingPage() {
   return (
     <SmoothScrollProvider>
+      <FaqStructuredData />
     <div className="flex min-h-full flex-1 flex-col overflow-x-clip bg-white">
       <LandingNav />
       <main id="main" className="flex-1">

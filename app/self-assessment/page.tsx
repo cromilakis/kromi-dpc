@@ -12,7 +12,21 @@ import { DiagnosisWizard } from "@/components/self-assessment/diagnosis-wizard";
  */
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("selfAssessment.meta");
-  return { title: t("title"), description: t("description") };
+  const title = t("title");
+  const description = t("description");
+  return {
+    title,
+    description,
+    alternates: { canonical: "/self-assessment" },
+    openGraph: {
+      type: "website",
+      url: "/self-assessment",
+      title,
+      description,
+      images: ["/og.png"],
+    },
+    twitter: { card: "summary_large_image", title, description, images: ["/og.png"] },
+  };
 }
 
 export default async function SelfAssessmentPage() {
